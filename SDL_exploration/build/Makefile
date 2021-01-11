@@ -123,6 +123,19 @@ app/fast:
 	$(MAKE) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/build
 .PHONY : app/fast
 
+#=============================================================================
+# Target rules for targets named sdl_grid
+
+# Build rule for target.
+sdl_grid: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 sdl_grid
+.PHONY : sdl_grid
+
+# fast build rule for target.
+sdl_grid/fast:
+	$(MAKE) -f CMakeFiles/sdl_grid.dir/build.make CMakeFiles/sdl_grid.dir/build
+.PHONY : sdl_grid/fast
+
 src/sdl1.o: src/sdl1.cpp.o
 
 .PHONY : src/sdl1.o
@@ -150,6 +163,33 @@ src/sdl1.cpp.s:
 	$(MAKE) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/sdl1.cpp.s
 .PHONY : src/sdl1.cpp.s
 
+src/sdl_grid.o: src/sdl_grid.cpp.o
+
+.PHONY : src/sdl_grid.o
+
+# target to build an object file
+src/sdl_grid.cpp.o:
+	$(MAKE) -f CMakeFiles/sdl_grid.dir/build.make CMakeFiles/sdl_grid.dir/src/sdl_grid.cpp.o
+.PHONY : src/sdl_grid.cpp.o
+
+src/sdl_grid.i: src/sdl_grid.cpp.i
+
+.PHONY : src/sdl_grid.i
+
+# target to preprocess a source file
+src/sdl_grid.cpp.i:
+	$(MAKE) -f CMakeFiles/sdl_grid.dir/build.make CMakeFiles/sdl_grid.dir/src/sdl_grid.cpp.i
+.PHONY : src/sdl_grid.cpp.i
+
+src/sdl_grid.s: src/sdl_grid.cpp.s
+
+.PHONY : src/sdl_grid.s
+
+# target to generate assembly for a file
+src/sdl_grid.cpp.s:
+	$(MAKE) -f CMakeFiles/sdl_grid.dir/build.make CMakeFiles/sdl_grid.dir/src/sdl_grid.cpp.s
+.PHONY : src/sdl_grid.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -157,11 +197,15 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... app"
 	@echo "... edit_cache"
+	@echo "... app"
+	@echo "... sdl_grid"
 	@echo "... src/sdl1.o"
 	@echo "... src/sdl1.i"
 	@echo "... src/sdl1.s"
+	@echo "... src/sdl_grid.o"
+	@echo "... src/sdl_grid.i"
+	@echo "... src/sdl_grid.s"
 .PHONY : help
 
 

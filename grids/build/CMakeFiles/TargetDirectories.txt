@@ -1,0 +1,3 @@
+/home/kartik/Documents/Random/grids/build/CMakeFiles/rebuild_cache.dir
+/home/kartik/Documents/Random/grids/build/CMakeFiles/app.dir
+/home/kartik/Documents/Random/grids/build/CMakeFiles/edit_cache.dir

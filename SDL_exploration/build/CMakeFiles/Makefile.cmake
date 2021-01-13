@@ -43,6 +43,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/app.dir/DependInfo.cmake"
   "CMakeFiles/sdl_grid.dir/DependInfo.cmake"
+  "CMakeFiles/sdl1.dir/DependInfo.cmake"
+  "CMakeFiles/sdl2.dir/DependInfo.cmake"
   )

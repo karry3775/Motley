@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/sdl2.dir/src/sdl2.cpp.o  -o sdl2 -lSDL2 

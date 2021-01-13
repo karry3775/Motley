@@ -14,6 +14,7 @@ public:
 		setGrid();	
 		if(!initGrid()) return;
 		gameLoop();
+		destroyAll();
 	}
 
 	
@@ -38,11 +39,11 @@ private:
 	SDL_Renderer *m_renderer; // renderer object
 		
 
-	
+	// Sets the Grid metadata
 	void setGrid() {
 		// Set the grid window parameters
-		m_window_width = m_width * m_cell_size;
-		m_window_height = m_height * m_cell_size;
+		m_pixel_width = m_width * m_cell_size;
+		m_pixel_height = m_height * m_cell_size;
 
 		// Set the color values
 		m_background_color = {22, 22, 22, 255}; // Barley black
@@ -52,11 +53,11 @@ private:
 
 		// Define default positions for cursor at the center of the screen
 		m_cursor = {
-			.x = (m_pixel_width / 2)
-			.y = (m_pixel_height / 2)
-			.w = m_cell_size;
-			.h = m_cell_size;
-		}
+			.x = m_pixel_width / 2,
+			.y = m_pixel_height / 2,
+			.w = m_cell_size,
+			.h = m_cell_size,
+		};
 
 		// Define the default position of ghost cursor to be also at the center
 		// but this will be updated to be one cell below the mouse cursor
@@ -73,7 +74,7 @@ private:
 
 		// Create window and renderer
 		if(SDL_CreateWindowAndRenderer(m_pixel_width, m_pixel_height, 
-									   0, &m_window, &_m_renderer) < 0) {
+									   0, &m_window, &m_renderer) < 0) {
 			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Create window and renderer: %s",
 						 SDL_GetError());
 			return false;
@@ -130,7 +131,7 @@ private:
 					if(!mouse_active) mouse_active = SDL_TRUE;
 					break;
 				case SDL_WINDOWEVENT:
-					if(event.window.event == SDL_WINDOWEVENT_ETNER && !mouse_hover)
+					if(event.window.event == SDL_WINDOWEVENT_ENTER && !mouse_hover)
 						mouse_hover = SDL_TRUE;
 					else if(event.window.event == SDL_WINDOWEVENT_LEAVE && mouse_hover)
 						mouse_hover = SDL_FALSE;
@@ -142,46 +143,62 @@ private:
 			} // end of poll event
 
 			// Do the actual drawing here
-			SDL_SetRenderDrawColor(m_renderer, m_background.r m_background.g,
-								   m_background.b, m_background.a);
-			SDL_RenderClear(renderer);	
+			SDL_SetRenderDrawColor(m_renderer, m_background_color.r, m_background_color.g,
+								   m_background_color.b, m_background_color.a);
+			SDL_RenderClear(m_renderer);	
 
 			// Draw grid lines
 			SDL_SetRenderDrawColor(m_renderer, m_line_color.r, m_line_color.g,
 								   m_line_color.b, m_line_color.a);
 			for(int x = 0; x <  m_pixel_width; x += m_cell_size) {
-				SDL_RenderDrawLine(renderer, x, 0, x, m_pixel_height);
+				SDL_RenderDrawLine(m_renderer, x, 0, x, m_pixel_height);
 			}
 
 			for(int y = 0; y < m_pixel_height; y += m_cell_size) {
-				SDL_RenderDrawLine(renderer, 0, y, m_pixel_width, y);
+				SDL_RenderDrawLine(m_renderer, 0, y, m_pixel_width, y);
 			}
 
 
 			// Draw ghost cursor
 			if(mouse_active && mouse_hover) {
-				CONTINUE;
+				SDL_SetRenderDrawColor(m_renderer, m_ghost_cursor_color.r,
+									   m_ghost_cursor_color.g,
+									   m_ghost_cursor_color.b,
+									   m_ghost_cursor_color.a);
+			    SDL_RenderFillRect(m_renderer, &m_ghost_cursor);
 			}
-		} // end of game loop
 
+			// Draw the grid cursor
+			SDL_SetRenderDrawColor(m_renderer, m_cursor_color.r,
+								   m_cursor_color.g,
+								   m_cursor_color.b,
+								   m_cursor_color.a);
+
+			SDL_RenderFillRect(m_renderer, &m_cursor);
+
+			// Finally present the render
+			SDL_RenderPresent(m_renderer);
+		} // end of game loop
 
 	}
 
-
-	
-
-
+	void destroyAll() {
+		SDL_DestroyRenderer(m_renderer);
+		SDL_DestroyWindow(m_window);
+		SDL_Quit();
+	}
 };
 
 int main(int argc, char** argv) {
 
-	// Initialize SDL environment
-	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Initialize SDL %s",
-					 SDL_GetError());
-		return EXIT_FAILURE;
-	}
-
+	// Create the grid class object
+	int grid_width = 50;
+	int grid_height = 50;
+	int grid_cell_size = 20;
+ 
+	Grid* grid =  new Grid(grid_width, grid_height, grid_cell_size);
+	
+	grid->showGrid();
 	
 	return 0;
 }

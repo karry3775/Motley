@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named app
-
-# Build rule for target.
-app: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 app
-.PHONY : app
-
-# fast build rule for target.
-app/fast:
-	$(MAKE) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/build
-.PHONY : app/fast
-
-#=============================================================================
 # Target rules for targets named sdl_grid
 
 # Build rule for target.
@@ -136,13 +123,39 @@ sdl_grid/fast:
 	$(MAKE) -f CMakeFiles/sdl_grid.dir/build.make CMakeFiles/sdl_grid.dir/build
 .PHONY : sdl_grid/fast
 
+#=============================================================================
+# Target rules for targets named sdl1
+
+# Build rule for target.
+sdl1: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 sdl1
+.PHONY : sdl1
+
+# fast build rule for target.
+sdl1/fast:
+	$(MAKE) -f CMakeFiles/sdl1.dir/build.make CMakeFiles/sdl1.dir/build
+.PHONY : sdl1/fast
+
+#=============================================================================
+# Target rules for targets named sdl2
+
+# Build rule for target.
+sdl2: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 sdl2
+.PHONY : sdl2
+
+# fast build rule for target.
+sdl2/fast:
+	$(MAKE) -f CMakeFiles/sdl2.dir/build.make CMakeFiles/sdl2.dir/build
+.PHONY : sdl2/fast
+
 src/sdl1.o: src/sdl1.cpp.o
 
 .PHONY : src/sdl1.o
 
 # target to build an object file
 src/sdl1.cpp.o:
-	$(MAKE) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/sdl1.cpp.o
+	$(MAKE) -f CMakeFiles/sdl1.dir/build.make CMakeFiles/sdl1.dir/src/sdl1.cpp.o
 .PHONY : src/sdl1.cpp.o
 
 src/sdl1.i: src/sdl1.cpp.i
@@ -151,7 +164,7 @@ src/sdl1.i: src/sdl1.cpp.i
 
 # target to preprocess a source file
 src/sdl1.cpp.i:
-	$(MAKE) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/sdl1.cpp.i
+	$(MAKE) -f CMakeFiles/sdl1.dir/build.make CMakeFiles/sdl1.dir/src/sdl1.cpp.i
 .PHONY : src/sdl1.cpp.i
 
 src/sdl1.s: src/sdl1.cpp.s
@@ -160,8 +173,35 @@ src/sdl1.s: src/sdl1.cpp.s
 
 # target to generate assembly for a file
 src/sdl1.cpp.s:
-	$(MAKE) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/sdl1.cpp.s
+	$(MAKE) -f CMakeFiles/sdl1.dir/build.make CMakeFiles/sdl1.dir/src/sdl1.cpp.s
 .PHONY : src/sdl1.cpp.s
+
+src/sdl2.o: src/sdl2.cpp.o
+
+.PHONY : src/sdl2.o
+
+# target to build an object file
+src/sdl2.cpp.o:
+	$(MAKE) -f CMakeFiles/sdl2.dir/build.make CMakeFiles/sdl2.dir/src/sdl2.cpp.o
+.PHONY : src/sdl2.cpp.o
+
+src/sdl2.i: src/sdl2.cpp.i
+
+.PHONY : src/sdl2.i
+
+# target to preprocess a source file
+src/sdl2.cpp.i:
+	$(MAKE) -f CMakeFiles/sdl2.dir/build.make CMakeFiles/sdl2.dir/src/sdl2.cpp.i
+.PHONY : src/sdl2.cpp.i
+
+src/sdl2.s: src/sdl2.cpp.s
+
+.PHONY : src/sdl2.s
+
+# target to generate assembly for a file
+src/sdl2.cpp.s:
+	$(MAKE) -f CMakeFiles/sdl2.dir/build.make CMakeFiles/sdl2.dir/src/sdl2.cpp.s
+.PHONY : src/sdl2.cpp.s
 
 src/sdl_grid.o: src/sdl_grid.cpp.o
 
@@ -198,11 +238,15 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... app"
 	@echo "... sdl_grid"
+	@echo "... sdl1"
+	@echo "... sdl2"
 	@echo "... src/sdl1.o"
 	@echo "... src/sdl1.i"
 	@echo "... src/sdl1.s"
+	@echo "... src/sdl2.o"
+	@echo "... src/sdl2.i"
+	@echo "... src/sdl2.s"
 	@echo "... src/sdl_grid.o"
 	@echo "... src/sdl_grid.i"
 	@echo "... src/sdl_grid.s"

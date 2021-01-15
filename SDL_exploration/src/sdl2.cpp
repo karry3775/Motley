@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+// Fix the weird cursor location on grid
 
 class Grid{
 
@@ -120,13 +121,13 @@ private:
 					break;
 				case SDL_MOUSEBUTTONDOWN:
 					// Set the cursor position to mouse position
-					m_cursor.x = event.motion.x;
-					m_cursor.y = event.motion.y;
+					m_cursor.x = ( event.motion.x / m_cell_size ) * m_cell_size ;
+					m_cursor.y = ( event.motion.y / m_cell_size ) * m_cell_size;
 					break; 
 				case SDL_MOUSEMOTION:
 					// Set the position of the ghost cursor, when you are not clicking
-					m_ghost_cursor.x = event.motion.x;
-					m_ghost_cursor.y = event.motion.y;
+					m_ghost_cursor.x = ( event.motion.x / m_cell_size ) * m_cell_size;
+					m_ghost_cursor.y = ( event.motion.y / m_cell_size ) * m_cell_size;
 
 					if(!mouse_active) mouse_active = SDL_TRUE;
 					break;
@@ -194,7 +195,7 @@ int main(int argc, char** argv) {
 	// Create the grid class object
 	int grid_width = 50;
 	int grid_height = 50;
-	int grid_cell_size = 20;
+	int grid_cell_size = 50;
  
 	Grid* grid =  new Grid(grid_width, grid_height, grid_cell_size);
 	

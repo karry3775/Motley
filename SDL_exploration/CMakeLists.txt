@@ -15,3 +15,10 @@ target_link_libraries(sdl2 ${SDL2_LIBRARIES})
 
 add_executable(sdl_grid src/sdl_grid.cpp)
 target_link_libraries(sdl_grid ${SDL2_LIBRARIES})
+
+add_executable(sdl_maze src/sdl_maze.cpp)
+target_link_libraries(sdl_maze ${SDL2_LIBRARIES})
+target_include_directories(sdl_maze
+	PUBLIC	
+	${PROJECT_SOURCE_DIR}/include
+)

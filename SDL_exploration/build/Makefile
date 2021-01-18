@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named sdl_maze
+
+# Build rule for target.
+sdl_maze: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 sdl_maze
+.PHONY : sdl_maze
+
+# fast build rule for target.
+sdl_maze/fast:
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/build
+.PHONY : sdl_maze/fast
+
+#=============================================================================
 # Target rules for targets named sdl_grid
 
 # Build rule for target.
@@ -230,6 +243,33 @@ src/sdl_grid.cpp.s:
 	$(MAKE) -f CMakeFiles/sdl_grid.dir/build.make CMakeFiles/sdl_grid.dir/src/sdl_grid.cpp.s
 .PHONY : src/sdl_grid.cpp.s
 
+src/sdl_maze.o: src/sdl_maze.cpp.o
+
+.PHONY : src/sdl_maze.o
+
+# target to build an object file
+src/sdl_maze.cpp.o:
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/src/sdl_maze.cpp.o
+.PHONY : src/sdl_maze.cpp.o
+
+src/sdl_maze.i: src/sdl_maze.cpp.i
+
+.PHONY : src/sdl_maze.i
+
+# target to preprocess a source file
+src/sdl_maze.cpp.i:
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/src/sdl_maze.cpp.i
+.PHONY : src/sdl_maze.cpp.i
+
+src/sdl_maze.s: src/sdl_maze.cpp.s
+
+.PHONY : src/sdl_maze.s
+
+# target to generate assembly for a file
+src/sdl_maze.cpp.s:
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/src/sdl_maze.cpp.s
+.PHONY : src/sdl_maze.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -238,6 +278,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... sdl_maze"
 	@echo "... sdl_grid"
 	@echo "... sdl1"
 	@echo "... sdl2"
@@ -250,6 +291,9 @@ help:
 	@echo "... src/sdl_grid.o"
 	@echo "... src/sdl_grid.i"
 	@echo "... src/sdl_grid.s"
+	@echo "... src/sdl_maze.o"
+	@echo "... src/sdl_maze.i"
+	@echo "... src/sdl_maze.s"
 .PHONY : help
 
 

@@ -60,6 +60,43 @@ CMAKE_SOURCE_DIR = /home/kartik/Documents/Motley/SDL_exploration
 CMAKE_BINARY_DIR = /home/kartik/Documents/Motley/SDL_exploration/build
 
 #=============================================================================
+# Target rules for target CMakeFiles/sdl_maze.dir
+
+# All Build rule for target.
+CMakeFiles/sdl_maze.dir/all:
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/depend
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles --progress-num=7,8 "Built target sdl_maze"
+.PHONY : CMakeFiles/sdl_maze.dir/all
+
+# Include target in all.
+all: CMakeFiles/sdl_maze.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/sdl_maze.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/sdl_maze.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles 0
+.PHONY : CMakeFiles/sdl_maze.dir/rule
+
+# Convenience name for target.
+sdl_maze: CMakeFiles/sdl_maze.dir/rule
+
+.PHONY : sdl_maze
+
+# clean rule for target.
+CMakeFiles/sdl_maze.dir/clean:
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/clean
+.PHONY : CMakeFiles/sdl_maze.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/sdl_maze.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/sdl_grid.dir
 
 # All Build rule for target.

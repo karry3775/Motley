@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include "sdl_maze.h"
 #include <iostream>
 
 class Maze{
@@ -34,3 +35,8 @@ private:
 	 
 
 };
+
+int main() {
+
+	return 0;
+}

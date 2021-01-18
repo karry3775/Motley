@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/kartik/Documents/Random/SDL_exploration/src/sdl2.cpp" "/home/kartik/Documents/Random/SDL_exploration/build/CMakeFiles/sdl2.dir/src/sdl2.cpp.o"
+  "/home/kartik/Documents/Motley/SDL_exploration/src/sdl2.cpp" "/home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles/sdl2.dir/src/sdl2.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

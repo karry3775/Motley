@@ -1,4 +1,4 @@
-# Install script for directory: /home/kartik/Documents/Random/helloworld
+# Install script for directory: /home/kartik/Documents/Motley/helloworld
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/kartik/Documents/Random/helloworld/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/kartik/Documents/Motley/helloworld/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

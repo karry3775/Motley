@@ -2,41 +2,33 @@
 #include "sdl_maze.h"
 #include <iostream>
 
-class Maze{
+class Maze {
+   public:
+    Maze();
 
-public:
-	Maze();
+    void display(){};
+    //
+    // Getters
+    //
+    int getWidth() const {};
 
-	void display() {};
-	//
-	// Getters
-	//
-	int getWidth() const {};
+    int getHeight() const {};
 
-	int getHeight() const {};
+    int getResolution() const {};
 
-	int getResolution() const {};
-	
+   private:
+    int m_width;
+    int m_height;
+    int m_resolution;
 
-private:
-	int m_width;
-	int m_height;
-	int m_resolution;
+    //
+    // Setters
+    //
+    void setWidth(){};
 
-	
-	// 
-	// Setters
-	//
-	void setWidth() {};
+    void setHeight(){};
 
-	void setHeight() {};
-
-	void setResolution() {};
-	 
-
+    void setResolution(){};
 };
 
-int main() {
-
-	return 0;
-}
+int main() { return 0; }

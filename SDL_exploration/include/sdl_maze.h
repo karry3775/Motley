@@ -74,25 +74,25 @@ class Cell {
      * A getter function to retrieve
      * origin of the cell
      */
-    inline const Point& getOrigin() const { return m_origin; }
+    const Point& getOrigin() const { return m_origin; }
 
     /**
      * A getter function to retrieve
      * size of the cell
      */
-    inline const uint32_t& getSize() const { return m_size; }
+    const uint32_t& getSize() const { return m_size; }
 
     /**
      * A getter function to retrieve
      * corners of the cell
      */
-    inline const Corners& getCorners() const { return m_corners; }
+    const Corners& getCorners() const { return m_corners; }
 
     /**
      * A getter function to retrieve
      * walls of the cells
      */
-    inline const Walls& getWalls() const { return m_walls; }
+    const Walls& getWalls() const { return m_walls; }
 
     static const Point
         default_origin;  // will be set in the implementation file
@@ -115,25 +115,25 @@ class Cell {
      * A setter function to set the origin
      * of the cell
      */
-    inline void setOrigin(const Point& origin) { m_origin = origin; }
+    void setOrigin(const Point& origin) { m_origin = origin; }
 
     /**
      * A setter function to set the size of
      * the cell
      */
-    inline void setSize(const uint32_t& size) { m_size = size; }
+    void setSize(const uint32_t& size) { m_size = size; }
 
     /**
      * A setter function to set the corners
      * of a cell
      */
-    inline void setCorners(const Corners& corners) { m_corners = corners; }
+    void setCorners(const Corners& corners) { m_corners = corners; }
 
     /**
      * A setter function to set the walls for
      * a cell
      */
-    inline void setWalls(const Walls& walls) { m_walls = walls; }
+    void setWalls(const Walls& walls) { m_walls = walls; }
 };
 
 class MazeGenerator {

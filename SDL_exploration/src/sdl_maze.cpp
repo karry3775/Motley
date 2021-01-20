@@ -1,34 +1,41 @@
-#include <SDL2/SDL.h>
 #include "sdl_maze.h"
-#include <iostream>
 
-class Maze {
-   public:
-    Maze();
+namespace maze {
 
-    void display(){};
-    //
-    // Getters
-    //
-    int getWidth() const {};
+Cell::Cell() {
+    // TODO
+}
 
-    int getHeight() const {};
+Cell::Cell(Point origin, uint32_t size) {
+    // TODO
+}
 
-    int getResolution() const {};
+void Cell::setCellFromOriginAndSize() {
+    // Assign corner points from origin and size
+    Point top_left(m_origin.x, m_origin.y);
+    Point top_right(m_origin.x + m_size, m_origin.y);
+    Point bottom_left(m_origin.x, m_origin.y + m_size);
+    Point bottom_right(m_origin.x + m_size, m_origin.y + m_size);
 
-   private:
-    int m_width;
-    int m_height;
-    int m_resolution;
+    // Create and set Corners type object for Cell
+    Corners corners(top_left, top_right, bottom_left, bottom_right);
+    setCorners(corners);
 
-    //
-    // Setters
-    //
-    void setWidth(){};
+    // Set the walls
+    // There are going to be four walls associated with each cell
+    // top left -> top right
+    Wall top_left_top_right(top_left, top_right);
+    // top right -> bottom right
+    Wall top_right_bottom_right(top_right, bottom_right);
+    // bottom right -> bottom left
+    Wall bottom_right_bottom_left(bottom_right, bottom_left);
+    // bottom left -> top left
+    Wall bottom_left_top_left(bottom_left, top_left);
 
-    void setHeight(){};
+    // Create and set Walls type object for Cell
+    Walls walls(top_left_top_right, top_right_bottom_right,
+                bottom_right_bottom_left, bottom_left_top_left);
+    setWalls(walls);
+}
 
-    void setResolution(){};
-};
-
-int main() { return 0; }
+}  // end namespace maze

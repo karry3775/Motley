@@ -2,6 +2,31 @@
 
 namespace maze {
 
+Point::Point(int x, int y) {
+    this->x = x;
+    this->y = y;
+}
+
+Wall::Wall(Point start, Point end) {
+    this->start = start;
+    this->end = end;
+}
+
+Walls::Walls(Wall tltr, Wall trbr, Wall brbl, Wall bltl) {
+    top_left_top_right = tltr;
+    top_right_bottom_right = trbr;
+    bottom_right_bottom_left = brbl;
+    bottom_left_top_left = bltl;
+}
+
+Corners::Corners(Point top_left, Point top_right, Point bottom_left,
+                 Point bottom_right) {
+    this->top_left = top_left;
+    this->top_right = top_right;
+    this->bottom_left = bottom_left;
+    this->bottom_right = bottom_right;
+}
+
 Cell::Cell() {
     // TODO
 }

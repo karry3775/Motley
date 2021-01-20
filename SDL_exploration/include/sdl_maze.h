@@ -11,10 +11,7 @@ struct Point {
 
     Point();
 
-    Point(int x, int y) {
-        this->x = x;
-        this->y = y;
-    }
+    Point(int x, int y);
 };
 
 struct Wall {
@@ -23,10 +20,7 @@ struct Wall {
 
     Wall();
 
-    Wall(Point start, Point end) {
-        this->start = start;
-        this->end = end;
-    }
+    Wall(Point start, Point end);
 };
 
 struct Walls {
@@ -37,12 +31,7 @@ struct Walls {
 
     Walls();
 
-    Walls(Wall tltr, Wall trbr, Wall brbl, Wall bltl) {
-        top_left_top_right = tltr;
-        top_right_bottom_right = trbr;
-        bottom_right_bottom_left = brbl;
-        bottom_left_top_left = bltl;
-    }
+    Walls(Wall tltr, Wall trbr, Wall brbl, Wall bltl);
 };
 
 struct Corners {
@@ -54,12 +43,7 @@ struct Corners {
     Corners();
 
     Corners(Point top_left, Point top_right, Point bottom_left,
-            Point bottom_right) {
-        this->top_left = top_left;
-        this->top_right = top_right;
-        this->bottom_left = bottom_left;
-        this->bottom_right = bottom_right;
-    }
+            Point bottom_right);
 };
 
 class Cell {
@@ -78,13 +62,13 @@ class Cell {
      *       |       |
      * (0, 1) ------- (1, 1)
      */
-    Cell(){};
+    Cell();
 
     /**
      * A parameterized constructor that constructors
      * the cell from size and origin passed to it
      */
-    Cell(Point origin, uint32_t size){};
+    Cell(Point origin, uint32_t size);
 
     /**
      * A getter function to retrieve

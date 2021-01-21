@@ -2,15 +2,21 @@
 
 namespace maze {
 
+Point::Point(){}
+
 Point::Point(int x, int y) {
     this->x = x;
     this->y = y;
 }
 
+Wall::Wall(){}
+
 Wall::Wall(Point start, Point end) {
     this->start = start;
     this->end = end;
 }
+
+Walls::Walls(){}
 
 Walls::Walls(Wall tltr, Wall trbr, Wall brbl, Wall bltl) {
     top_left_top_right = tltr;
@@ -18,6 +24,8 @@ Walls::Walls(Wall tltr, Wall trbr, Wall brbl, Wall bltl) {
     bottom_right_bottom_left = brbl;
     bottom_left_top_left = bltl;
 }
+
+Corners::Corners(){}
 
 Corners::Corners(Point top_left, Point top_right, Point bottom_left,
                  Point bottom_right) {

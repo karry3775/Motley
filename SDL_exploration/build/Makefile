@@ -270,6 +270,33 @@ src/sdl_maze.cpp.s:
 	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/src/sdl_maze.cpp.s
 .PHONY : src/sdl_maze.cpp.s
 
+src/sdl_maze_main.o: src/sdl_maze_main.cpp.o
+
+.PHONY : src/sdl_maze_main.o
+
+# target to build an object file
+src/sdl_maze_main.cpp.o:
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/src/sdl_maze_main.cpp.o
+.PHONY : src/sdl_maze_main.cpp.o
+
+src/sdl_maze_main.i: src/sdl_maze_main.cpp.i
+
+.PHONY : src/sdl_maze_main.i
+
+# target to preprocess a source file
+src/sdl_maze_main.cpp.i:
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/src/sdl_maze_main.cpp.i
+.PHONY : src/sdl_maze_main.cpp.i
+
+src/sdl_maze_main.s: src/sdl_maze_main.cpp.s
+
+.PHONY : src/sdl_maze_main.s
+
+# target to generate assembly for a file
+src/sdl_maze_main.cpp.s:
+	$(MAKE) -f CMakeFiles/sdl_maze.dir/build.make CMakeFiles/sdl_maze.dir/src/sdl_maze_main.cpp.s
+.PHONY : src/sdl_maze_main.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -294,6 +321,9 @@ help:
 	@echo "... src/sdl_maze.o"
 	@echo "... src/sdl_maze.i"
 	@echo "... src/sdl_maze.s"
+	@echo "... src/sdl_maze_main.o"
+	@echo "... src/sdl_maze_main.i"
+	@echo "... src/sdl_maze_main.s"
 .PHONY : help
 
 

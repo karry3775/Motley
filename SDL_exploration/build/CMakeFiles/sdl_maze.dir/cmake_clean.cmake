@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/sdl_maze.dir/src/sdl_maze.cpp.o"
+  "CMakeFiles/sdl_maze.dir/src/sdl_maze_main.cpp.o"
   "sdl_maze.pdb"
   "sdl_maze"
 )

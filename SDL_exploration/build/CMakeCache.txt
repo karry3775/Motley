@@ -130,7 +130,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=SDL_exploraation
+CMAKE_PROJECT_NAME:STATIC=SDL_exploration
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -189,6 +189,12 @@ SDL_exploraation_BINARY_DIR:STATIC=/home/kartik/Documents/Motley/SDL_exploration
 
 //Value Computed by CMake
 SDL_exploraation_SOURCE_DIR:STATIC=/home/kartik/Documents/Motley/SDL_exploration
+
+//Value Computed by CMake
+SDL_exploration_BINARY_DIR:STATIC=/home/kartik/Documents/Motley/SDL_exploration/build
+
+//Value Computed by CMake
+SDL_exploration_SOURCE_DIR:STATIC=/home/kartik/Documents/Motley/SDL_exploration
 
 
 ########################

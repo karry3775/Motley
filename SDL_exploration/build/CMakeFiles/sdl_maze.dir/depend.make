@@ -4,3 +4,6 @@
 CMakeFiles/sdl_maze.dir/src/sdl_maze.cpp.o: ../include/sdl_maze.h
 CMakeFiles/sdl_maze.dir/src/sdl_maze.cpp.o: ../src/sdl_maze.cpp
 
+CMakeFiles/sdl_maze.dir/src/sdl_maze_main.cpp.o: ../include/sdl_maze.h
+CMakeFiles/sdl_maze.dir/src/sdl_maze_main.cpp.o: ../src/sdl_maze_main.cpp
+

@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/sdl_maze.dir/src/sdl_maze.cpp.o CMakeFiles/sdl_maze.dir/src/sdl_maze_main.cpp.o  -o sdl_maze -lSDL2 

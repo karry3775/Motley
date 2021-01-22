@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/sdl_grid.dir/src/sdl_grid.cpp.o  -o sdl_grid -lSDL2 

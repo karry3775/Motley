@@ -17,7 +17,14 @@ target_link_libraries(sdl2 ${SDL2_LIBRARIES})
 add_executable(sdl_grid src/sdl_grid.cpp)
 target_link_libraries(sdl_grid ${SDL2_LIBRARIES})
 
-add_executable(sdl_maze src/sdl_maze.cpp src/sdl_maze_main.cpp)
+file(
+	GLOB SOURCES 
+		"src/sdl_maze_main.cpp"
+		"src/sdl_maze_utils.cpp"
+		"src/sdl_maze.cpp"
+)
+
+add_executable(sdl_maze ${SOURCES})
 target_link_libraries(sdl_maze ${SDL2_LIBRARIES})
 target_include_directories(sdl_maze
 	PUBLIC	

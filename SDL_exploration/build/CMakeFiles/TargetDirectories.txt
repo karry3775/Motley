@@ -1,6 +1,0 @@
-/home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles/rebuild_cache.dir
-/home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles/edit_cache.dir
-/home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles/sdl_maze.dir
-/home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles/sdl_grid.dir
-/home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles/sdl1.dir
-/home/kartik/Documents/Motley/SDL_exploration/build/CMakeFiles/sdl2.dir

@@ -1,21 +1,32 @@
 #include "sdl_maze_utils.h"
 
 namespace maze {
-Point::Point() {}
+Point::Point() {
+    x = 0;
+    y = 0;
+}
 
 Point::Point(int x, int y) {
     this->x = x;
     this->y = y;
 }
 
-Wall::Wall() {}
+Wall::Wall() {
+    start = Point(0, 0);
+    end = Point(0, 1);
+}
 
 Wall::Wall(Point start, Point end) {
     this->start = start;
     this->end = end;
 }
 
-Walls::Walls() {}
+Walls::Walls() {
+    top_left_top_right = Wall(Point(0, 0), Point(1, 0));
+    top_right_bottom_right = Wall(Point(1, 0), Point(1, 1));
+    bottom_right_bottom_left = Wall(Point(1, 1), Point(0, 1));
+    bottom_left_top_left = Wall(Point(0, 1), Point(0, 0));
+}
 
 Walls::Walls(Wall tltr, Wall trbr, Wall brbl, Wall bltl) {
     top_left_top_right = tltr;
@@ -24,7 +35,12 @@ Walls::Walls(Wall tltr, Wall trbr, Wall brbl, Wall bltl) {
     bottom_left_top_left = bltl;
 }
 
-Corners::Corners() {}
+Corners::Corners() {
+    top_left = Point(0, 0);
+    top_right = Point(1, 0);
+    bottom_left = Point(0, 1);
+    bottom_right = Point(1, 1);
+}
 
 Corners::Corners(Point top_left, Point top_right, Point bottom_left,
                  Point bottom_right) {
@@ -35,11 +51,13 @@ Corners::Corners(Point top_left, Point top_right, Point bottom_left,
 }
 
 Cell::Cell() {
-    // TODO
+    setOrigin(Point(0, 0));
+    setSize(1);  
+    setCellFromOriginAndSize();
 }
 
-Cell::Cell(Point origin, uint32_t size) {
-    // TODO
+Cell::Cell(Point origin, uint32_t size) : m_origin(origin), m_size(size) {
+    setCellFromOriginAndSize();
 }
 
 void Cell::setCellFromOriginAndSize() {

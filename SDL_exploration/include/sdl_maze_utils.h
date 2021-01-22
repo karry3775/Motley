@@ -7,6 +7,9 @@ struct Point {
     int x;
     int y;
 
+    /**
+     * Initializes a point at 0,0
+     */
     Point();
 
     Point(int x, int y);
@@ -16,6 +19,10 @@ struct Wall {
     Point start;
     Point end;
 
+    /**
+     * Initializes an wall
+     * from (0,0) to (0, 1)
+     */
     Wall();
 
     Wall(Point start, Point end);
@@ -27,6 +34,14 @@ struct Walls {
     Wall bottom_right_bottom_left;
     Wall bottom_left_top_left;
 
+    /**
+     * Intiailizes foour walls
+     * corresponding to
+     *  (0, 0) ------- (1, 0)
+     *       |       |
+     *       |       |
+     * (0, 1) ------- (1, 1)
+     */
     Walls();
 
     Walls(Wall tltr, Wall trbr, Wall brbl, Wall bltl);
@@ -37,7 +52,15 @@ struct Corners {
     Point top_right;
     Point bottom_left;
     Point bottom_right;
-
+    
+    /**
+     * Initializes four corners 
+     * corresponding to
+     * (0, 0) ------- (1, 0)
+     *       |       |
+     *       |       |
+     * (0, 1) ------- (1, 1)
+     */ 
     Corners();
 
     Corners(Point top_left, Point top_right, Point bottom_left,

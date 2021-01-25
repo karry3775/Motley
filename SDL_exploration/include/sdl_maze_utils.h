@@ -18,6 +18,7 @@ struct Point {
 struct Wall {
     Point start;
     Point end;
+    bool exists;  // flag to tell if the wall exists or not
 
     /**
      * Initializes an wall
@@ -26,6 +27,11 @@ struct Wall {
     Wall();
 
     Wall(Point start, Point end);
+
+    /**
+     * Method to destroy the wall
+     */
+    void destroy();
 };
 
 struct Walls {
@@ -52,15 +58,15 @@ struct Corners {
     Point top_right;
     Point bottom_left;
     Point bottom_right;
-    
+
     /**
-     * Initializes four corners 
+     * Initializes four corners
      * corresponding to
      * (0, 0) ------- (1, 0)
      *       |       |
      *       |       |
      * (0, 1) ------- (1, 1)
-     */ 
+     */
     Corners();
 
     Corners(Point top_left, Point top_right, Point bottom_left,

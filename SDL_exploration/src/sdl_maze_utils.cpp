@@ -19,7 +19,11 @@ Wall::Wall() {
 Wall::Wall(Point start, Point end) {
     this->start = start;
     this->end = end;
+    // Set exists to true by default
+    this->exists = true;
 }
+
+void Wall::destroy() { exists = false; }
 
 Walls::Walls() {
     top_left_top_right = Wall(Point(0, 0), Point(1, 0));
@@ -52,7 +56,7 @@ Corners::Corners(Point top_left, Point top_right, Point bottom_left,
 
 Cell::Cell() {
     setOrigin(Point(0, 0));
-    setSize(1);  
+    setSize(1);
     setCellFromOriginAndSize();
 }
 

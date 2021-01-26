@@ -11,6 +11,7 @@ class MazeGenerator {
      * Default constructor for the class
      */
     MazeGenerator();
+
     /**
      * Constructor to initiate the Maze
      */
@@ -21,15 +22,27 @@ class MazeGenerator {
      * Randomized depth first search maze generation method
      */
     void randomizedDepthFirstSearch();
+
     /**
      *  Helper function for the above method
      */
     void randomizedDepthFirstSearchHelper(
         uint32_t row, uint32_t col, std::set<std::pair<int, int>> visited);
 
+    /**
+     * Function to init grid
+     * - assigns cells for the grid
+     * - to add more ...
+     */
+    void initGrid();
+
     std::vector<std::vector<Cell>> m_grid;
     uint32_t m_rows;
     uint32_t m_cols;
+    uint32_t m_size;
+    static const uint32_t m_default_rows;
+    static const uint32_t m_default_cols;
+    static const uint32_t m_default_size;
 };
 
 }  // namespace maze

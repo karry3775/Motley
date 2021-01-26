@@ -14,13 +14,14 @@ Point::Point(int x, int y) {
 Wall::Wall() {
     start = Point(0, 0);
     end = Point(0, 1);
+    exists = true;
 }
 
 Wall::Wall(Point start, Point end) {
     this->start = start;
     this->end = end;
     // Set exists to true by default
-    this->exists = true;
+    exists = true;
 }
 
 void Wall::destroy() { exists = false; }

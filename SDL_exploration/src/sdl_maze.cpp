@@ -62,7 +62,40 @@ void MazeGenerator::randomizedDepthFirstSearchHelper(
         // Select neighbours at random while there are neighbours remaining
         int random_idx = rand() % neighbours.size();
         // do a depth first search on that element and
-        // TODO break the wall
+        // break the wall
+
+        // If we have a top neighbour
+        // TODO we can use simply indices to determine which neighbour it is:
+        if (neighbours[random_idx].first < row) {
+            m_grid[row][col].getWallsMutable().top_left_top_right.destroy();
+            m_grid[neighbours[random_idx].first][neighbours[random_idx].second]
+                .getWallsMutable()
+                .bottom_right_bottom_left.destroy();
+        }
+        // If we a right neighbour
+        else if (neighbours[random_idx].second > col) {
+            m_grid[row][col].getWallsMutable().top_right_bottom_right.destroy();
+            m_grid[neighbours[random_idx].first][neighbours[random_idx].second]
+                .getWallsMutable()
+                .bottom_left_top_left.destroy();
+        }
+        // If we have a left neighbour
+        else if (neighbours[random_idx].second < col) {
+            m_grid[row][col].getWallsMutable().bottom_left_top_left.destroy();
+            m_grid[neighbours[random_idx].first][neighbours[random_idx].second]
+                .getWallsMutable()
+                .top_right_bottom_right.destroy();
+        }
+        // if we have down neighbour
+        else {
+            m_grid[row][col]
+                .getWallsMutable()
+                .bottom_right_bottom_left.destroy();
+            m_grid[neighbours[random_idx].first][neighbours[random_idx].second]
+                .getWallsMutable()
+                .top_left_top_right.destroy();
+        }
+
         // between the current cell and this neigbouring cell
         visited.insert(std::make_pair(neighbours[random_idx].first,
                                       neighbours[random_idx].second));
@@ -85,3 +118,10 @@ void MazeGenerator::initGrid() {
 }
 
 }  // end namespace maze
+
+/**
+ * temp :
+ * We need to find a common wall between two cells and 
+ * then mark them as destroyed for both
+ * So each cell has a walls element that contains four wall(s)
+ * and each wall is composed of two points 

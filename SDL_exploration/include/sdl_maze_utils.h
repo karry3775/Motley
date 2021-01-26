@@ -13,12 +13,17 @@ struct Point {
     Point();
 
     Point(int x, int y);
+
+    /**
+     * == operator for the pointer struct
+     */
+    bool operator==(const Point& pt) const { return (x == pt.x && y == pt.y); }
 };
 
 struct Wall {
     Point start;
     Point end;
-    bool exists;  // flag to tell if the wall exists or not
+    mutable bool exists;  // flag to tell if the wall exists or not
 
     /**
      * Initializes an wall
@@ -120,6 +125,11 @@ class Cell {
      * walls of the cells
      */
     const Walls& getWalls() const { return m_walls; }
+
+    /**
+     *  A getter function for mutable walls
+     */
+    Walls& getWallsMutable() { return m_walls; }
 
     static const Point
         default_origin;  // will be set in the implementation file

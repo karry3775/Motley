@@ -19,6 +19,8 @@ MazeGenerator::MazeGenerator(uint32_t rows, uint32_t cols, uint32_t cell_size)
     initGrid();
 }
 
+void MazeGenerator::generateMaze() { randomizedDepthFirstSearch(); }
+
 void MazeGenerator::randomizedDepthFirstSearch() {
     // Initate a visited set
     std::set<std::pair<int, int>> visited{};

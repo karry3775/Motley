@@ -17,6 +17,13 @@ class MazeGenerator {
      */
     MazeGenerator(uint32_t rows, uint32_t cols, uint32_t cell_size);
 
+    /**
+     * Public interface function that helps the user to create
+     * a maze. Will be responsible for making calls to maze generation
+     * algorithms.
+     */
+    void generateMaze();
+
    private:
     /**
      * Randomized depth first search maze generation method

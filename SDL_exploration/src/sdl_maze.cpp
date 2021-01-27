@@ -80,6 +80,8 @@ bool MazeGenerator::showMaze() {
         // Present the render
         SDL_RenderPresent(renderer);
     }  // end of game loop
+
+    return true;
 }
 
 void MazeGenerator::displayMazeCells() {
@@ -138,6 +140,15 @@ void MazeGenerator::randomizedDepthFirstSearchHelper(
     while (!neighbours.empty()) {
         // Select neighbours at random while there are neighbours remaining
         int random_idx = rand() % neighbours.size();
+        // Need to check if this neighbour has already been visited by the
+        // children
+        if (visited.find(std::make_pair(neighbours[random_idx].first,
+                                        neighbours[random_idx].second)) !=
+            visited.end()) {
+            // remove that from neighbours
+            neighbours.erase(neighbours.begin() + random_idx);
+            continue;
+        }
         // do a depth first search on that element and
         // break the wall
 

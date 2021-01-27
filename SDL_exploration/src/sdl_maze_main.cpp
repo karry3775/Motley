@@ -10,13 +10,14 @@ int main() {
 
     maze_generator.generateMaze();
 
-    maze_generator
-        .displayMazeCells();  // TODO : Fix all walls getting destroyed error
+    maze_generator.displayMazeCells();
 
     if (!maze_generator.showMaze()) {
         // detailed error message is already handled
         // by showMaze
         std::cout << "Failed to display maze! Aborting!" << std::endl;
+    } else {
+        std::cout << "Finished cleanly!" << std::endl;
     }
     return 0;
 }

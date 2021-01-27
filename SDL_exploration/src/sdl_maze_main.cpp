@@ -8,8 +8,7 @@ int main() {
     // and try to design our visualizer
     maze::MazeGenerator maze_generator;
 
-    // maze_generator.generateMaze(); // TOOD: fix it its currently running
-    // infinitely
+    maze_generator.generateMaze();
 
     if (!maze_generator.showMaze()) {
         // detailed error message is already handled

@@ -4,9 +4,9 @@
 
 namespace maze {
 
-const uint32_t MazeGenerator::m_default_rows = 10;
-const uint32_t MazeGenerator::m_default_cols = 10;
-const uint32_t MazeGenerator::m_default_size = 1;
+const uint32_t MazeGenerator::m_default_rows = 50;
+const uint32_t MazeGenerator::m_default_cols = 50;
+const uint32_t MazeGenerator::m_default_size = 10;
 
 MazeGenerator::MazeGenerator()
     : m_rows(m_default_rows), m_cols(m_default_cols), m_size(m_default_size) {
@@ -93,7 +93,7 @@ void MazeGenerator::randomizedDepthFirstSearch() {
 }
 
 void MazeGenerator::randomizedDepthFirstSearchHelper(
-    int row, int col, std::set<std::pair<int, int>> visited) {
+    int row, int col, std::set<std::pair<int, int>>& visited) {
     // Populate unvisited and valid neighbours
     std::vector<std::pair<int, int>> neighbours{};
     std::pair<int, int> cur_coords = std::make_pair(row, col);

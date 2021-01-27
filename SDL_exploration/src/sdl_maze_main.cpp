@@ -10,6 +10,9 @@ int main() {
 
     maze_generator.generateMaze();
 
+    maze_generator
+        .displayMazeCells();  // TODO : Fix all walls getting destroyed error
+
     if (!maze_generator.showMaze()) {
         // detailed error message is already handled
         // by showMaze

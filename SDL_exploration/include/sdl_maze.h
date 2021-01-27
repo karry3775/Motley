@@ -40,7 +40,7 @@ class MazeGenerator {
      *  Helper function for the above method
      */
     void randomizedDepthFirstSearchHelper(
-        uint32_t row, uint32_t col, std::set<std::pair<int, int>> visited);
+        int row, int col, std::set<std::pair<int, int>> visited);
 
     /**
      * Function to init grid

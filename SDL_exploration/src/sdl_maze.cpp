@@ -1,5 +1,6 @@
 #include "sdl_maze.h"
 #include <random>
+#include <iostream>  // remove later, only for DEBUG purposes
 
 namespace maze {
 
@@ -85,14 +86,14 @@ void MazeGenerator::randomizedDepthFirstSearch() {
     // Initate a visited set
     std::set<std::pair<int, int>> visited{};
 
-    uint32_t start_row = 0;
-    uint32_t start_col = 0;
+    int start_row = 0;
+    int start_col = 0;
 
     randomizedDepthFirstSearchHelper(start_row, start_col, visited);
 }
 
 void MazeGenerator::randomizedDepthFirstSearchHelper(
-    uint32_t row, uint32_t col, std::set<std::pair<int, int>> visited) {
+    int row, int col, std::set<std::pair<int, int>> visited) {
     // Populate unvisited and valid neighbours
     std::vector<std::pair<int, int>> neighbours{};
     std::pair<int, int> cur_coords = std::make_pair(row, col);

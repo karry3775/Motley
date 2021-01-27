@@ -21,6 +21,66 @@ MazeGenerator::MazeGenerator(uint32_t rows, uint32_t cols, uint32_t cell_size)
 
 void MazeGenerator::generateMaze() { randomizedDepthFirstSearch(); }
 
+bool MazeGenerator::showMaze() {
+    // TODO:
+    /** temp : What this function should do
+     * 1. First lets just write a jank piece of code
+     * 2. Later we can move it to a different visualizer lib
+     * 2. Render a simple window that respects the size of the grid
+     * 3. Start iterating through cells and draw them ?
+     */
+    // Set window width and height
+    uint32_t width = m_rows * m_size;
+    uint32_t height = m_cols * m_size;
+
+    // Set the color values
+    SDL_Color background_color = {22, 22, 22, 255};  // Barley black
+    SDL_Color line_color = {44, 44, 44, 255};        // Dark Grey
+
+    // SDL objects
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+
+    // Init SDL
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Initialize SDL: %s",
+                     SDL_GetError());
+        return false;
+    }
+
+    // Create window and renderer
+    if (SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer) < 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                     "Create window and renderer: %s", SDL_GetError());
+        return false;
+    }
+
+    // Set window title
+    SDL_SetWindowTitle(window, "Maze");
+
+    // Start the game loop
+    SDL_bool quit = SDL_FALSE;
+
+    while (!quit) {
+        SDL_Event event;
+
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                quit = SDL_TRUE;
+                break;
+            }
+        }  // end of poll events
+
+        // Render the background
+        SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g,
+                               background_color.b, background_color.a);
+        SDL_RenderClear(renderer);
+
+        // Present the render
+        SDL_RenderPresent(renderer);
+    }  // end of game loop
+}
+
 void MazeGenerator::randomizedDepthFirstSearch() {
     // Initate a visited set
     std::set<std::pair<int, int>> visited{};
@@ -118,10 +178,3 @@ void MazeGenerator::initGrid() {
 }
 
 }  // end namespace maze
-
-/**
- * temp :
- * We need to find a common wall between two cells and 
- * then mark them as destroyed for both
- * So each cell has a walls element that contains four wall(s)
- * and each wall is composed of two points 

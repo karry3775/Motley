@@ -2,6 +2,7 @@
 
 #include "sdl_maze_core.h"
 #include "sdl_maze_utils.h"
+#include <SDL2/SDL.h>
 
 namespace maze {
 
@@ -23,6 +24,11 @@ class MazeGenerator {
      * algorithms.
      */
     void generateMaze();
+
+    /**
+     * Public interface function to show the generated maze
+     */
+    bool showMaze();
 
    private:
     /**

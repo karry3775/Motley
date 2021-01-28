@@ -4,9 +4,9 @@
 
 namespace maze {
 
-const uint32_t MazeGenerator::m_default_rows = 50;
-const uint32_t MazeGenerator::m_default_cols = 50;
-const uint32_t MazeGenerator::m_default_size = 10;
+const uint32_t MazeGenerator::m_default_rows = 30;
+const uint32_t MazeGenerator::m_default_cols = 30;
+const uint32_t MazeGenerator::m_default_size = 50;
 
 MazeGenerator::MazeGenerator()
     : m_rows(m_default_rows), m_cols(m_default_cols), m_size(m_default_size) {
@@ -76,6 +76,50 @@ bool MazeGenerator::showMaze() {
         SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g,
                                background_color.b, background_color.a);
         SDL_RenderClear(renderer);
+
+        // Render the cell boundaries
+        SDL_SetRenderDrawColor(renderer, line_color.r, line_color.g,
+                               line_color.b, line_color.a);
+
+        // Iterate through cells in the maze and render if the thing
+        // has a wall
+        for (int row = 0; row < m_rows; ++row) {
+            for (int col = 0; col < m_cols; ++col) {
+                // top left top right wall
+                const auto tltr =
+                    m_grid[row][col].getWalls().top_left_top_right;
+                if (tltr.exists) {
+                    // std::cout << tltr.start.x << ", " << tltr.start.y << ", "
+                    // << tltr.end.x << ", " << tltr.end.y << std::endl;
+                    SDL_RenderDrawLine(renderer, tltr.start.x, tltr.start.y,
+                                       tltr.end.x, tltr.end.y);
+                }
+
+                // top right bottom right wall
+                const auto trbr =
+                    m_grid[row][col].getWalls().top_right_bottom_right;
+                if (trbr.exists) {
+                    SDL_RenderDrawLine(renderer, trbr.start.x, trbr.start.y,
+                                       trbr.end.x, trbr.end.y);
+                }
+
+                // bottom right bottom left wall
+                const auto brbl =
+                    m_grid[row][col].getWalls().bottom_right_bottom_left;
+                if (brbl.exists) {
+                    SDL_RenderDrawLine(renderer, brbl.start.x, brbl.start.y,
+                                       brbl.end.x, brbl.end.y);
+                }
+
+                // bottom left and top left wall
+                const auto bltl =
+                    m_grid[row][col].getWalls().bottom_left_top_left;
+                if (bltl.exists) {
+                    SDL_RenderDrawLine(renderer, bltl.start.x, bltl.start.y,
+                                       bltl.end.x, bltl.end.y);
+                }
+            }
+        }
 
         // Present the render
         SDL_RenderPresent(renderer);
@@ -200,7 +244,7 @@ void MazeGenerator::initGrid() {
 
     for (int row = 0; row < m_grid.size(); ++row) {
         for (int col = 0; col < m_grid[0].size(); ++col) {
-            m_grid[row][col] = Cell(Point(row * m_size, col * m_size), 1);
+            m_grid[row][col] = Cell(Point(row * m_size, col * m_size), m_size);
         }
     }
 }

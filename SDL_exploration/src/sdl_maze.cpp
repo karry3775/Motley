@@ -4,8 +4,8 @@
 
 namespace maze {
 
-const uint32_t MazeGenerator::m_default_rows = 30;
-const uint32_t MazeGenerator::m_default_cols = 30;
+const uint32_t MazeGenerator::m_default_rows = 20;
+const uint32_t MazeGenerator::m_default_cols = 20;
 const uint32_t MazeGenerator::m_default_size = 50;
 
 MazeGenerator::MazeGenerator()
@@ -36,7 +36,7 @@ bool MazeGenerator::showMaze() {
 
     // Set the color values
     SDL_Color background_color = {22, 22, 22, 255};  // Barley black
-    SDL_Color line_color = {44, 44, 44, 255};        // Dark Grey
+    SDL_Color line_color = {255, 255, 255, 255};     // White
 
     // SDL objects
     SDL_Window* window;

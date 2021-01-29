@@ -68,8 +68,8 @@ Cell::Cell(Point origin, uint32_t size) : m_origin(origin), m_size(size) {
 void Cell::setCellFromOriginAndSize() {
     // Assign corner points from origin and size
     Point top_left(m_origin.x, m_origin.y);
-    Point top_right(m_origin.x + m_size, m_origin.y);
-    Point bottom_left(m_origin.x, m_origin.y + m_size);
+    Point top_right(m_origin.x, m_origin.y + m_size);
+    Point bottom_left(m_origin.x + m_size, m_origin.y);
     Point bottom_right(m_origin.x + m_size, m_origin.y + m_size);
 
     // Create and set Corners type object for Cell

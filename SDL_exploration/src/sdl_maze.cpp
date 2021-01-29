@@ -151,6 +151,9 @@ void MazeGenerator::randomizedDepthFirstSearch() {
     int start_row = 0;
     int start_col = 0;
 
+    // mark the first cell as visited
+    visited.insert(std::make_pair(0, 0));
+
     randomizedDepthFirstSearchHelper(start_row, start_col, visited);
 }
 
@@ -204,7 +207,7 @@ void MazeGenerator::randomizedDepthFirstSearchHelper(
                 .getWallsMutable()
                 .bottom_right_bottom_left.destroy();
         }
-        // If we a right neighbour
+        // If we have a right neighbour
         else if (neighbours[random_idx].second > col) {
             m_grid[row][col].getWallsMutable().top_right_bottom_right.destroy();
             m_grid[neighbours[random_idx].first][neighbours[random_idx].second]

@@ -31,8 +31,10 @@ bool MazeGenerator::showMaze() {
      * 3. Start iterating through cells and draw them ?
      */
     // Set window width and height
-    uint32_t width = m_rows * m_size;
-    uint32_t height = m_cols * m_size;
+    // increase size by 1 to see all the drawn lines
+    uint32_t padding = 1;
+    uint32_t width = m_rows * m_size + padding;
+    uint32_t height = m_cols * m_size + padding;
 
     // Set the color values
     SDL_Color background_color = {22, 22, 22, 255};  // Barley black

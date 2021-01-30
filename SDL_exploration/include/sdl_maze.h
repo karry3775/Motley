@@ -4,6 +4,8 @@
 #include "sdl_maze_utils.h"
 #include <SDL2/SDL.h>
 
+#define microseconds_in_seconds 1000000
+
 namespace maze {
 
 class MazeGenerator {
@@ -50,9 +52,14 @@ class MazeGenerator {
     /**
      * Function to init grid
      * - assigns cells for the grid
-     * - to add more ...
+     * - initiate the visualizer
      */
-    void initGrid();
+    bool initGrid();
+
+    /**
+     * Helper function to render all walls
+     */
+    void renderAndPresentMaze();
 
     std::vector<std::vector<Cell>> m_grid;
     uint32_t m_rows;
@@ -61,6 +68,17 @@ class MazeGenerator {
     static const uint32_t m_default_rows;
     static const uint32_t m_default_cols;
     static const uint32_t m_default_size;
+
+    // visualization members
+    static const uint32_t m_padding;
+    uint32_t m_width_in_pix;
+    uint32_t m_height_in_pix;
+    SDL_Color m_background_color;
+    SDL_Color m_line_color;
+    SDL_Window* m_window;
+    SDL_Renderer* m_renderer;
+    static const uint32_t
+        m_sleep_duration_ms;  // sleep duration in milliseconds
 };
 
 }  // namespace maze

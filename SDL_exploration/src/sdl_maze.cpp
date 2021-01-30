@@ -7,7 +7,7 @@ namespace maze {
 
 const uint32_t MazeGenerator::m_default_rows = 20;
 const uint32_t MazeGenerator::m_default_cols = 20;
-const uint32_t MazeGenerator::m_default_size = 50;
+const uint32_t MazeGenerator::m_default_size = 20;
 const uint32_t MazeGenerator::m_padding = 1;
 const uint32_t MazeGenerator::m_sleep_duration_ms =
     0.1 * microseconds_in_seconds;  // refers

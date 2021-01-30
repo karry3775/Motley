@@ -45,6 +45,18 @@ class MazeGenerator {
         int row, int col, std::set<std::pair<int, int>>& visited);
 
     /**
+     *  Helper function to get Neighbours
+     */
+    std::vector<std::pair<int, int>> getNeighbours(
+        int row, int col, const std::set<std::pair<int, int>>& visited);
+
+    /**
+     * Helper function to destroy shared wall between neighbour
+     */
+    void destroySharedWall(std::vector<std::pair<int, int>> neighbours, int idx,
+                           int row, int col);
+
+    /**
      * Function to init grid
      * - assigns cells for the grid
      * - initiate the visualizer

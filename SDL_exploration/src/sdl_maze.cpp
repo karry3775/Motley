@@ -65,14 +65,10 @@ void MazeGenerator::randomizedDepthFirstSearch() {
     randomizedDepthFirstSearchHelper(start_row, start_col, visited);
 }
 
-void MazeGenerator::randomizedDepthFirstSearchHelper(
-    int row, int col, std::set<std::pair<int, int>>& visited) {
-    // render and present the maze
-    renderAndPresentMaze();
-
+std::vector<std::pair<int, int>> MazeGenerator::getNeighbours(
+    int row, int col, const std::set<std::pair<int, int>>& visited) {
     // Populate unvisited and valid neighbours
     std::vector<std::pair<int, int>> neighbours{};
-    std::pair<int, int> cur_coords = std::make_pair(row, col);
 
     // unvisited and valid left neighbour (row, col - 1)
     if (col - 1 >= 0 &&
@@ -95,6 +91,50 @@ void MazeGenerator::randomizedDepthFirstSearchHelper(
         neighbours.push_back(std::make_pair(row + 1, col));
     }
 
+    return neighbours;
+}
+
+void MazeGenerator::destroySharedWall(
+    std::vector<std::pair<int, int>> neighbours, int idx, int row, int col) {
+    // If we have a top neighbour
+    // TODO we can use simply indices to determine which neighbour it is:
+    if (neighbours[idx].first < row) {
+        m_grid[row][col].getWallsMutable().top_left_top_right.destroy();
+        m_grid[neighbours[idx].first][neighbours[idx].second]
+            .getWallsMutable()
+            .bottom_right_bottom_left.destroy();
+    }
+    // If we have a right neighbour
+    else if (neighbours[idx].second > col) {
+        m_grid[row][col].getWallsMutable().top_right_bottom_right.destroy();
+        m_grid[neighbours[idx].first][neighbours[idx].second]
+            .getWallsMutable()
+            .bottom_left_top_left.destroy();
+    }
+    // If we have a left neighbour
+    else if (neighbours[idx].second < col) {
+        m_grid[row][col].getWallsMutable().bottom_left_top_left.destroy();
+        m_grid[neighbours[idx].first][neighbours[idx].second]
+            .getWallsMutable()
+            .top_right_bottom_right.destroy();
+    }
+    // If we have down neighbour
+    else {
+        m_grid[row][col].getWallsMutable().bottom_right_bottom_left.destroy();
+        m_grid[neighbours[idx].first][neighbours[idx].second]
+            .getWallsMutable()
+            .top_left_top_right.destroy();
+    }
+}
+
+void MazeGenerator::randomizedDepthFirstSearchHelper(
+    int row, int col, std::set<std::pair<int, int>>& visited) {
+    // render and present the maze
+    renderAndPresentMaze();
+
+    // Get valid neighbours
+    auto neighbours = getNeighbours(row, col, visited);
+
     while (!neighbours.empty()) {
         // Select neighbours at random while there are neighbours remaining
         int random_idx = rand() % neighbours.size();
@@ -107,44 +147,15 @@ void MazeGenerator::randomizedDepthFirstSearchHelper(
             neighbours.erase(neighbours.begin() + random_idx);
             continue;
         }
-        // do a depth first search on that element and
-        // break the wall
 
-        // If we have a top neighbour
-        // TODO we can use simply indices to determine which neighbour it is:
-        if (neighbours[random_idx].first < row) {
-            m_grid[row][col].getWallsMutable().top_left_top_right.destroy();
-            m_grid[neighbours[random_idx].first][neighbours[random_idx].second]
-                .getWallsMutable()
-                .bottom_right_bottom_left.destroy();
-        }
-        // If we have a right neighbour
-        else if (neighbours[random_idx].second > col) {
-            m_grid[row][col].getWallsMutable().top_right_bottom_right.destroy();
-            m_grid[neighbours[random_idx].first][neighbours[random_idx].second]
-                .getWallsMutable()
-                .bottom_left_top_left.destroy();
-        }
-        // If we have a left neighbour
-        else if (neighbours[random_idx].second < col) {
-            m_grid[row][col].getWallsMutable().bottom_left_top_left.destroy();
-            m_grid[neighbours[random_idx].first][neighbours[random_idx].second]
-                .getWallsMutable()
-                .top_right_bottom_right.destroy();
-        }
-        // if we have down neighbour
-        else {
-            m_grid[row][col]
-                .getWallsMutable()
-                .bottom_right_bottom_left.destroy();
-            m_grid[neighbours[random_idx].first][neighbours[random_idx].second]
-                .getWallsMutable()
-                .top_left_top_right.destroy();
-        }
+        // break shared wall
+        destroySharedWall(neighbours, random_idx, row, col);
 
-        // between the current cell and this neigbouring cell
+        // Mark current neighbour as visited
         visited.insert(std::make_pair(neighbours[random_idx].first,
                                       neighbours[random_idx].second));
+
+        // Recursively do a randomized depth first search
         randomizedDepthFirstSearchHelper(neighbours[random_idx].first,
                                          neighbours[random_idx].second,
                                          visited);

@@ -4,5 +4,5 @@ This repository is made for the sole purpose of doing random assortment of proje
 # Maze generation
 
 ## Randomized depth search (Rendered using SDL)
-![maze](SDL_exploration/images/maze.png)
+![maze](SDL_exploration/images/mazegen.gif)
 

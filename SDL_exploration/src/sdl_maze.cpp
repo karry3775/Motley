@@ -52,22 +52,6 @@ bool MazeGenerator::showMaze() {
     return true;
 }
 
-void MazeGenerator::displayMazeCells() {
-    for (int i = 0; i < m_rows; ++i) {
-        for (int j = 0; j < m_cols; ++j) {
-            std::cout << "Cell index: (" << i << ", " << j << ") " << std::endl;
-            std::cout << m_grid[i][j].getWalls().top_left_top_right.exists
-                      << m_grid[i][j].getWalls().top_right_bottom_right.exists
-                      << m_grid[i][j].getWalls().bottom_right_bottom_left.exists
-                      << m_grid[i][j].getWalls().bottom_left_top_left.exists
-                      << std::endl;
-            std::cout << "#####################################################"
-                         "########"
-                      << std::endl;
-        }
-    }
-}
-
 void MazeGenerator::randomizedDepthFirstSearch() {
     // Initate a visited set
     std::set<std::pair<int, int>> visited{};

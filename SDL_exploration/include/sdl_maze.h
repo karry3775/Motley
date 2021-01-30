@@ -32,11 +32,6 @@ class MazeGenerator {
      */
     bool showMaze();
 
-    /**
-     *  Public interface to just display grid cells
-     */
-    void displayMazeCells();
-
    private:
     /**
      * Randomized depth first search maze generation method

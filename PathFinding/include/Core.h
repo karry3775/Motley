@@ -6,4 +6,8 @@
 
 #include <map>
 
+#include <unordered_map>
+
 #include <algorithm>
+
+#include <climits>  // for INT_MAX among other things

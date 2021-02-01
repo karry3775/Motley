@@ -25,6 +25,8 @@ class Environment {
 
     const uint32_t getSize() const { return size_; };
 
+    AdjacencyList<T> getAdjacencyList() const { return adj_; };
+
    private:
     AdjacencyList<T> adj_;
     uint32_t size_;

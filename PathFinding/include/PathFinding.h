@@ -13,7 +13,7 @@ class PathFinder {
      * @param start  Starting Cell for the path
      * @param end    Ending Cell for the path
      * @param method Method to be used for path finding
-     * Available options are DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS, DFS
+     * Available options are DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS
      */
     PathFinder(uint32_t rows, uint32_t cols, Cell start, Cell end,
                PathFinder::Method method);

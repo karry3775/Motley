@@ -35,4 +35,8 @@ Grid::Grid(uint32_t rows, uint32_t cols)
     }
 }
 
+const uint32_t Grid::getRows() const { return rows_; }
+
+const uint32_t Grid::getCols() const { return cols_; }
+
 }  // namespace pathfinding

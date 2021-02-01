@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core.h"
 #include "Cell.h"
 
 #include "EnvironmentGeneration.h"
@@ -10,6 +9,8 @@ class Grid : public Environment<Cell> {
    public:
     Grid();
     Grid(uint32_t rows, uint32_t cols);
+    const uint32_t getRows() const;
+    const uint32_t getCols() const;
 
    private:
     uint32_t rows_;

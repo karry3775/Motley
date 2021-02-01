@@ -19,6 +19,6 @@ int main(int argc, char** argv) {
 
     // Create the PathFinderObject
     PF::PathFinder* path_finder =
-        new PF::PathFinder(rows, cols, start, end, PF::PathFinder::DIJKSTRA);
+        new PF::PathFinder(rows, cols, start, end, PF::PathFinder::BFS);
     return 0;
 }

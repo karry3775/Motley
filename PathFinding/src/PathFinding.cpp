@@ -30,9 +30,6 @@ void PathFinder::findPath() {
         case BFS:
             findPathBfs();
             break;
-        case DFS:
-            findPathDfs();
-            break;
         default:
             break;
     }
@@ -55,10 +52,6 @@ void PathFinder::findPathHierarchical() {
 }
 
 void PathFinder::findPathBfs() {
-    // TODO
-}
-
-void PathFinder::findPathDfs() {
     // TODO
 }
 

@@ -6,7 +6,7 @@ namespace pathfinding {
 
 class PathFinder {
    public:
-    enum Method { DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS, DFS };
+    enum Method { DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS };
     /**
      * @param rows   Number of rows in the grid world
      * @param cols   Number of cols in the grid world
@@ -25,7 +25,6 @@ class PathFinder {
     void findPathSample();
     void findPathHierarchical();
     void findPathBfs();
-    void findPathDfs();
 
     Grid* grid_;
     Cell start_;

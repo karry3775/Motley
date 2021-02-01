@@ -4,6 +4,7 @@
 
 namespace pathfinding {
 
-typedef std::vector<std::vector<int>> AdjacencyList;
+template <typename T>
+using AdjacencyList = std::map<T, std::vector<T>>;
 
 }  // namespace pathfinding

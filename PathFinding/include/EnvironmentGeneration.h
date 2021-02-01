@@ -1,40 +1,33 @@
 #pragma once
 /**
- * Design of this interface:
- * 1. This module should be responsible for returning
- *    an environment (the possible options could be a grid world, maze,
- *    grid world with obstacles, to name a few) and that environment object
- *    should be have a visualize function of its own to see what we are dealing
- *    with
- * 2. That environment should be in the format of an adjacency lists based graph
- *    data structure, so that it can be later be used as a test bed for various
- *    other path finding algorithms
+ * Template class for all environments
  */
 #include "DefaultTypes.h"
 
 namespace pathfinding {
 
-class Environment{
+template <typename T>
+class Environment {
    public:
-    Environment();
+    Environment(){};
 
-    Environment(uint32_t size);
+    Environment(uint32_t size) : size_{size} {};
 
     // function to add edge to the Environment
-    void addEdge(uint32_t v, uint32_t w);
+    void addEdge(T v, T w) {
+        // Bypass if already there
+        if (std::find(adj_[v].begin(), adj_[v].end(), w) != adj_[v].end())
+            return;
 
-    const uint32_t getSize() const;    
+        adj_[v].push_back(w);
+        adj_[w].push_back(v);
+    }
+
+    const uint32_t getSize() const { return size_; };
 
    private:
-    
-    AdjacencyList adj_;
+    AdjacencyList<T> adj_;
     uint32_t size_;
-
-
-};
-
-class Grid : public Environment {
-    // TODO
 };
 
 }  // namespace pathfinding

@@ -5,6 +5,7 @@
 namespace pathfinding {
 class Cell {
    public:
+    Cell(){};
     Cell(uint32_t x, uint32_t y) : x_{x}, y_{y} {};
 
     // Compare operator for Cell

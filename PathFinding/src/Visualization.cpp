@@ -48,20 +48,20 @@ bool Visualizer::init() {
 
 void Visualizer::setDarkTheme() {
     // TODO
-    background_color_ = {};      // some version of black
-    grid_line_color_ = {};       // some version of white
-    traversal_cell_color_ = {};  // some version of blue
-    path_color_ = {};            // some version of green
-    waypoint_color_ = {};        // some version of red
+    background_color_ = {65, 60, 48, 255};    // color code #413C30
+    grid_line_color_ = {223, 222, 221, 255};  // color code #DFDEDD
+    traversal_cell_color_ = {};               // some version of blue
+    path_color_ = {};                         // some version of green
+    waypoint_color_ = {};                     // some version of red
 }
 
 void Visualizer::setLightTheme() {
     // TODO
-    background_color_ = {};      // some version of white
-    grid_line_color_ = {};       // some version of black
-    traversal_cell_color_ = {};  // some version of blue
-    path_color_ = {};            // some version of green
-    waypoint_color_ = {};        // some version of red
+    background_color_ = {223, 222, 221, 255};  // color code #DFDEDD
+    grid_line_color_ = {65, 60, 48, 255};      // color code #413C30
+    traversal_cell_color_ = {};                // some version of blue
+    path_color_ = {};                          // some version of green
+    waypoint_color_ = {};                      // some version of red
 }
 
 }  // namespace pathfinding

@@ -15,8 +15,8 @@ class PathFinder {
      * @param method Method to be used for path finding
      * Available options are DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS
      */
-    PathFinder(uint32_t rows, uint32_t cols, Cell start, Cell end,
-               PathFinder::Method method);
+    PathFinder(uint32_t rows, uint32_t cols, uint32_t cell_size, Cell start,
+               Cell end, PathFinder::Method method);
 
    private:
     void findPath();

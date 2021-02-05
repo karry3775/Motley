@@ -6,8 +6,11 @@ Grid::Grid() {
     // TODO
 }
 
-Grid::Grid(uint32_t rows, uint32_t cols)
-    : Environment(rows * cols), rows_{rows}, cols_{cols} {
+Grid::Grid(uint32_t rows, uint32_t cols, uint32_t cell_size)
+    : Environment(rows * cols),
+      rows_{rows},
+      cols_{cols},
+      cell_size_{cell_size} {
     // Add all edges
     // TODO: Later move this to a separate function
     for (int row = 0; row < rows_; ++row) {
@@ -38,5 +41,7 @@ Grid::Grid(uint32_t rows, uint32_t cols)
 const uint32_t Grid::getRows() const { return rows_; }
 
 const uint32_t Grid::getCols() const { return cols_; }
+
+const uint32_t Grid::getCellSize() const { return cell_size_; }
 
 }  // namespace pathfinding

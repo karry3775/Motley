@@ -3,11 +3,11 @@
 
 namespace pathfinding {
 
-PathFinder::PathFinder(uint32_t rows, uint32_t cols, Cell start, Cell end,
-                       PathFinder::Method method)
+PathFinder::PathFinder(uint32_t rows, uint32_t cols, uint32_t cell_size,
+                       Cell start, Cell end, PathFinder::Method method)
     : start_{start}, end_{end}, method_{method} {
     // Generate a grid environment
-    grid_ = new Grid(rows, cols);
+    grid_ = new Grid(rows, cols, cell_size);
 
     // Find path using the suggested method above
     findPath();

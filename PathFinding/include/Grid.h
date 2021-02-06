@@ -14,6 +14,8 @@ class Grid : public Environment<Cell> {
     const uint32_t getCellSize() const;
 
    private:
+    // TODO: Rename to something better
+    void create();
     uint32_t rows_;
     uint32_t cols_;
     uint32_t cell_size_;

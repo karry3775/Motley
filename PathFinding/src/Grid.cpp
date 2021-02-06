@@ -12,7 +12,10 @@ Grid::Grid(uint32_t rows, uint32_t cols, uint32_t cell_size)
       cols_{cols},
       cell_size_{cell_size} {
     // Add all edges
-    // TODO: Later move this to a separate function
+    create();
+}
+
+void Grid::create() {
     for (int row = 0; row < rows_; ++row) {
         for (int col = 0; col < cols_; ++col) {
             // get all the neighbours of the current

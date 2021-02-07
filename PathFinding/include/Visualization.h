@@ -2,14 +2,18 @@
 
 #include <SDL2/SDL.h>
 #include "Grid.h"
+#include "PathFinding.h"
 
 namespace pathfinding {
 
+enum class Theme { DARK, LIGHT };
+
 class Visualizer {
    public:
-    enum Theme { DARK, LIGHT };
-
     Visualizer();
+
+    Visualizer(const PathFinder*);
+
     ~Visualizer();
 
     /**
@@ -18,21 +22,19 @@ class Visualizer {
     void setTitle(const char*);
 
     /**
-     * Function to set the fig size
-     * from width and height
-     */
-    void setSize(const uint32_t&, const uint32_t&);
-
-    /**
      * Function to set the theme of the visualizer
      */
     void setTheme(const Theme&);
 
     /**
+     * Initiate the visualizer
+     */ 
+    bool init();
+
+    /**
      *  Shows the environment visualization
-     * @param Grid Grid type object
      */
-    void showEnvironment(const Grid&);
+    void showEnvironment();
 
     /**
      * Shows the path in the evironment
@@ -43,12 +45,12 @@ class Visualizer {
     void showPath(const Path<Cell>&);
 
    private:
-    bool init();
     void setLightTheme();
     void setDarkTheme();
 
     uint32_t width_;
     uint32_t height_;
+    uint32_t cell_size_;
 
     SDL_Window* window_;
     SDL_Renderer* renderer_;

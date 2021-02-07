@@ -11,7 +11,7 @@ file(
         "src/main.cpp"
         "src/Grid.cpp"
         "src/PathFinding.cpp"
-        "src/PathVisualizer.cpp"
+        "src/Visualization.cpp"
 )
 
 add_executable(path_finding ${SOURCES})

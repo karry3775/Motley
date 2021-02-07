@@ -1,3 +1,4 @@
+#include "Visualization.h"
 #include "PathFinding.h"
 
 namespace PF = pathfinding;
@@ -12,7 +13,7 @@ int main(int argc, char** argv) {
     uint32_t cols{10};
 
     // Size of individual cell in pixels
-    uint32_t cell_size{10};
+    uint32_t cell_size{50};
 
     // Choose a starting point
     PF::Cell start(0, 0);
@@ -23,5 +24,18 @@ int main(int argc, char** argv) {
     // Create the PathFinderObject
     PF::PathFinder* path_finder = new PF::PathFinder(
         rows, cols, cell_size, start, end, PF::PathFinder::BFS);
+
+    /** Visualize the environment **/
+    // Create a visualizer object for the grid object
+    PF::Visualizer* visualizer(new PF::Visualizer(path_finder));
+    // Set title
+    visualizer->setTitle("Grid");
+    // Set theme
+    visualizer->setTheme(PF::Theme::LIGHT);
+    // Initiate the grid
+    visualizer->init();
+    // Show the environment
+    visualizer->showEnvironment();
+
     return 0;
 }

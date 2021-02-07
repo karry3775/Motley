@@ -13,6 +13,10 @@ PathFinder::PathFinder(uint32_t rows, uint32_t cols, uint32_t cell_size,
     findPath();
 }
 
+const Grid* PathFinder::getGrid() const {
+    return grid_;
+}
+
 void PathFinder::findPath() {
     switch (method_) {
         case DIJKSTRA:

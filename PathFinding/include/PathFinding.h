@@ -18,6 +18,9 @@ class PathFinder {
     PathFinder(uint32_t rows, uint32_t cols, uint32_t cell_size, Cell start,
                Cell end, PathFinder::Method method);
 
+    // TODO : Check if this is best way to return
+    const Grid* getGrid() const; 
+
    private:
     void findPath();
     void findPathDijkstra();

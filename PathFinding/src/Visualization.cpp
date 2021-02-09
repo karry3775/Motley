@@ -92,7 +92,6 @@ bool Visualizer::init() {
 }
 
 void Visualizer::setDarkTheme() {
-    // TODO
     background_color_ = {65, 60, 48, 255};         // color code #413C30
     grid_line_color_ = {223, 222, 221, 255};       // color code #DFDEDD
     traversal_cell_color_ = {123, 163, 219, 255};  // some version of blue
@@ -101,7 +100,6 @@ void Visualizer::setDarkTheme() {
 }
 
 void Visualizer::setLightTheme() {
-    // TODO
     background_color_ = {223, 222, 221, 255};      // color code #DFDEDD
     grid_line_color_ = {65, 60, 48, 255};          // color code #413C30
     traversal_cell_color_ = {123, 163, 219, 255};  // Bleu de France

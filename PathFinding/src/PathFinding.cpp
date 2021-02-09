@@ -13,9 +13,7 @@ PathFinder::PathFinder(uint32_t rows, uint32_t cols, uint32_t cell_size,
     findPath();
 }
 
-const Grid* PathFinder::getGrid() const {
-    return grid_;
-}
+const Grid* PathFinder::getGrid() const { return grid_; }
 
 void PathFinder::findPath() {
     switch (method_) {
@@ -70,7 +68,6 @@ void PathFinder::findPathBfs() {
     DistanceMap<Cell> dist;
     auto adj = grid_->getAdjacencyList();
     for (auto itr = adj.begin(); itr != adj.end(); ++itr) {
-        visited.insert(itr->first);
         dist[itr->first] = INT_MAX;
         pred[itr->first] = itr->first;
     }

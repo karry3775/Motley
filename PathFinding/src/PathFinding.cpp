@@ -62,10 +62,10 @@ void PathFinder::findPathBfs() {
     // already been visited
     std::set<Cell> visited;
 
-    // Set the distances to be INF
-    // and predecessor to be itself as no parents exists yet
     PredecessorMap<Cell> pred;
     DistanceMap<Cell> dist;
+    // Set the distances to be INF
+    // and predecessor to be itself as no parents exists yet
     auto adj = grid_->getAdjacencyList();
     for (auto itr = adj.begin(); itr != adj.end(); ++itr) {
         dist[itr->first] = INT_MAX;
@@ -104,7 +104,15 @@ void PathFinder::findPathBfs() {
         }
     }
 
-    // TODO: Form path using pred
+    // Form the path using predecessor
+    auto current = end_;
+    while (pred[current] != current) {
+        path_.push_back(current);
+        current = pred[current];
+    }
+
+    // Reverse the path
+    std::reverse(path_.begin(), path_.end());
 }
 
 }  // namespace pathfinding

@@ -19,6 +19,10 @@ class Cell {
         return (this->x_ == c.x_ && this->y_ == c.y_);
     }
 
+    bool operator!=(const Cell& c) const {
+        return (this->x_ != c.x_ || this->y_ != c.y_);
+    }
+
    private:
     uint32_t x_;
     uint32_t y_;

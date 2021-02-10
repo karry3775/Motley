@@ -19,6 +19,7 @@ class Grid : public Environment<Cell> {
     uint32_t rows_;
     uint32_t cols_;
     uint32_t cell_size_;
+    std::vector<std::vector<Cell*>> grid_;
 };
 
 }  // namespace pathfinding

@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     PF::Cell start(0, 0);
 
     // Choose an ending point
-    PF::Cell end(0, 0);
+    PF::Cell end(9, 9);
 
     // Create the PathFinderObject
     PF::PathFinder* path_finder = new PF::PathFinder(
@@ -35,7 +35,9 @@ int main(int argc, char** argv) {
     // Initiate the grid
     visualizer->init();
     // Show the environment
-    visualizer->showEnvironment();
+    // visualizer->showEnvironment();
+    // Show Path
+    visualizer->showPath();
 
     return 0;
 }

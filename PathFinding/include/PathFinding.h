@@ -19,7 +19,9 @@ class PathFinder {
                Cell end, PathFinder::Method method);
 
     // TODO : Check if this is best way to return
-    const Grid* getGrid() const; 
+    const Grid* getGrid() const;
+
+    const Path<Cell> getPath() const;
 
    private:
     void findPath();

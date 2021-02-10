@@ -28,7 +28,7 @@ class Visualizer {
 
     /**
      * Initiate the visualizer
-     */ 
+     */
     bool init();
 
     /**
@@ -40,9 +40,8 @@ class Visualizer {
      * Shows the path in the evironment
      * Assumes that the environment exists
      * to visualizer a path in.
-     * @param Path Path type object
      */
-    void showPath(const Path<Cell>&);
+    void showPath();
 
    private:
     void setLightTheme();
@@ -62,6 +61,8 @@ class Visualizer {
 
     Theme theme_;
     const char* title_;
+
+    Path<Cell> path_;
 };
 
 }  // namespace pathfinding

@@ -7,6 +7,7 @@ Visualizer::Visualizer(const PathFinder* path_finder) {
     cell_size_ = path_finder->getGrid()->getCellSize();
     width_ = cell_size_ * path_finder->getGrid()->getCols() + 1;
     height_ = cell_size_ * path_finder->getGrid()->getRows() + 1;
+    path_ = path_finder->getPath();
 }
 
 void Visualizer::setTitle(const char* title) { title_ = title; }
@@ -54,6 +55,18 @@ void Visualizer::showEnvironment() {
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);
     SDL_Quit();
+}
+
+void Visualizer::showPath() {
+    // TODO
+    for (int idx = 0; idx < path_.size(); ++idx) {
+        // Each element is a cell
+        // and we have to color it
+        auto cell = path_[idx];
+        // temp : for now lets just print the contents of
+        // the cell
+        std::cout << cell << std::endl;
+    }
 }
 
 bool Visualizer::init() {

@@ -15,7 +15,7 @@ PathFinder::PathFinder(uint32_t rows, uint32_t cols, uint32_t cell_size,
 
 const Grid* PathFinder::getGrid() const { return grid_; }
 
-const Path<Cell> PathFinder::getPath() const { return path_; }
+const Path<Cell*> PathFinder::getPath() const { return path_; }
 
 void PathFinder::findPath() {
     switch (method_) {
@@ -58,53 +58,37 @@ void PathFinder::findPathHierarchical() {
 void PathFinder::findPathBfs() {
     // A queue to facilitate list of vertices/Cells
     // to be traversed in BFS
-    std::queue<Cell> cell_queue;
+    std::queue<Cell*> cell_queue;
 
     // A set to keep track of what's
     // already been visited
-    std::set<Cell> visited;
+    std::set<Cell*> visited;
 
-    PredecessorMap<Cell> pred;
-    DistanceMap<Cell> dist;
+    PredecessorMap<Cell*> pred;
+    DistanceMap<Cell*> dist;
     // Set the distances to be INF
     // and predecessor to be itself as no parents exists yet
     auto adj = grid_->getAdjacencyList();
-    // for (auto itr = adj.begin(); itr != adj.end(); ++itr) {
-    //     dist[itr->first] = INT_MAX;
-    //     pred[itr->first] = itr->first;
-    // }
-
-    // DEBUG:
-    // Printing adj list
-    std::cout << "Printing the adjacency list!\n";
     for (auto itr = adj.begin(); itr != adj.end(); ++itr) {
-        std::cout << *(itr->first) << "-->";
-        for (auto child : itr->second) {
-            std::cout << *child << ", ";
-        }
-        std::cout << std::endl;
+        dist[itr->first] = INT_MAX;
+        pred[itr->first] = itr->first;
     }
-    std::cout << "Printed!\n";
 
-
-    /** CODE TO DEBUG LATER
     // We will start by visiting the starting point
     // thus marking it visited and setting the distance
     // to be 0 and pushing it into the queue
-    visited.insert(start_);
-    dist[start_] = 0;
-    cell_queue.push(start_);
+    visited.insert(grid_->at(start_));
+    // or may be just ask the user to specify the row and column instead.
+    dist[grid_->at(start_)] = 0;
+    cell_queue.push(grid_->at(start_));
 
     // standard BFS algorithm
     while (!cell_queue.empty()) {
-        Cell current = cell_queue.front();
+        Cell* current = cell_queue.front();
         cell_queue.pop();
 
-        std::cout << "size of adj[current]: " << adj[current].size()
-                  << std::endl;
         // visit its neighbours one by one
         for (int i = 0; i < adj[current].size(); ++i) {
-            std::cout << "adj[current][i]: " << adj[current][i] << std::endl;
             if (visited.find(adj[current][i]) == visited.end()) {
                 // mark it as visited
                 visited.insert(adj[current][i]);
@@ -116,28 +100,25 @@ void PathFinder::findPathBfs() {
                 cell_queue.push(adj[current][i]);
 
                 // We can stop the BFS when we find the destination
-                if (adj[current][i] == end_) {
+                if (adj[current][i] == grid_->at(end_)) {
                     break;
                 }
             }
         }
     }
 
-    // temp: Print the predecessor map
-    for (auto itr = pred.begin(); itr != pred.end(); ++itr) {
-        std::cout << itr->first << " --> " << itr->second;
-        std::cout << std::endl;
-    }
     // Form the path using predecessor
-    auto current = end_;
+    auto current = grid_->at(end_);
     while (pred[current] != current) {
         path_.push_back(current);
         current = pred[current];
     }
 
+    // Additionally push back the starting point
+    path_.push_back(grid_->at(start_));
+
     // Reverse the path
     std::reverse(path_.begin(), path_.end());
-    **/
 }
 
 }  // namespace pathfinding

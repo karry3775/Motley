@@ -62,7 +62,7 @@ class Visualizer {
     Theme theme_;
     const char* title_;
 
-    Path<Cell> path_;
+    Path<Cell*> path_;
 };
 
 }  // namespace pathfinding

@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     // Set title
     visualizer->setTitle("Grid");
     // Set theme
-    visualizer->setTheme(PF::Theme::LIGHT);
+    visualizer->setTheme(PF::Theme::DARK);
     // Initiate the grid
     visualizer->init();
     // Show the environment

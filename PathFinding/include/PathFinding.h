@@ -21,7 +21,7 @@ class PathFinder {
     // TODO : Check if this is best way to return
     const Grid* getGrid() const;
 
-    const Path<Cell> getPath() const;
+    const Path<Cell*> getPath() const;
 
    private:
     void findPath();
@@ -36,7 +36,7 @@ class PathFinder {
     Cell end_;
     PathFinder::Method method_;
 
-    Path<Cell> path_;
+    Path<Cell*> path_;
 };
 
 }  // namespace pathfinding

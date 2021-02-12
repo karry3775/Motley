@@ -34,10 +34,8 @@ int main(int argc, char** argv) {
     visualizer->setTheme(PF::Theme::DARK);
     // Initiate the grid
     visualizer->init();
-    // Show the environment
-    // visualizer->showEnvironment();
-    // Show Path
-    visualizer->showPath();
+    // Show
+    visualizer->show();
 
     return 0;
 }

@@ -3,6 +3,8 @@
 
 namespace pathfinding {
 
+const uint32_t Visualizer::m_sleep_duration_ms = 0.1 * microseconds_in_seconds;
+
 Visualizer::Visualizer(const PathFinder* path_finder) {
     cell_size_ = path_finder->getGrid()->getCellSize();
     width_ = cell_size_ * path_finder->getGrid()->getCols() + 1;
@@ -14,53 +16,15 @@ void Visualizer::setTitle(const char* title) { title_ = title; }
 
 void Visualizer::setTheme(const Theme& theme) { theme_ = theme; }
 
-void Visualizer::showEnvironment() {
-    SDL_bool quit = SDL_FALSE;
-
-    while (!quit) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                quit = SDL_TRUE;
-                break;
-            }
-        }
-        // Render background
-        SDL_SetRenderDrawColor(renderer_, background_color_.r,
-                               background_color_.g, background_color_.b,
-                               background_color_.a);
-        SDL_RenderClear(renderer_);
-
-        // TODO: Add a check to see if the width_ and
-        // height_ have been set
-
-        SDL_SetRenderDrawColor(renderer_, grid_line_color_.r,
-                               grid_line_color_.g, grid_line_color_.b,
-                               grid_line_color_.a);
-
-        // Draw horizontal grid lines
-        for (int row = 0; row < width_; row += cell_size_) {
-            SDL_RenderDrawLine(renderer_, row, 0, row, height_);
-        }
-        // Draw vertical grid lines
-        for (int col = 0; col < height_; col += cell_size_) {
-            SDL_RenderDrawLine(renderer_, 0, col, width_, col);
-        }
-
-        // Present the render
-        SDL_RenderPresent(renderer_);
-    }
-
-    // Destroy
-    SDL_DestroyRenderer(renderer_);
-    SDL_DestroyWindow(window_);
-    SDL_Quit();
-}
-
-void Visualizer::showPath() {
+void Visualizer::show() {
     // TODO: show all in one function
     // depending on what's available
     SDL_bool quit = SDL_FALSE;
+
+    // A variable to keep track of
+    // how many waypoints we are showing
+    // This is to aid progression of path
+    int num_path_waypoints = 1;
 
     while (!quit) {
         SDL_Event event;
@@ -81,10 +45,11 @@ void Visualizer::showPath() {
 
         // Iterate through the path and fill up rectangles with
         // path color
+        // TODO: Make it progressional
         SDL_SetRenderDrawColor(renderer_, path_color_.r, path_color_.g,
                                path_color_.b, path_color_.a);
 
-        for (int i = 0; i < path_.size(); ++i) {
+        for (int i = 0; i < num_path_waypoints; ++i) {
             auto cell = *path_[i];
 
             // Form the rectangle to be rendered
@@ -97,6 +62,10 @@ void Visualizer::showPath() {
             // Fill the rectangle
             SDL_RenderFillRect(renderer_, &rect);
         }
+
+        num_path_waypoints = (num_path_waypoints < path_.size())
+                                 ? num_path_waypoints + 1
+                                 : num_path_waypoints;
 
         SDL_SetRenderDrawColor(renderer_, grid_line_color_.r,
                                grid_line_color_.g, grid_line_color_.b,
@@ -113,6 +82,9 @@ void Visualizer::showPath() {
 
         // Present the render
         SDL_RenderPresent(renderer_);
+
+        // Sleep
+        usleep(m_sleep_duration_ms);
     }
 
     // Destroy

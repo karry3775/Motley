@@ -3,6 +3,9 @@
 #include <SDL2/SDL.h>
 #include "Grid.h"
 #include "PathFinding.h"
+#include <unistd.h>  // TODO: Switch to boost for portability
+
+#define microseconds_in_seconds 1000000
 
 namespace pathfinding {
 
@@ -32,16 +35,9 @@ class Visualizer {
     bool init();
 
     /**
-     *  Shows the environment visualization
+     *  Shows the visualization
      */
-    void showEnvironment();
-
-    /**
-     * Shows the path in the evironment
-     * Assumes that the environment exists
-     * to visualizer a path in.
-     */
-    void showPath();
+    void show();
 
    private:
     void setLightTheme();
@@ -63,6 +59,9 @@ class Visualizer {
     const char* title_;
 
     Path<Cell*> path_;
+
+    // sleep duration in milliseconds
+    static const uint32_t m_sleep_duration_ms;
 };
 
 }  // namespace pathfinding

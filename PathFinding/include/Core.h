@@ -13,3 +13,7 @@
 #include <climits>  // for INT_MAX among other things
 
 #include <iostream>
+
+#include <set>
+
+#include <glog/logging.h>

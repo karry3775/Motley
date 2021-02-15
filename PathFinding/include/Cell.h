@@ -6,7 +6,7 @@ namespace pathfinding {
 class Cell {
    public:
     Cell(){};
-    Cell(uint32_t row, uint32_t col) : row_{row}, col_{col} {};
+    Cell(const uint32_t& row, const uint32_t& col) : row_{row}, col_{col} {};
 
     // Compare operator for Cell
     // Essential for this be considered as a key in

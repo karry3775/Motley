@@ -17,8 +17,8 @@ void Visualizer::setTitle(const char* title) { title_ = title; }
 void Visualizer::setTheme(const Theme& theme) { theme_ = theme; }
 
 void Visualizer::show() {
-    // TODO: show all in one function
-    // depending on what's available
+    // TODO: Add check for checking if path was
+    // calculated
     SDL_bool quit = SDL_FALSE;
 
     // A variable to keep track of

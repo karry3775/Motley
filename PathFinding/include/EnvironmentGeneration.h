@@ -16,6 +16,7 @@ class Environment {
     // function to add edge to the Environment
     void addEdge(T* v, T* w) {
         adj_[v].push_back(w);
+        adj_[w].push_back(v); // temp : Experimental
     }
 
     const uint32_t getSize() const { return size_; };

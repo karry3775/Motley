@@ -73,6 +73,20 @@ class Maze : public Environment<Cell> {
                                           const std::set<Cell*>& visited);
 
     /**
+     * Adds a wall between two cells
+     * @param parent parent cell under consideration
+     * @param child child (aka neighbour) cell under consideration
+     */
+    void addWall(const Cell* parent, const Cell* child);
+
+    /**
+     * Construct wall defined by two corners
+     * @param first first corner of the wall
+     * @param second second corner of the wall
+     */
+    void constructWall(const Corner& first, const Corner& second);
+
+    /**
      * Generate maze using Prim's method
      */
     void generatePrims();

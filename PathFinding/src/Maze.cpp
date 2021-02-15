@@ -52,11 +52,6 @@ void Maze::generateRDFS() {
     generateRDFS(start, visited);
 }
 
-/**
- * TODO: Should populate the walls
- * TODO: Should populate the adjacency list for path finding algorithms
- *    to work upon
- */
 void Maze::generateRDFS(Cell* current, std::set<Cell*>& visited) {
     // base case
     // TODO:
@@ -75,8 +70,14 @@ void Maze::generateRDFS(Cell* current, std::set<Cell*>& visited) {
         if (visited.find(neighbours[random_idx]) != visited.end()) {
             // Remove this neighbour
             neighbours.erase(neighbours.begin() + random_idx);
+            // Add a wall
+            addWall(current, neighbours[random_idx]);
             continue;
         }
+
+        // Push it into the adjaceny list
+        addEdge(current, neighbours[random_idx]);
+
         // Mark it as visited
         visited.insert(neighbours[random_idx]);
 
@@ -95,26 +96,74 @@ std::vector<Cell*> Maze::getValidNeighbours(Cell* cell,
     // Check the top neighbour
     if (cell->getRow() - 1 >= 0 && visited.find(cell) == visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow() - 1][cell->getCol()]);
+    } else {
+        // TODO: Add a wall
     }
 
     // Check the left neighbour
     if (cell->getCol() - 1 >= 0 && visited.find(cell) == visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow()][cell->getCol() - 1]);
+    } else {
+        // TODO: Add a wall
     }
 
     // Check for down neighbour
     if (cell->getRow() + 1 < matrix_.size() &&
         visited.find(cell) == visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow() + 1][cell->getCol()]);
+    } else {
+        // TODO: Add a wall
     }
 
     // Check for right neighbour
     if (cell->getCol() + 1 < matrix_[0].size() &&
         visited.find(cell) == visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow()][cell->getCol() + 1]);
+    } else {
+        // TODO: Add a wall
     }
 
     return neighbours;
+}
+
+void Maze::addWall(const Cell* parent, const Cell* child) {
+    // TODO: add constructs for all four wall types maybe
+
+    // Check if its a top neighbour
+    if (child->getRow() < parent->getRow()) {
+        // Populate corners that will make the wall
+        Corner first(parent->getRow(), parent->getCol());
+        Corner second(parent->getRow(), parent->getCol() + cell_size_);
+        constructWall(first, second);
+    }
+    // Check if its left neighbour
+    else if (child->getCol() < parent->getCol()) {
+        // Populate corners that will make the wall
+        Corner first(parent->getRow(), parent->getCol());
+        Corner second(parent->getRow() + cell_size_, parent->getCol());
+        constructWall(first, second);
+    }
+    // Check if its down neighbour
+    else if (child->getRow() > parent->getRow()) {
+        // Populate corners that will make the wall
+        Corner first(parent->getRow() + cell_size_, parent->getCol());
+        Corner second(parent->getRow() + cell_size_,
+                      parent->getCol() + cell_size_);
+        constructWall(first, second);
+    }
+    // Otherwise handle the case for right neighbour
+    else {
+        // Populate corners that will make the wall
+        Corner first(parent->getRow(), parent->getCol() + cell_size_);
+        Corner second(parent->getRow() + cell_size_,
+                      parent->getCol() + cell_size_);
+        constructWall(first, second);
+    }
+}
+
+void Maze::constructWall(const Corner& first, const Corner& second) {
+    Wall* wall = new Wall(first, second);
+    walls_.push_back(wall);
 }
 
 void Maze::generatePrims() {

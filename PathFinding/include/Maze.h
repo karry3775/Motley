@@ -62,6 +62,17 @@ class Maze : public Environment<Cell> {
     void generateRDFS();
 
     /**
+     * Helper function for RANDOMIZED_DFS
+     */
+    void generateRDFS(Cell* current, std::set<Cell*>& visited);
+
+    /**
+     * Util functions for RANDOMIZED_DFS
+     */
+    std::vector<Cell*> getValidNeighbours(Cell* cell,
+                                          const std::set<Cell*>& visited);
+
+    /**
      * Generate maze using Prim's method
      */
     void generatePrims();

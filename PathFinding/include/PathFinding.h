@@ -4,9 +4,11 @@
 
 namespace pathfinding {
 
+enum class Method { DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS };
+enum class EnvironmentType { GRID, MAZE };
+
 class PathFinder {
    public:
-    enum Method { DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS };
     /**
      * @param rows   Number of rows in the grid world
      * @param cols   Number of cols in the grid world
@@ -14,9 +16,12 @@ class PathFinder {
      * @param end    Ending Cell for the path
      * @param method Method to be used for path finding
      * Available options are DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS
+     * @param env    Choice of environment to perform path finding
+     * Available options are GRID and MAZE
      */
-    PathFinder(uint32_t rows, uint32_t cols, uint32_t cell_size, Cell start,
-               Cell end, PathFinder::Method method);
+    PathFinder(const uint32_t& rows, const uint32_t& cols,
+               const uint32_t& cell_size, const Cell& start, const Cell& end,
+               const Method& method, const EnvironmentType& env_type);
 
     // TODO : Check if this is best way to return
     const Grid* getGrid() const;
@@ -34,7 +39,8 @@ class PathFinder {
     Grid* grid_;
     Cell start_;
     Cell end_;
-    PathFinder::Method method_;
+    Method method_;
+    EnvironmentType env_type_;
 
     Path<Cell*> path_;
 };

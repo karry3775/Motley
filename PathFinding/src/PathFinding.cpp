@@ -3,9 +3,11 @@
 
 namespace pathfinding {
 
-PathFinder::PathFinder(uint32_t rows, uint32_t cols, uint32_t cell_size,
-                       Cell start, Cell end, PathFinder::Method method)
-    : start_{start}, end_{end}, method_{method} {
+PathFinder::PathFinder(const uint32_t& rows, const uint32_t& cols,
+                       const uint32_t& cell_size, const Cell& start,
+                       const Cell& end, const Method& method,
+                       const EnvironmentType& env_type)
+    : start_{start}, end_{end}, method_{method}, env_type_{env_type} {
     // Generate a grid environment
     grid_ = new Grid(rows, cols, cell_size);
 
@@ -19,19 +21,19 @@ const Path<Cell*> PathFinder::getPath() const { return path_; }
 
 void PathFinder::findPath() {
     switch (method_) {
-        case DIJKSTRA:
+        case Method::DIJKSTRA:
             findPathDijkstra();
             break;
-        case ASTAR:
+        case Method::ASTAR:
             findPathAstar();
             break;
-        case SAMPLE:
+        case Method::SAMPLE:
             findPathSample();
             break;
-        case HIERARCHICAL:
+        case Method::HIERARCHICAL:
             findPathHierarchical();
             break;
-        case BFS:
+        case Method::BFS:
             findPathBfs();
             break;
         default:

@@ -22,8 +22,9 @@ int main(int argc, char** argv) {
     PF::Cell end(49, 49);
 
     // Create the PathFinderObject
-    PF::PathFinder* path_finder = new PF::PathFinder(
-        rows, cols, cell_size, start, end, PF::PathFinder::BFS);
+    PF::PathFinder* path_finder =
+        new PF::PathFinder(rows, cols, cell_size, start, end, PF::Method::BFS,
+                           PF::EnvironmentType::GRID);
 
     /** Visualize the environment **/
     // Create a visualizer object for the grid object

@@ -9,7 +9,7 @@ class Grid : public Environment<Cell> {
    public:
     Grid();
     Grid(uint32_t rows, uint32_t cols, uint32_t cell_size);
-    
+
     const uint32_t getRows() const;
     const uint32_t getCols() const;
     const uint32_t getCellSize() const;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Grid.h"
+#include "Maze.h"
 
 namespace pathfinding {
 
@@ -24,7 +25,7 @@ class PathFinder {
                const Method& method, const EnvironmentType& env_type);
 
     // TODO : Check if this is best way to return
-    const Grid* getGrid() const;
+    const Environment<Cell>* getEnvironment() const;
 
     const Path<Cell*> getPath() const;
 
@@ -36,7 +37,7 @@ class PathFinder {
     void findPathHierarchical();
     void findPathBfs();
 
-    Grid* grid_;
+    Environment<Cell>* env_;
     Cell start_;
     Cell end_;
     Method method_;

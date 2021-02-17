@@ -8,14 +8,23 @@ PathFinder::PathFinder(const uint32_t& rows, const uint32_t& cols,
                        const Cell& end, const Method& method,
                        const EnvironmentType& env_type)
     : start_{start}, end_{end}, method_{method}, env_type_{env_type} {
-    // Generate a grid environment
-    grid_ = new Grid(rows, cols, cell_size);
+    // Generate environment based on enum value
+    switch (env_type) {
+        case EnvironmentType::GRID:
+            env_ = new Grid(rows, cols, cell_size);
+            break;
+        case EnvironmentType::MAZE:
+            env_ = new Maze(rows, cols, cell_size);
+            break;
+        default:
+            LOG(FATAL) << "Unknown environment type!";
+    }
 
     // Find path using the suggested method above
     findPath();
 }
 
-const Grid* PathFinder::getGrid() const { return grid_; }
+const Environment<Cell>* PathFinder::getEnvironment() const { return env_; }
 
 const Path<Cell*> PathFinder::getPath() const { return path_; }
 
@@ -70,7 +79,7 @@ void PathFinder::findPathBfs() {
     DistanceMap<Cell*> dist;
     // Set the distances to be INF
     // and predecessor to be itself as no parents exists yet
-    auto adj = grid_->getAdjacencyList();
+    auto adj = env_->getAdjacencyList();
     for (auto itr = adj.begin(); itr != adj.end(); ++itr) {
         dist[itr->first] = INT_MAX;
         pred[itr->first] = itr->first;
@@ -79,10 +88,10 @@ void PathFinder::findPathBfs() {
     // We will start by visiting the starting point
     // thus marking it visited and setting the distance
     // to be 0 and pushing it into the queue
-    visited.insert(grid_->at(start_));
+    visited.insert(env_->at(start_));
     // or may be just ask the user to specify the row and column instead.
-    dist[grid_->at(start_)] = 0;
-    cell_queue.push(grid_->at(start_));
+    dist[env_->at(start_)] = 0;
+    cell_queue.push(env_->at(start_));
 
     // standard BFS algorithm
     while (!cell_queue.empty()) {
@@ -102,7 +111,7 @@ void PathFinder::findPathBfs() {
                 cell_queue.push(adj[current][i]);
 
                 // We can stop the BFS when we find the destination
-                if (adj[current][i] == grid_->at(end_)) {
+                if (adj[current][i] == env_->at(end_)) {
                     break;
                 }
             }
@@ -110,14 +119,14 @@ void PathFinder::findPathBfs() {
     }
 
     // Form the path using predecessor
-    auto current = grid_->at(end_);
+    auto current = env_->at(end_);
     while (pred[current] != current) {
         path_.push_back(current);
         current = pred[current];
     }
 
     // Additionally push back the starting point
-    path_.push_back(grid_->at(start_));
+    path_.push_back(env_->at(start_));
 
     // Reverse the path
     std::reverse(path_.begin(), path_.end());

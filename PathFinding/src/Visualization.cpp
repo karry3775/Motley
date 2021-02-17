@@ -6,9 +6,9 @@ namespace pathfinding {
 const uint32_t Visualizer::m_sleep_duration_ms = 0.1 * microseconds_in_seconds;
 
 Visualizer::Visualizer(const PathFinder* path_finder) {
-    cell_size_ = path_finder->getGrid()->getCellSize();
-    width_ = cell_size_ * path_finder->getGrid()->getCols() + 1;
-    height_ = cell_size_ * path_finder->getGrid()->getRows() + 1;
+    cell_size_ = path_finder->getEnvironment()->getCellSize();
+    width_ = cell_size_ * path_finder->getEnvironment()->getCols() + 1;
+    height_ = cell_size_ * path_finder->getEnvironment()->getRows() + 1;
     path_ = path_finder->getPath();
 }
 

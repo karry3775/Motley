@@ -23,6 +23,19 @@ class Environment {
 
     virtual AdjacencyList<T*> getAdjacencyList() const { return adj_; };
 
+    /** Pure virtual functions **/
+    // TODO: Add better description for this interface class
+
+    virtual Cell* at(const Cell&) = 0;
+
+    virtual Cell* at(const uint32_t& row, const uint32_t& col) = 0;
+
+    virtual const uint32_t getRows() const = 0;
+
+    virtual const uint32_t getCols() const = 0;
+
+    virtual const uint32_t getCellSize() const = 0;
+
    private:
     AdjacencyList<T*> adj_;
     uint32_t size_;

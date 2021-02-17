@@ -3,10 +3,10 @@
 
 namespace pathfinding {
 
-PathFinder::PathFinder(const uint32_t& rows, const uint32_t& cols,
-                       const uint32_t& cell_size, const Cell& start,
-                       const Cell& end, const Method& method,
-                       const EnvironmentType& env_type)
+PathFinder::PathFinder(const EnvironmentType& env_type, const Method& method,
+                       const GenerationMethod& gen_method, const uint32_t& rows,
+                       const uint32_t& cols, const uint32_t& cell_size,
+                       const Cell& start, const Cell& end)
     : start_{start}, end_{end}, method_{method}, env_type_{env_type} {
     // Generate environment based on enum value
     switch (env_type) {
@@ -14,7 +14,7 @@ PathFinder::PathFinder(const uint32_t& rows, const uint32_t& cols,
             env_ = new Grid(rows, cols, cell_size);
             break;
         case EnvironmentType::MAZE:
-            env_ = new Maze(rows, cols, cell_size);
+            env_ = new Maze(rows, cols, cell_size, gen_method);
             break;
         default:
             LOG(FATAL) << "Unknown environment type!";

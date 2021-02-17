@@ -23,14 +23,15 @@ int main(int argc, char** argv) {
 
     // Create the PathFinderObject
     PF::PathFinder* path_finder =
-        new PF::PathFinder(rows, cols, cell_size, start, end, PF::Method::BFS,
-                           PF::EnvironmentType::GRID);
+        new PF::PathFinder(PF::EnvironmentType::MAZE, PF::Method::BFS,
+                           PF::GenerationMethod::RANDOMIZED_DFS, rows, cols,
+                           cell_size, start, end);
 
     /** Visualize the environment **/
     // Create a visualizer object for the grid object
     PF::Visualizer* visualizer(new PF::Visualizer(path_finder));
     // Set title
-    visualizer->setTitle("Grid");
+    visualizer->setTitle("Maze");
     // Set theme
     visualizer->setTheme(PF::Theme::DARK);
     // Initiate the grid

@@ -7,9 +7,23 @@ Maze::Maze() {
 }
 
 Maze::Maze(const uint32_t& rows, const uint32_t& cols,
-           const uint32_t& cell_size)
-    : rows_{rows}, cols_{cols}, cell_size_{cell_size} {
-    // TODO
+           const uint32_t& cell_size, const GenerationMethod& generation_method)
+    : rows_{rows},
+      cols_{cols},
+      cell_size_{cell_size},
+      generation_method_{generation_method} {
+          
+    // Populate the matrix_
+    // Resize the grid matrix
+    matrix_.resize(rows_, std::vector<Cell*>(cols_));
+    // Initialize the grid with Cells
+    for (int row = 0; row < rows_; ++row) {
+        for (int col = 0; col < cols_; ++col) {
+            matrix_[row][col] = new Cell(row, col);
+        }
+    }
+    // Generate Maze;
+    generate();
 }
 
 const uint32_t Maze::getRows() const { return rows_; }
@@ -26,8 +40,8 @@ Cell* Maze::at(const uint32_t& row, const uint32_t& col) {
     return matrix_[row][col];
 }
 
-void Maze::generate(const GenerationMethod& generation_method) {
-    switch (generation_method) {
+void Maze::generate() {
+    switch (generation_method_) {
         case GenerationMethod::RANDOMIZED_DFS:
             generateRDFS();
             break;
@@ -37,6 +51,10 @@ void Maze::generate(const GenerationMethod& generation_method) {
         case GenerationMethod::KRUSKALS:
             generateKruskal();
             break;
+        case GenerationMethod::NONE:
+            LOG(FATAL) << "A method needs to be specified for Maze Generation. "
+                          "NONE was passed!";
+            break;
         default:
             LOG(FATAL) << "Unknown Maze Generation method!";
             break;
@@ -44,8 +62,6 @@ void Maze::generate(const GenerationMethod& generation_method) {
 }
 
 void Maze::generateRDFS() {
-    // temp : brainstorm about the technique
-    // We start from a starting cell and then we do randomized DFS
     std::set<Cell*> visited;
     Cell* start = new Cell(0, 0);
 
@@ -53,9 +69,6 @@ void Maze::generateRDFS() {
 }
 
 void Maze::generateRDFS(Cell* current, std::set<Cell*>& visited) {
-    // base case
-    // TODO:
-
     // Select one of the unvisited valid neighbour
     auto neighbours = getValidNeighbours(current, visited);
 

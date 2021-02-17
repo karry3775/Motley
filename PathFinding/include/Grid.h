@@ -19,7 +19,8 @@ class Grid : public Environment<Cell> {
     Cell* at(const uint32_t& row, const uint32_t& col);
 
    private:
-    // TODO: Rename to something better
+    // TODO: Rename to something better (Make this as generate so that
+    // it is consistent with the Maze)
     void create();
     uint32_t rows_;
     uint32_t cols_;

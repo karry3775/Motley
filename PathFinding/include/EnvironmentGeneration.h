@@ -14,14 +14,14 @@ class Environment {
     Environment(uint32_t size) : size_{size} {};
 
     // function to add edge to the Environment
-    void addEdge(T* v, T* w) {
+    virtual void addEdge(T* v, T* w) {
         adj_[v].push_back(w);
-        adj_[w].push_back(v); // temp : Experimental
+        adj_[w].push_back(v);  // temp : Experimental
     }
 
-    const uint32_t getSize() const { return size_; };
+    virtual const uint32_t getSize() const { return size_; };
 
-    AdjacencyList<T*> getAdjacencyList() const { return adj_; };
+    virtual AdjacencyList<T*> getAdjacencyList() const { return adj_; };
 
    private:
     AdjacencyList<T*> adj_;

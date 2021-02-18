@@ -12,8 +12,6 @@ Maze::Maze(const uint32_t& rows, const uint32_t& cols,
       cols_{cols},
       cell_size_{cell_size},
       generation_method_{generation_method} {
-          
-    // Populate the matrix_
     // Resize the grid matrix
     matrix_.resize(rows_, std::vector<Cell*>(cols_));
     // Initialize the grid with Cells
@@ -63,12 +61,16 @@ void Maze::generate() {
 
 void Maze::generateRDFS() {
     std::set<Cell*> visited;
-    Cell* start = new Cell(0, 0);
+    auto start = matrix_[0][0];
+
+    // Mark start as visited
+    visited.insert(start);
 
     generateRDFS(start, visited);
 }
 
 void Maze::generateRDFS(Cell* current, std::set<Cell*>& visited) {
+    LOG(INFO) << "Recursing!";
     // Select one of the unvisited valid neighbour
     auto neighbours = getValidNeighbours(current, visited);
 
@@ -107,37 +109,49 @@ std::vector<Cell*> Maze::getValidNeighbours(Cell* cell,
     std::vector<Cell*> neighbours;
 
     // Check the top neighbour
-    if (cell->getRow() - 1 >= 0 && visited.find(cell) == visited.end()) {
+    if (cell->getRow() - 1 >= 0 &&
+        visited.find(matrix_[cell->getRow() - 1][cell->getCol()]) ==
+            visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow() - 1][cell->getCol()]);
-    } else if (cell->getRow() - 1 >= 0 && visited.find(cell) != visited.end()) {
+    } else if (cell->getRow() - 1 >= 0 &&
+               visited.find(matrix_[cell->getRow() - 1][cell->getCol()]) !=
+                   visited.end()) {
         // Add a wall if not out of bounds but visited already
         addWall(cell, matrix_[cell->getRow() - 1][cell->getCol()]);
     }
 
     // Check the left neighbour
-    if (cell->getCol() - 1 >= 0 && visited.find(cell) == visited.end()) {
+    if (cell->getCol() - 1 >= 0 &&
+        visited.find(matrix_[cell->getRow()][cell->getCol() - 1]) ==
+            visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow()][cell->getCol() - 1]);
-    } else if (cell->getCol() - 1 >= 0 && visited.find(cell) != visited.end()) {
+    } else if (cell->getCol() - 1 >= 0 &&
+               visited.find(matrix_[cell->getRow()][cell->getCol() - 1]) !=
+                   visited.end()) {
         // Add a wall if not out of bounds but visited already
         addWall(cell, matrix_[cell->getRow()][cell->getCol() - 1]);
     }
 
     // Check for down neighbour
     if (cell->getRow() + 1 < matrix_.size() &&
-        visited.find(cell) == visited.end()) {
+        visited.find(matrix_[cell->getRow() + 1][cell->getCol()]) ==
+            visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow() + 1][cell->getCol()]);
     } else if (cell->getRow() + 1 < matrix_.size() &&
-               visited.find(cell) != visited.end()) {
+               visited.find(matrix_[cell->getRow() + 1][cell->getCol()]) !=
+                   visited.end()) {
         // Add a wall if not out of bounds but visited already
         addWall(cell, matrix_[cell->getRow() + 1][cell->getCol()]);
     }
 
     // Check for right neighbour
     if (cell->getCol() + 1 < matrix_[0].size() &&
-        visited.find(cell) == visited.end()) {
+        visited.find(matrix_[cell->getRow()][cell->getCol() + 1]) ==
+            visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow()][cell->getCol() + 1]);
     } else if (cell->getCol() + 1 < matrix_[0].size() &&
-               visited.find(cell) != visited.end()) {
+               visited.find(matrix_[cell->getRow()][cell->getCol() + 1]) !=
+                   visited.end()) {
         // Add a wall if not out of bounds but visited already
         addWall(cell, matrix_[cell->getRow()][cell->getCol() + 1]);
     }
@@ -151,31 +165,37 @@ void Maze::addWall(const Cell* parent, const Cell* child) {
     // Check if its a top neighbour
     if (child->getRow() < parent->getRow()) {
         // Populate corners that will make the wall
-        Corner first(parent->getRow(), parent->getCol());
-        Corner second(parent->getRow(), parent->getCol() + cell_size_);
+        Corner first(parent->getRow() * cell_size_,
+                     parent->getCol() * cell_size_);
+        Corner second(parent->getRow() * cell_size_,
+                      parent->getCol() * cell_size_ * cell_size_ + cell_size_);
         constructWall(first, second);
     }
     // Check if its left neighbour
     else if (child->getCol() < parent->getCol()) {
         // Populate corners that will make the wall
-        Corner first(parent->getRow(), parent->getCol());
-        Corner second(parent->getRow() + cell_size_, parent->getCol());
+        Corner first(parent->getRow() * cell_size_,
+                     parent->getCol() * cell_size_);
+        Corner second(parent->getRow() * cell_size_ + cell_size_,
+                      parent->getCol() * cell_size_);
         constructWall(first, second);
     }
     // Check if its down neighbour
     else if (child->getRow() > parent->getRow()) {
         // Populate corners that will make the wall
-        Corner first(parent->getRow() + cell_size_, parent->getCol());
-        Corner second(parent->getRow() + cell_size_,
-                      parent->getCol() + cell_size_);
+        Corner first(parent->getRow() * cell_size_ + cell_size_,
+                     parent->getCol() * cell_size_);
+        Corner second(parent->getRow() * cell_size_ + cell_size_,
+                      parent->getCol() * cell_size_ + cell_size_);
         constructWall(first, second);
     }
     // Otherwise handle the case for right neighbour
     else {
         // Populate corners that will make the wall
-        Corner first(parent->getRow(), parent->getCol() + cell_size_);
-        Corner second(parent->getRow() + cell_size_,
-                      parent->getCol() + cell_size_);
+        Corner first(parent->getRow() * cell_size_,
+                     parent->getCol() * cell_size_ + cell_size_);
+        Corner second(parent->getRow() * cell_size_ + cell_size_,
+                      parent->getCol() * cell_size_ + cell_size_);
         constructWall(first, second);
     }
 }

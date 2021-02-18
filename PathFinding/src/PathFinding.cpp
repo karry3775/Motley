@@ -26,6 +26,10 @@ PathFinder::PathFinder(const EnvironmentType& env_type, const Method& method,
 
 const Environment<Cell>* PathFinder::getEnvironment() const { return env_; }
 
+const EnvironmentType& PathFinder::getEnvironmentType() const {
+    return env_type_;
+}
+
 const Path<Cell*> PathFinder::getPath() const { return path_; }
 
 void PathFinder::findPath() {
@@ -130,6 +134,12 @@ void PathFinder::findPathBfs() {
 
     // Reverse the path
     std::reverse(path_.begin(), path_.end());
+
+    // DEBUG
+    LOG(WARNING) << "Path is: ";
+    for (const auto& x : path_) {
+        LOG(INFO) << *x;
+    }
 }
 
 }  // namespace pathfinding

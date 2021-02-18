@@ -10,6 +10,7 @@ Visualizer::Visualizer(const PathFinder* path_finder) {
     width_ = cell_size_ * path_finder->getEnvironment()->getCols() + 1;
     height_ = cell_size_ * path_finder->getEnvironment()->getRows() + 1;
     path_ = path_finder->getPath();
+    env_type_ = path_finder->getEnvironmentType();
 }
 
 void Visualizer::setTitle(const char* title) { title_ = title; }
@@ -17,6 +18,20 @@ void Visualizer::setTitle(const char* title) { title_ = title; }
 void Visualizer::setTheme(const Theme& theme) { theme_ = theme; }
 
 void Visualizer::show() {
+    switch (env_type_) {
+        case EnvironmentType::GRID:
+            showGrid();
+            break;
+        case EnvironmentType::MAZE:
+            showMaze();
+            break;
+        default:
+            LOG(FATAL) << "Unknown environment type for path finding!";
+            break;
+    }
+}
+
+void Visualizer::showGrid() {
     // TODO: Add check for checking if path was
     // calculated
     SDL_bool quit = SDL_FALSE;
@@ -87,6 +102,66 @@ void Visualizer::show() {
         usleep(m_sleep_duration_ms);
     }
 
+    // Destroy
+    SDL_DestroyRenderer(renderer_);
+    SDL_DestroyWindow(window_);
+    SDL_Quit();
+}
+
+void Visualizer::showMaze() {
+    SDL_bool quit = SDL_FALSE;
+
+    // To track the number of current waypoints shown
+    // Helps in showing path progression
+    int num_path_waypoints = 1;
+
+    while (!quit) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                quit = SDL_FALSE;
+                break;
+            }
+        }
+
+        // Render background
+        SDL_SetRenderDrawColor(renderer_, background_color_.r,
+                               background_color_.g, background_color_.b,
+                               background_color_.a);
+        SDL_RenderClear(renderer_);
+
+        // TODO: Check if width and height have been set
+
+        // Iterate through the path and fill up the rectangles with path
+        // color
+        SDL_SetRenderDrawColor(renderer_, path_color_.r, path_color_.g,
+                               path_color_.b, path_color_.a);
+
+        // Add waypoints progressionally
+        for (int i = 0; i < num_path_waypoints; ++i) {
+            auto cell = *path_[i];
+
+            // Form the rectangle to be rendered
+            SDL_Rect rect;
+            rect.x = cell.getCol() * cell_size_;
+            rect.y = cell.getRow() * cell_size_;
+            rect.w = cell_size_;
+            rect.h = cell_size_;
+
+            // Fill the rectangle
+            SDL_RenderFillRect(renderer_, &rect);
+        }
+
+        num_path_waypoints = (num_path_waypoints < path_.size())
+                                 ? num_path_waypoints + 1
+                                 : num_path_waypoints;
+
+        // Present the render
+        SDL_RenderPresent(renderer_);
+
+        // Sleep
+        usleep(m_sleep_duration_ms);
+    }
     // Destroy
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);

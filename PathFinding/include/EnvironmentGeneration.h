@@ -23,6 +23,16 @@ class Environment {
 
     virtual AdjacencyList<T*> getAdjacencyList() const { return adj_; };
 
+    virtual void printAdjacencyList() const {
+        LOG(INFO) << "The adjancency list is:";
+        for (auto itr = adj_.begin(); itr != adj_.end(); ++itr) {
+            LOG(INFO) << *(itr->first) << " --> ";
+            for (auto x : itr->second) {
+                LOG(INFO) << *x << " ";
+            }
+        }
+    }
+
     /** Pure virtual functions **/
     // TODO: Add better description for this interface class
 

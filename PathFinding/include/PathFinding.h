@@ -40,6 +40,8 @@ class PathFinder {
     // TODO : Check if this is best way to return
     const Environment<Cell>* getEnvironment() const;
 
+    const EnvironmentType& getEnvironmentType() const;
+
     const Path<Cell*> getPath() const;
 
    private:

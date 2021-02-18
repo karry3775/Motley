@@ -39,6 +39,16 @@ class Visualizer {
      */
     void show();
 
+    /**
+     * Visualizer pathfinding for Grid environment
+     */
+    void showGrid();
+
+    /**
+     * Visualize pathfinding for maze environment
+     */
+    void showMaze();
+
    private:
     void setLightTheme();
     void setDarkTheme();
@@ -59,6 +69,9 @@ class Visualizer {
     const char* title_;
 
     Path<Cell*> path_;
+
+    // Environment type
+    EnvironmentType env_type_;
 
     // sleep duration in milliseconds
     static const uint32_t m_sleep_duration_ms;

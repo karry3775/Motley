@@ -36,7 +36,7 @@ class Maze : public Environment<Cell> {
     /**
      * Getter for walls of the maze
      */
-    const std::vector<Wall*> getWalls() const; 
+    const std::vector<Wall*> getWalls() const;
 
     /**
      * Gets the pointer to the cell in the maze based

@@ -3,7 +3,7 @@
 
 namespace pathfinding {
 
-const uint32_t Visualizer::m_sleep_duration_ms = 0.1 * microseconds_in_seconds;
+const uint32_t Visualizer::m_sleep_duration_ms = 0.01 * microseconds_in_seconds;
 
 Visualizer::Visualizer(const PathFinder* path_finder) {
     cell_size_ = path_finder->getEnvironment()->getCellSize();
@@ -89,11 +89,11 @@ void Visualizer::showGrid() {
 
         // Draw horizontal grid lines
         for (int row = 0; row < width_; row += cell_size_) {
-            SDL_RenderDrawLine(renderer_, row, 0, row, height_);
+            SDL_RenderDrawLine(renderer_, row, 0, row, height_ - 1);
         }
         // Draw vertical grid lines
         for (int col = 0; col < height_; col += cell_size_) {
-            SDL_RenderDrawLine(renderer_, 0, col, width_, col);
+            SDL_RenderDrawLine(renderer_, 0, col, width_ - 1, col);
         }
 
         // Present the render
@@ -184,6 +184,13 @@ void Visualizer::showMaze() {
             SDL_RenderDrawLine(renderer_, corners[0], corners[1], corners[2],
                                corners[3]);
         }
+
+        // Additionally add walls denoting maze outerboundaries
+        SDL_RenderDrawLine(renderer_, 0, 0, width_ - 1, 0);
+        SDL_RenderDrawLine(renderer_, 0, 0, 0, height_ - 1);
+        SDL_RenderDrawLine(renderer_, 0, height_ - 1, width_ - 1, height_ - 1);
+        SDL_RenderDrawLine(renderer_, width_ - 1, height_ - 1, width_ - 1, 0);
+
         // Present the render
         SDL_RenderPresent(renderer_);
 
@@ -232,19 +239,21 @@ bool Visualizer::init() {
 }
 
 void Visualizer::setDarkTheme() {
-    background_color_ = {65, 60, 48, 255};         // color code #413C30
-    grid_line_color_ = {223, 222, 221, 255};       // color code #DFDEDD
-    traversal_cell_color_ = {123, 163, 219, 255};  // some version of blue
-    path_color_ = {137, 225, 117, 255};            // some version of green
-    waypoint_color_ = {255, 31, 31, 255};          // some version of red
+    background_color_ = {65, 60, 48, 255};    // color code #413C30
+    grid_line_color_ = {223, 222, 221, 255};  // color code #DFDEDD
+    path_color_ = {255, 31, 31, 255};         // some version of blue // FIX ME
+    traversal_cell_color_ = {123, 163, 219,
+                             255};           // some version of green // FIXE ME
+    waypoint_color_ = {137, 225, 117, 255};  // some version of red // FIX ME
 }
 
 void Visualizer::setLightTheme() {
-    background_color_ = {223, 222, 221, 255};      // color code #DFDEDD
-    grid_line_color_ = {65, 60, 48, 255};          // color code #413C30
-    traversal_cell_color_ = {123, 163, 219, 255};  // Bleu de France
-    path_color_ = {137, 225, 117, 255};            // some version of green
-    waypoint_color_ = {255, 31, 31, 255};          // some version of red
+    background_color_ = {223, 222, 221, 255};  // color code #DFDEDD
+    grid_line_color_ = {223, 222, 221, 255};   // color code #DFDEDD
+    path_color_ = {255, 31, 31, 255};          // some version of blue // FIX ME
+    traversal_cell_color_ = {123, 163, 219,
+                             255};           // some version of green // FIX ME
+    waypoint_color_ = {137, 225, 117, 255};  // some version of red // FIX ME
 }
 
 }  // namespace pathfinding

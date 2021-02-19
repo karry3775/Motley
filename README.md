@@ -7,5 +7,6 @@ This repository is made for the sole purpose of doing random assortment of proje
 ![maze](SDL_exploration/images/mazegen.gif)
 
 ## Path finding tool
+![maze_bfs](PathFinding/images/maze_bfs.gif)
 
 

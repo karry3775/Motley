@@ -134,12 +134,6 @@ void PathFinder::findPathBfs() {
 
     // Reverse the path
     std::reverse(path_.begin(), path_.end());
-
-    // DEBUG
-    LOG(WARNING) << "Path is: ";
-    for (const auto& x : path_) {
-        LOG(INFO) << *x;
-    }
 }
 
 }  // namespace pathfinding

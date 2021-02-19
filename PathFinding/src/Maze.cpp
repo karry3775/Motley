@@ -114,23 +114,12 @@ std::vector<Cell*> Maze::getValidNeighbours(Cell* cell,
         visited.find(matrix_[cell->getRow() - 1][cell->getCol()]) ==
             visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow() - 1][cell->getCol()]);
-    } else if (cell->getRow() - 1 >= 0 &&
-               visited.find(matrix_[cell->getRow() - 1][cell->getCol()]) !=
-                   visited.end()) {
-        // Add a wall if not out of bounds but visited already
-        addWall(cell, matrix_[cell->getRow() - 1][cell->getCol()]);
     }
-
     // Check the left neighbour
     if (cell->getCol() - 1 >= 0 &&
         visited.find(matrix_[cell->getRow()][cell->getCol() - 1]) ==
             visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow()][cell->getCol() - 1]);
-    } else if (cell->getCol() - 1 >= 0 &&
-               visited.find(matrix_[cell->getRow()][cell->getCol() - 1]) !=
-                   visited.end()) {
-        // Add a wall if not out of bounds but visited already
-        addWall(cell, matrix_[cell->getRow()][cell->getCol() - 1]);
     }
 
     // Check for down neighbour
@@ -138,11 +127,6 @@ std::vector<Cell*> Maze::getValidNeighbours(Cell* cell,
         visited.find(matrix_[cell->getRow() + 1][cell->getCol()]) ==
             visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow() + 1][cell->getCol()]);
-    } else if (cell->getRow() + 1 < matrix_.size() &&
-               visited.find(matrix_[cell->getRow() + 1][cell->getCol()]) !=
-                   visited.end()) {
-        // Add a wall if not out of bounds but visited already
-        addWall(cell, matrix_[cell->getRow() + 1][cell->getCol()]);
     }
 
     // Check for right neighbour
@@ -150,11 +134,6 @@ std::vector<Cell*> Maze::getValidNeighbours(Cell* cell,
         visited.find(matrix_[cell->getRow()][cell->getCol() + 1]) ==
             visited.end()) {
         neighbours.emplace_back(matrix_[cell->getRow()][cell->getCol() + 1]);
-    } else if (cell->getCol() + 1 < matrix_[0].size() &&
-               visited.find(matrix_[cell->getRow()][cell->getCol() + 1]) !=
-                   visited.end()) {
-        // Add a wall if not out of bounds but visited already
-        addWall(cell, matrix_[cell->getRow()][cell->getCol() + 1]);
     }
 
     return neighbours;
@@ -169,7 +148,7 @@ void Maze::addWall(const Cell* parent, const Cell* child) {
         Corner first(parent->getRow() * cell_size_,
                      parent->getCol() * cell_size_);
         Corner second(parent->getRow() * cell_size_,
-                      parent->getCol() * cell_size_ * cell_size_ + cell_size_);
+                      parent->getCol() * cell_size_ + cell_size_);
         constructWall(first, second);
     }
     // Check if its left neighbour

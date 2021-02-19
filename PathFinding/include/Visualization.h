@@ -70,6 +70,9 @@ class Visualizer {
 
     Path<Cell*> path_;
 
+    // Environment
+    const Environment<Cell>* env_;
+
     // Environment type
     EnvironmentType env_type_;
 

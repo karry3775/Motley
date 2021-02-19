@@ -46,6 +46,8 @@ class Environment {
 
     virtual const uint32_t getCellSize() const = 0;
 
+    virtual const std::vector<Wall*> getWalls() const {}
+
    private:
     AdjacencyList<T*> adj_;
     uint32_t size_;

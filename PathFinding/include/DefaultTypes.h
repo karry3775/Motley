@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "Wall.h"
 
 namespace pathfinding {
 

@@ -34,6 +34,11 @@ class Maze : public Environment<Cell> {
     const uint32_t getCellSize() const;
 
     /**
+     * Getter for walls of the maze
+     */
+    const std::vector<Wall*> getWalls() const; 
+
+    /**
      * Gets the pointer to the cell in the maze based
      * on information provided by a cell
      * @param Cell Cell describing the location to be accessed

@@ -30,8 +30,8 @@ class Wall {
 inline std::ostream& operator<<(std::ostream& stream, const Wall& wall) {
     stream << "Wall: ";
 
-    for (auto itr = wall.getItems().begin(); itr != wall.getItems().end();
-         ++itr) {
+    std::set<Corner> items;
+    for (auto itr = items.begin(); itr != items.end(); ++itr) {
         stream << (*itr) << " ";
     }
 

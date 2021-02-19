@@ -30,6 +30,8 @@ const uint32_t Maze::getCols() const { return cols_; }
 
 const uint32_t Maze::getCellSize() const { return cell_size_; }
 
+const std::vector<Wall*> Maze::getWalls() const { return walls_; }
+
 Cell* Maze::at(const Cell& cell) {
     return matrix_[cell.getRow()][cell.getCol()];
 }
@@ -70,7 +72,6 @@ void Maze::generateRDFS() {
 }
 
 void Maze::generateRDFS(Cell* current, std::set<Cell*>& visited) {
-    LOG(INFO) << "Recursing!";
     // Select one of the unvisited valid neighbour
     auto neighbours = getValidNeighbours(current, visited);
 

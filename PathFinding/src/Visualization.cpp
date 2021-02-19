@@ -11,6 +11,7 @@ Visualizer::Visualizer(const PathFinder* path_finder) {
     height_ = cell_size_ * path_finder->getEnvironment()->getRows() + 1;
     path_ = path_finder->getPath();
     env_type_ = path_finder->getEnvironmentType();
+    env_ = path_finder->getEnvironment();
 }
 
 void Visualizer::setTitle(const char* title) { title_ = title; }
@@ -119,7 +120,7 @@ void Visualizer::showMaze() {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
-                quit = SDL_FALSE;
+                quit = SDL_TRUE;
                 break;
             }
         }
@@ -156,6 +157,33 @@ void Visualizer::showMaze() {
                                  ? num_path_waypoints + 1
                                  : num_path_waypoints;
 
+        // Show the maze walls
+        // TODO: move me to another function (although cleverly since
+        // we cant have maze and grid functions defined all over the place)
+        // Major GOTCHA! getWalls is not virtual and hence its not callable
+        // Easy fix would be just create a virtual getWalls inside environment
+        // Later to be replaced by a getParams which can then be utilized as
+        // we see fit.
+        SDL_SetRenderDrawColor(renderer_, grid_line_color_.r,
+                               grid_line_color_.g, grid_line_color_.b,
+                               grid_line_color_.a);
+
+        for (auto& wall_ptr : env_->getWalls()) {
+            CHECK(wall_ptr->getItems().size() != 0) << "walls are empty!";
+
+            // Get the corners for the walls
+            std::vector<uint32_t> corners;
+
+            std::set<Corner> items = wall_ptr->getItems();
+            for (auto itr = items.begin(); itr != items.end(); ++itr) {
+                corners.push_back(itr->getCol());
+                corners.push_back(itr->getRow());
+            }
+
+            // Draw the line
+            SDL_RenderDrawLine(renderer_, corners[0], corners[1], corners[2],
+                               corners[3]);
+        }
         // Present the render
         SDL_RenderPresent(renderer_);
 

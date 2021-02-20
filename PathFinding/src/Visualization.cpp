@@ -110,6 +110,7 @@ void Visualizer::showGrid() {
 }
 
 void Visualizer::showMaze() {
+    // TODO: Check if width and height have been set
     SDL_bool quit = SDL_FALSE;
 
     // To track the number of current waypoints shown
@@ -126,96 +127,21 @@ void Visualizer::showMaze() {
         }
 
         // Render background
-        SDL_SetRenderDrawColor(renderer_, background_color_.r,
-                               background_color_.g, background_color_.b,
-                               background_color_.a);
-        SDL_RenderClear(renderer_);
+        renderBackground();
 
-        // TODO: Check if width and height have been set
+        // Render path
+        renderPath(num_path_waypoints);
 
-        // Iterate through the path and fill up the rectangles with path
-        // color
-        SDL_SetRenderDrawColor(renderer_, path_color_.r, path_color_.g,
-                               path_color_.b, path_color_.a);
-
-        // Add waypoints progressionally
-        for (int i = 0; i < num_path_waypoints; ++i) {
-            auto cell = *path_[i];
-
-            // Form the rectangle to be rendered
-            SDL_Rect rect;
-            rect.x = cell.getCol() * cell_size_;
-            rect.y = cell.getRow() * cell_size_;
-            rect.w = cell_size_;
-            rect.h = cell_size_;
-
-            // Fill the rectangle
-            SDL_RenderFillRect(renderer_, &rect);
-        }
-
-        // Overwrite the colors for start and end color
-        auto start_cell = *path_[0];
-        // Assign color for start cell
-        SDL_SetRenderDrawColor(renderer_, start_color_.r, start_color_.g,
-                               start_color_.b, start_color_.a);
-        SDL_Rect rect;
-        rect.x = start_cell.getCol() * cell_size_;
-        rect.y = start_cell.getRow() * cell_size_;
-        rect.w = cell_size_;
-        rect.h = cell_size_;
-
-        // Fill the start cell
-        SDL_RenderFillRect(renderer_, &rect);
-
-        auto end_cell = *path_[path_.size() - 1];
-        // Assign color for end cell
-        SDL_SetRenderDrawColor(renderer_, end_color_.r, end_color_.g,
-                               end_color_.b, end_color_.a);
-        rect.x = end_cell.getCol() * cell_size_;
-        rect.y = end_cell.getRow() * cell_size_;
-        rect.w = cell_size_;
-        rect.h = cell_size_;
-
-        // Fill the end cell
-        SDL_RenderFillRect(renderer_, &rect);
-
+        // Update number of waypoints to be rendered
         num_path_waypoints = (num_path_waypoints < path_.size())
                                  ? num_path_waypoints + 1
                                  : num_path_waypoints;
 
-        // Show the maze walls
-        // TODO: move me to another function (although cleverly since
-        // we cant have maze and grid functions defined all over the place)
-        // Major GOTCHA! getWalls is not virtual and hence its not callable
-        // Easy fix would be just create a virtual getWalls inside environment
-        // Later to be replaced by a getParams which can then be utilized as
-        // we see fit.
-        SDL_SetRenderDrawColor(renderer_, grid_line_color_.r,
-                               grid_line_color_.g, grid_line_color_.b,
-                               grid_line_color_.a);
+        // Render walls
+        renderWalls();
 
-        for (auto& wall_ptr : env_->getWalls()) {
-            CHECK(wall_ptr->getItems().size() != 0) << "walls are empty!";
-
-            // Get the corners for the walls
-            std::vector<uint32_t> corners;
-
-            std::set<Corner> items = wall_ptr->getItems();
-            for (auto itr = items.begin(); itr != items.end(); ++itr) {
-                corners.push_back(itr->getCol());
-                corners.push_back(itr->getRow());
-            }
-
-            // Draw the line
-            SDL_RenderDrawLine(renderer_, corners[0], corners[1], corners[2],
-                               corners[3]);
-        }
-
-        // Additionally add walls denoting maze outerboundaries
-        SDL_RenderDrawLine(renderer_, 0, 0, width_ - 1, 0);
-        SDL_RenderDrawLine(renderer_, 0, 0, 0, height_ - 1);
-        SDL_RenderDrawLine(renderer_, 0, height_ - 1, width_ - 1, height_ - 1);
-        SDL_RenderDrawLine(renderer_, width_ - 1, height_ - 1, width_ - 1, 0);
+        // render outer boundaries
+        renderBoundaries();
 
         // Present the render
         SDL_RenderPresent(renderer_);
@@ -282,6 +208,86 @@ void Visualizer::setLightTheme() {
     path_color_ = {106, 90, 205, 255};
     traversal_cell_color_ = {123, 163, 219, 255};
     waypoint_color_ = {137, 225, 117, 255};
+}
+
+void Visualizer::renderBackground() {
+    SDL_SetRenderDrawColor(renderer_, background_color_.r, background_color_.g,
+                           background_color_.b, background_color_.a);
+    SDL_RenderClear(renderer_);
+}
+
+void Visualizer::renderPath(const uint32_t& num_waypoints) {
+    // Iterate through the path and fill up the rectangles with path
+    // color
+    SDL_SetRenderDrawColor(renderer_, path_color_.r, path_color_.g,
+                           path_color_.b, path_color_.a);
+
+    // Add waypoints progressionally
+    for (int i = 0; i < num_waypoints; ++i) {
+        auto cell = *path_[i];
+
+        // Form the rectangle to be rendered
+        renderCell(cell, path_color_);
+    }
+
+    // Render start cell
+    auto start_cell = *path_[0];
+    renderCell(start_cell, start_color_);
+
+    // Render end cell
+    auto end_cell = *path_[path_.size() - 1];
+    renderCell(end_cell, end_color_);
+}
+
+void Visualizer::renderWalls() {
+    // Major GOTCHA! getWalls was not virtual and hence its not callable unless
+    // made one Easy fix would be just create a virtual getWalls inside
+    // environment Later to be replaced by a virtual getParams which can then be
+    // utilized as we see fit.
+
+    // Set render color
+    SDL_SetRenderDrawColor(renderer_, grid_line_color_.r, grid_line_color_.g,
+                           grid_line_color_.b, grid_line_color_.a);
+
+    // Render walls
+    for (auto& wall_ptr : env_->getWalls()) {
+        CHECK(wall_ptr->getItems().size() != 0) << "walls are empty!";
+
+        // Get the corners for the walls
+        std::vector<uint32_t> corners;
+
+        std::set<Corner> items = wall_ptr->getItems();
+        for (auto itr = items.begin(); itr != items.end(); ++itr) {
+            corners.push_back(itr->getCol());
+            corners.push_back(itr->getRow());
+        }
+
+        // Draw the line
+        SDL_RenderDrawLine(renderer_, corners[0], corners[1], corners[2],
+                           corners[3]);
+    }
+}
+
+void Visualizer::renderCell(const Cell& cell, const SDL_Color& color) {
+    // Set render color
+    SDL_SetRenderDrawColor(renderer_, color.r, color.g, color.b, color.a);
+
+    // Create the cell rectangle to be rendered
+    SDL_Rect rect;
+    rect.x = cell.getCol() * cell_size_;
+    rect.y = cell.getRow() * cell_size_;
+    rect.w = cell_size_;
+    rect.h = cell_size_;
+
+    // Push to the renderer
+    SDL_RenderFillRect(renderer_, &rect);
+}
+
+void Visualizer::renderBoundaries() {
+    SDL_RenderDrawLine(renderer_, 0, 0, width_ - 1, 0);
+    SDL_RenderDrawLine(renderer_, 0, 0, 0, height_ - 1);
+    SDL_RenderDrawLine(renderer_, 0, height_ - 1, width_ - 1, height_ - 1);
+    SDL_RenderDrawLine(renderer_, width_ - 1, height_ - 1, width_ - 1, 0);
 }
 
 }  // namespace pathfinding

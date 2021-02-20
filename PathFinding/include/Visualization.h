@@ -52,6 +52,11 @@ class Visualizer {
    private:
     void setLightTheme();
     void setDarkTheme();
+    void renderBackground();
+    void renderPath(const uint32_t& num_waypoints);
+    void renderWalls();
+    void renderCell(const Cell& cell, const SDL_Color& color);
+    void renderBoundaries();
 
     uint32_t width_;
     uint32_t height_;

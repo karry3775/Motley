@@ -239,21 +239,19 @@ bool Visualizer::init() {
 }
 
 void Visualizer::setDarkTheme() {
-    background_color_ = {65, 60, 48, 255};    // color code #413C30
-    grid_line_color_ = {223, 222, 221, 255};  // color code #DFDEDD
-    path_color_ = {255, 31, 31, 255};         // some version of blue // FIX ME
-    traversal_cell_color_ = {123, 163, 219,
-                             255};           // some version of green // FIXE ME
-    waypoint_color_ = {137, 225, 117, 255};  // some version of red // FIX ME
+    background_color_ = {65, 60, 48, 255};
+    grid_line_color_ = {223, 222, 221, 255};
+    path_color_ = {255, 31, 31, 255};
+    traversal_cell_color_ = {123, 163, 219, 255};
+    waypoint_color_ = {137, 225, 117, 255};
 }
 
 void Visualizer::setLightTheme() {
-    background_color_ = {223, 222, 221, 255};  // color code #DFDEDD
-    grid_line_color_ = {223, 222, 221, 255};   // color code #DFDEDD
-    path_color_ = {255, 31, 31, 255};          // some version of blue // FIX ME
-    traversal_cell_color_ = {123, 163, 219,
-                             255};           // some version of green // FIX ME
-    waypoint_color_ = {137, 225, 117, 255};  // some version of red // FIX ME
+    background_color_ = {223, 222, 221, 255};
+    grid_line_color_ = {65, 60, 48, 255};
+    path_color_ = {255, 31, 31, 255};
+    traversal_cell_color_ = {123, 163, 219, 255};
+    waypoint_color_ = {137, 225, 117, 255};
 }
 
 }  // namespace pathfinding

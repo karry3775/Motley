@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     // Set title
     visualizer->setTitle("MAZE");
     // Set theme
-    visualizer->setTheme(PF::Theme::DARK);
+    visualizer->setTheme(PF::Theme::LIGHT);
     // Initiate the grid
     visualizer->init();
     // Show

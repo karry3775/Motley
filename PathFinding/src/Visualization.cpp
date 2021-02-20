@@ -15,6 +15,21 @@ Visualizer::Visualizer(const PathFinder* path_finder) {
     env_type_ = path_finder->getEnvironmentType();
     env_ = path_finder->getEnvironment();
     waypoint_radius_ = FLAGS_waypoint_radius;
+    path_exists_ = path_finder->doesPathExists();
+
+    switch (env_type_) {
+        case EnvironmentType::GRID:
+            obstacles_ = path_finder->getObstacles();
+            break;
+        case EnvironmentType::MAZE:
+            // For specifying maze specific properties for
+            // visualizer in future
+            break;
+        default:
+            // Although this will be first caught by the path finder
+            LOG(FATAL) << "Unknown environment type!";
+            break;
+    }
 }
 
 void Visualizer::setTitle(const char* title) { title_ = title; }
@@ -57,6 +72,9 @@ void Visualizer::showGrid() {
         }
         // Render background
         renderBackground();
+
+        // Render obstacles
+        renderObstacles();
 
         // Render Path
         renderPath(num_path_waypoints);
@@ -179,6 +197,7 @@ void Visualizer::setDarkTheme() {
     traversal_cell_color_ = {123, 163, 219, 255};
     waypoint_line_color_ = {137, 225, 117, 255};
     waypoint_circle_color_ = {177, 137, 51, 255};
+    obstacles_color_ = {180, 180, 180, 255};
 }
 
 void Visualizer::setLightTheme() {
@@ -190,6 +209,7 @@ void Visualizer::setLightTheme() {
     traversal_cell_color_ = {123, 163, 219, 255};
     waypoint_line_color_ = {137, 225, 117, 255};
     waypoint_circle_color_ = {177, 137, 51, 255};
+    obstacles_color_ = {60, 60, 60, 255};
 }
 
 void Visualizer::renderBackground() {
@@ -298,16 +318,19 @@ void Visualizer::renderWayPoints(const uint32_t& num_waypoints) {
 }
 
 void Visualizer::renderWayPointPair(const Cell& c1, const Cell& c2) {
-    CHECK(cell_size_ / 2 != 0) << "cell_size needs to be even";
+    CHECK(cell_size_ % 2 == 0) << "cell_size needs to be even";
     SDL_SetRenderDrawColor(renderer_, waypoint_line_color_.r,
                            waypoint_line_color_.g, waypoint_line_color_.b,
                            waypoint_line_color_.a);
 
-    // Draw line joining the two lines
-    SDL_RenderDrawLine(renderer_, (c1.getCol() * cell_size_) + cell_size_ / 2,
-                       (c1.getRow() * cell_size_) + cell_size_ / 2,
-                       (c2.getCol() * cell_size_) + cell_size_ / 2,
-                       (c2.getRow() * cell_size_) + cell_size_ / 2);
+    if (path_exists_) {
+        // Draw line joining the two lines
+        SDL_RenderDrawLine(renderer_,
+                           (c1.getCol() * cell_size_) + cell_size_ / 2,
+                           (c1.getRow() * cell_size_) + cell_size_ / 2,
+                           (c2.getCol() * cell_size_) + cell_size_ / 2,
+                           (c2.getRow() * cell_size_) + cell_size_ / 2);
+    }
 
     SDL_SetRenderDrawColor(renderer_, waypoint_circle_color_.r,
                            waypoint_line_color_.g, waypoint_line_color_.b,
@@ -337,6 +360,17 @@ void Visualizer::renderCircle(int x0, int y0) {
         else {
             x--;
             radius_error += 2 * (y - x + 1);
+        }
+    }
+}
+
+void Visualizer::renderObstacles() {
+    CHECK(!obstacles_.empty()) << "No obstacles specified. Was this intended!";
+
+    // Iterate through all the obstacles and render them
+    for (int i = 0; i < obstacles_.size(); ++i) {
+        for (int j = 0; j < obstacles_[0].size(); ++j) {
+            if (obstacles_[i][j] == 1) renderCell(Cell(i, j), obstacles_color_);
         }
     }
 }

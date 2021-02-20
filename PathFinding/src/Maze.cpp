@@ -7,7 +7,8 @@ Maze::Maze() {
 }
 
 Maze::Maze(const uint32_t& rows, const uint32_t& cols,
-           const uint32_t& cell_size, const GenerationMethod& generation_method)
+           const uint32_t& cell_size,
+           const MazeGenerationMethod& generation_method)
     : rows_{rows},
       cols_{cols},
       cell_size_{cell_size},
@@ -42,18 +43,14 @@ Cell* Maze::at(const uint32_t& row, const uint32_t& col) {
 
 void Maze::generate() {
     switch (generation_method_) {
-        case GenerationMethod::RANDOMIZED_DFS:
+        case MazeGenerationMethod::RANDOMIZED_DFS:
             generateRDFS();
             break;
-        case GenerationMethod::PRIMS:
+        case MazeGenerationMethod::PRIMS:
             generatePrims();
             break;
-        case GenerationMethod::KRUSKALS:
+        case MazeGenerationMethod::KRUSKALS:
             generateKruskal();
-            break;
-        case GenerationMethod::NONE:
-            LOG(FATAL) << "A method needs to be specified for Maze Generation. "
-                          "NONE was passed!";
             break;
         default:
             LOG(FATAL) << "Unknown Maze Generation method!";

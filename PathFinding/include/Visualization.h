@@ -62,6 +62,8 @@ class Visualizer {
     void renderWayPointPair(const Cell& c1, const Cell& c2);
     void renderCircle(int x0, int y0);
 
+    void renderObstacles();
+
     uint32_t width_;
     uint32_t height_;
     uint32_t cell_size_;
@@ -77,11 +79,16 @@ class Visualizer {
     SDL_Color path_color_;
     SDL_Color waypoint_line_color_;
     SDL_Color waypoint_circle_color_;
+    SDL_Color obstacles_color_;
 
     Theme theme_;
     const char* title_;
 
     Path<Cell*> path_;
+
+    std::vector<std::vector<int>> obstacles_;
+
+    bool path_exists_;
 
     // Environment
     const Environment<Cell>* env_;

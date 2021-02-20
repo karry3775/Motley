@@ -8,13 +8,13 @@
 
 namespace pathfinding {
 
-enum class GenerationMethod { RANDOMIZED_DFS, PRIMS, KRUSKALS, NONE };
+enum class MazeGenerationMethod { RANDOMIZED_DFS, PRIMS, KRUSKALS };
 
 class Maze : public Environment<Cell> {
    public:
     Maze();
     Maze(const uint32_t& rows, const uint32_t& cols, const uint32_t& cell_size,
-         const GenerationMethod& generation_method);
+         const MazeGenerationMethod& generation_method);
 
     /**
      * Getter for the number of rows in the maze
@@ -117,7 +117,7 @@ class Maze : public Environment<Cell> {
     std::vector<std::vector<Cell*>> matrix_;
 
     // Method used for maze generation
-    GenerationMethod generation_method_;
+    MazeGenerationMethod generation_method_;
 };
 
 }  // namespace pathfinding

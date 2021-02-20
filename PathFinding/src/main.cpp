@@ -16,24 +16,24 @@ int main(int argc, char** argv) {
     uint32_t cell_size{20};
 
     // Choose a starting point
-    PF::Cell start(0, 0);
+    PF::Cell start(2, 2);
 
     // Choose an ending point
-    PF::Cell end(15, 34);
+    PF::Cell end(39, 39);
 
-    // Create the PathFinderObject
-    PF::PathFinder* path_finder =
-        new PF::PathFinder(PF::EnvironmentType::GRID, PF::Method::BFS,
-                           PF::GenerationMethod::NONE, rows, cols,
-                           cell_size, start, end);
+    // Create a grid PathFinderObject
+    PF::PathFinder* grid_path_finder = new PF::PathFinder(
+        PF::EnvironmentType::GRID, PF::PathFindingMethod::BFS,
+        PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE,
+        /**num_obstacles**/ 300, rows, cols, cell_size, start, end);
 
     /** Visualize the environment **/
     // Create a visualizer object for the grid object
-    PF::Visualizer* visualizer(new PF::Visualizer(path_finder));
+    PF::Visualizer* visualizer(new PF::Visualizer(grid_path_finder));
     // Set title
     visualizer->setTitle("GRID");
     // Set theme
-    visualizer->setTheme(PF::Theme::DARK);
+    visualizer->setTheme(PF::Theme::LIGHT);
     // Initiate the grid
     visualizer->init();
     // Show

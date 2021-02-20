@@ -3,22 +3,37 @@
 
 namespace pathfinding {
 
-PathFinder::PathFinder(const EnvironmentType& env_type, const Method& method,
-                       const GenerationMethod& gen_method, const uint32_t& rows,
+PathFinder::PathFinder(const EnvironmentType& env_type,
+                       const PathFindingMethod& pf_method,
+                       const ObstacleGenerationMethod& obs_gen_method,
+                       const uint32_t& num_obstacles, const uint32_t& rows,
                        const uint32_t& cols, const uint32_t& cell_size,
                        const Cell& start, const Cell& end)
-    : start_{start}, end_{end}, method_{method}, env_type_{env_type} {
-    // Generate environment based on enum value
-    switch (env_type) {
-        case EnvironmentType::GRID:
-            env_ = new Grid(rows, cols, cell_size);
-            break;
-        case EnvironmentType::MAZE:
-            env_ = new Maze(rows, cols, cell_size, gen_method);
-            break;
-        default:
-            LOG(FATAL) << "Unknown environment type!";
-    }
+    : start_{start}, end_{end}, pf_method_{pf_method}, env_type_{env_type} {
+    CHECK(env_type_ == EnvironmentType::GRID) << "Expected a GRID type!";
+
+    env_ = new Grid(rows, cols, cell_size, obs_gen_method, num_obstacles);
+
+    // Assign obstacles
+    obstacles_ = env_->getObstacles();
+
+    // Find path using the suggested method above
+    path_found_ = findPath();
+
+    // Assign a seed
+    srand(12345);
+}
+
+PathFinder::PathFinder(const EnvironmentType& env_type,
+                       const PathFindingMethod& pf_method,
+                       const MazeGenerationMethod& maze_gen_method,
+                       const uint32_t& rows, const uint32_t& cols,
+                       const uint32_t& cell_size, const Cell& start,
+                       const Cell& end)
+    : start_{start}, end_{end}, pf_method_{pf_method}, env_type_{env_type} {
+    CHECK(env_type_ == EnvironmentType::MAZE) << "Expected a MAZE type!";
+
+    env_ = new Maze(rows, cols, cell_size, maze_gen_method);
 
     // Find path using the suggested method above
     findPath();
@@ -32,45 +47,57 @@ const EnvironmentType& PathFinder::getEnvironmentType() const {
 
 const Path<Cell*> PathFinder::getPath() const { return path_; }
 
-void PathFinder::findPath() {
-    switch (method_) {
-        case Method::DIJKSTRA:
-            findPathDijkstra();
+const std::vector<std::vector<int>> PathFinder::getObstacles() const {
+    return obstacles_;
+}
+
+bool PathFinder::doesPathExists() const { return path_found_; }
+
+bool PathFinder::findPath() {
+    switch (pf_method_) {
+        case PathFindingMethod::DIJKSTRA:
+            return findPathDijkstra();
             break;
-        case Method::ASTAR:
-            findPathAstar();
+        case PathFindingMethod::ASTAR:
+            return findPathAstar();
             break;
-        case Method::SAMPLE:
-            findPathSample();
+        case PathFindingMethod::SAMPLE:
+            return findPathSample();
             break;
-        case Method::HIERARCHICAL:
-            findPathHierarchical();
+        case PathFindingMethod::HIERARCHICAL:
+            return findPathHierarchical();
             break;
-        case Method::BFS:
-            findPathBfs();
+        case PathFindingMethod::BFS:
+            return findPathBfs();
             break;
         default:
             break;
     }
+
+    return false;
 }
 
-void PathFinder::findPathDijkstra() {
+bool PathFinder::findPathDijkstra() {
     // TODO
+    return false;
 }
 
-void PathFinder::findPathAstar() {
+bool PathFinder::findPathAstar() {
     // TODO
+    return false;
 }
 
-void PathFinder::findPathSample() {
+bool PathFinder::findPathSample() {
     // TODO
+    return false;
 }
 
-void PathFinder::findPathHierarchical() {
+bool PathFinder::findPathHierarchical() {
     // TODO
+    return false;
 }
 
-void PathFinder::findPathBfs() {
+bool PathFinder::findPathBfs() {
     // A queue to facilitate list of vertices/Cells
     // to be traversed in BFS
     std::queue<Cell*> cell_queue;
@@ -97,6 +124,7 @@ void PathFinder::findPathBfs() {
     dist[env_->at(start_)] = 0;
     cell_queue.push(env_->at(start_));
 
+    bool path_found = false;
     // standard BFS algorithm
     while (!cell_queue.empty()) {
         Cell* current = cell_queue.front();
@@ -116,6 +144,7 @@ void PathFinder::findPathBfs() {
 
                 // We can stop the BFS when we find the destination
                 if (adj[current][i] == env_->at(end_)) {
+                    path_found = true;
                     break;
                 }
             }
@@ -134,6 +163,8 @@ void PathFinder::findPathBfs() {
 
     // Reverse the path
     std::reverse(path_.begin(), path_.end());
+
+    return path_found;
 }
 
 }  // namespace pathfinding

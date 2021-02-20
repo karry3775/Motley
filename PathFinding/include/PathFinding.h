@@ -5,7 +5,7 @@
 
 namespace pathfinding {
 
-enum class Method { DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS };
+enum class PathFindingMethod { DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS };
 enum class EnvironmentType { GRID, MAZE };
 
 // TODO: For future make this a template type so that it can support different
@@ -13,27 +13,49 @@ enum class EnvironmentType { GRID, MAZE };
 class PathFinder {
    public:
     /**
-     * @param env_type     Choice of environment to perform path finding
-     *                     Available options are GRID and MAZE
+     * @param env_type        Specify MAZE as environment type
      *
-     * @param gen_method   Available methods to generate the environment
-     *                     For Maze: RANDOMIZED_DFS, PRIMS and KRUSKALS
-     *                     are Needed. For Grid: NONE suffices as no method
-     *                     is needed
+     * @param maze_gen_method Available methods to generate maze
+     *                            [ RANDOMIZED_DFS, PRIMS and KRUSKALS ]
      *
-     * @param method       Method to be used for path finding
-     *                     Available options are DIJKSTRA, ASTAR, SAMPLE,
-     *                     HIERARCHICAL, BFS
+     * @param pf_method       Method to be used for path finding
+     *                        [DIJKSTRA, ASTAR, SAMPLE,
+     *                        HIERARCHICAL, BFS]
      *
-     * @param rows         Number of rows in the grid world
-     * @param cols         Number of cols in the grid world
-     * @param start        Starting Cell for the path
-     * @param end          Ending Cell for the path
+     * @param rows            Number of rows in the grid world
+     * @param cols            Number of cols in the grid world
+     * @param start           Starting Cell for the path
+     * @param end             Ending Cell for the path
      *
      *
      */
-    PathFinder(const EnvironmentType& env_type, const Method& method,
-               const GenerationMethod& gen_method, const uint32_t& rows,
+    PathFinder(const EnvironmentType& env_type,
+               const PathFindingMethod& pf_method,
+               const MazeGenerationMethod& maze_gen_method,
+               const uint32_t& rows, const uint32_t& cols,
+               const uint32_t& cell_size, const Cell& start, const Cell& end);
+
+    /**
+     * @param env_type        Specifiy GRID as the environment type
+     *
+     * @param obs_gen_method  Available methods to generate obstacles [MANUAL,
+     * AUTOMATIC]
+     *
+     * @param pf_method       Method to be used for path finding
+     *                        Available options are DIJKSTRA, ASTAR, SAMPLE,
+     *                        HIERARCHICAL, BFS
+     *
+     * @param rows            Number of rows in the grid world
+     * @param cols            Number of cols in the grid world
+     * @param start           Starting Cell for the path
+     * @param end             Ending Cell for the path
+     *
+     *
+     */
+    PathFinder(const EnvironmentType& env_type,
+               const PathFindingMethod& pf_method,
+               const ObstacleGenerationMethod& obs_gen_method,
+               const uint32_t& num_obstacles, const uint32_t& rows,
                const uint32_t& cols, const uint32_t& cell_size,
                const Cell& start, const Cell& end);
 
@@ -44,21 +66,27 @@ class PathFinder {
 
     const Path<Cell*> getPath() const;
 
+    const std::vector<std::vector<int>> getObstacles() const;
+
+    bool doesPathExists() const;
+
    private:
-    void findPath();
-    void findPathDijkstra();
-    void findPathAstar();
-    void findPathSample();
-    void findPathHierarchical();
-    void findPathBfs();
+    bool findPath();
+    bool findPathDijkstra();
+    bool findPathAstar();
+    bool findPathSample();
+    bool findPathHierarchical();
+    bool findPathBfs();
 
     Environment<Cell>* env_;
     Cell start_;
     Cell end_;
-    Method method_;
+    PathFindingMethod pf_method_;
     EnvironmentType env_type_;
 
     Path<Cell*> path_;
+    std::vector<std::vector<int>> obstacles_;
+    bool path_found_;
 };
 
 }  // namespace pathfinding

@@ -59,6 +59,8 @@ class Visualizer {
 
     SDL_Window* window_;
     SDL_Renderer* renderer_;
+    SDL_Color start_color_;
+    SDL_Color end_color_;
     SDL_Color background_color_;
     SDL_Color grid_line_color_;
     SDL_Color traversal_cell_color_;

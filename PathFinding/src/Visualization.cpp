@@ -153,6 +153,32 @@ void Visualizer::showMaze() {
             SDL_RenderFillRect(renderer_, &rect);
         }
 
+        // Overwrite the colors for start and end color
+        auto start_cell = *path_[0];
+        // Assign color for start cell
+        SDL_SetRenderDrawColor(renderer_, start_color_.r, start_color_.g,
+                               start_color_.b, start_color_.a);
+        SDL_Rect rect;
+        rect.x = start_cell.getCol() * cell_size_;
+        rect.y = start_cell.getRow() * cell_size_;
+        rect.w = cell_size_;
+        rect.h = cell_size_;
+
+        // Fill the start cell
+        SDL_RenderFillRect(renderer_, &rect);
+
+        auto end_cell = *path_[path_.size() - 1];
+        // Assign color for end cell
+        SDL_SetRenderDrawColor(renderer_, end_color_.r, end_color_.g,
+                               end_color_.b, end_color_.a);
+        rect.x = end_cell.getCol() * cell_size_;
+        rect.y = end_cell.getRow() * cell_size_;
+        rect.w = cell_size_;
+        rect.h = cell_size_;
+
+        // Fill the end cell
+        SDL_RenderFillRect(renderer_, &rect);
+
         num_path_waypoints = (num_path_waypoints < path_.size())
                                  ? num_path_waypoints + 1
                                  : num_path_waypoints;
@@ -239,17 +265,21 @@ bool Visualizer::init() {
 }
 
 void Visualizer::setDarkTheme() {
+    start_color_ = {60, 179, 113, 255};
+    end_color_ = {255, 99, 71, 255};
     background_color_ = {65, 60, 48, 255};
     grid_line_color_ = {223, 222, 221, 255};
-    path_color_ = {255, 31, 31, 255};
+    path_color_ = {106, 90, 205, 255};
     traversal_cell_color_ = {123, 163, 219, 255};
     waypoint_color_ = {137, 225, 117, 255};
 }
 
 void Visualizer::setLightTheme() {
+    start_color_ = {60, 179, 113, 255};
+    end_color_ = {255, 99, 71, 255};
     background_color_ = {223, 222, 221, 255};
     grid_line_color_ = {65, 60, 48, 255};
-    path_color_ = {255, 31, 31, 255};
+    path_color_ = {106, 90, 205, 255};
     traversal_cell_color_ = {123, 163, 219, 255};
     waypoint_color_ = {137, 225, 117, 255};
 }

@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     PF::Cell start(0, 0);
 
     // Choose an ending point
-    PF::Cell end(39, 39);
+    PF::Cell end(15, 34);
 
     // Create the PathFinderObject
     PF::PathFinder* path_finder =

@@ -1,6 +1,8 @@
 #include "Visualization.h"
 #include "PathFinding.h"
 
+DEFINE_int32(waypoint_radius, 3, "radius for a waypoint renderer through SDL");
+
 namespace pathfinding {
 
 const uint32_t Visualizer::m_sleep_duration_ms = 0.01 * microseconds_in_seconds;
@@ -12,6 +14,7 @@ Visualizer::Visualizer(const PathFinder* path_finder) {
     path_ = path_finder->getPath();
     env_type_ = path_finder->getEnvironmentType();
     env_ = path_finder->getEnvironment();
+    waypoint_radius_ = FLAGS_waypoint_radius;
 }
 
 void Visualizer::setTitle(const char* title) { title_ = title; }
@@ -102,22 +105,25 @@ void Visualizer::showMaze() {
         // Render path
         renderPath(num_path_waypoints);
 
-        // Update number of waypoints to be rendered
-        num_path_waypoints = (num_path_waypoints < path_.size())
-                                 ? num_path_waypoints + 1
-                                 : num_path_waypoints;
-
         // Render walls
         renderWalls();
 
         // render outer boundaries
         renderBoundaries();
 
+        // render waypoints
+        renderWayPoints(num_path_waypoints);
+
         // Present the render
         SDL_RenderPresent(renderer_);
 
         // Sleep
         usleep(m_sleep_duration_ms);
+
+        // Update number of waypoints to be rendered
+        num_path_waypoints = (num_path_waypoints < path_.size())
+                                 ? num_path_waypoints + 1
+                                 : num_path_waypoints;
     }
     // Destroy
     SDL_DestroyRenderer(renderer_);
@@ -160,6 +166,7 @@ bool Visualizer::init() {
     return true;
 }
 
+// good source to set colors: https://www.w3schools.com/css/css_colors_rgb.asp
 void Visualizer::setDarkTheme() {
     start_color_ = {60, 179, 113, 255};
     end_color_ = {255, 99, 71, 255};
@@ -167,7 +174,8 @@ void Visualizer::setDarkTheme() {
     grid_line_color_ = {223, 222, 221, 255};
     path_color_ = {106, 90, 205, 255};
     traversal_cell_color_ = {123, 163, 219, 255};
-    waypoint_color_ = {137, 225, 117, 255};
+    waypoint_line_color_ = {137, 225, 117, 255};
+    waypoint_circle_color_ = {177, 137, 51, 255};
 }
 
 void Visualizer::setLightTheme() {
@@ -177,7 +185,8 @@ void Visualizer::setLightTheme() {
     grid_line_color_ = {65, 60, 48, 255};
     path_color_ = {106, 90, 205, 255};
     traversal_cell_color_ = {123, 163, 219, 255};
-    waypoint_color_ = {137, 225, 117, 255};
+    waypoint_line_color_ = {137, 225, 117, 255};
+    waypoint_circle_color_ = {177, 137, 51, 255};
 }
 
 void Visualizer::renderBackground() {
@@ -271,6 +280,61 @@ void Visualizer::renderGridLines() {
     // Draw vertical grid lines
     for (int col = 0; col < height_; col += cell_size_) {
         SDL_RenderDrawLine(renderer_, 0, col, width_ - 1, col);
+    }
+}
+
+void Visualizer::renderWayPoints(const uint32_t& num_waypoints) {
+    // Add waypoints progressionally
+    for (int i = 0; i < num_waypoints - 1; ++i) {
+        auto cell1 = *path_[i];
+        auto cell2 = *path_[i + 1];
+
+        // Render waypoint pair
+        renderWayPointPair(cell1, cell2);
+    }
+}
+
+void Visualizer::renderWayPointPair(const Cell& c1, const Cell& c2) {
+    CHECK(cell_size_ / 2 != 0) << "cell_size needs to be even";
+    SDL_SetRenderDrawColor(renderer_, waypoint_line_color_.r,
+                           waypoint_line_color_.g, waypoint_line_color_.b,
+                           waypoint_line_color_.a);
+
+    // Draw line joining the two lines
+    SDL_RenderDrawLine(renderer_, (c1.getCol() * cell_size_) + cell_size_ / 2,
+                       (c1.getRow() * cell_size_) + cell_size_ / 2,
+                       (c2.getCol() * cell_size_) + cell_size_ / 2,
+                       (c2.getRow() * cell_size_) + cell_size_ / 2);
+
+    SDL_SetRenderDrawColor(renderer_, waypoint_circle_color_.r,
+                           waypoint_line_color_.g, waypoint_line_color_.b,
+                           waypoint_line_color_.a);
+
+    // Draw end points
+    renderCircle(c1.getCol() * cell_size_ + cell_size_ / 2,
+                 c1.getRow() * cell_size_ + cell_size_ / 2);
+    renderCircle(c2.getCol() * cell_size_ + cell_size_ / 2,
+                 c2.getRow() * cell_size_ + cell_size_ / 2);
+}
+
+void Visualizer::renderCircle(int x0, int y0) {
+    // Source : https://gist.github.com/henkman/1b6f4492b82dc76adad1dc110c923baa
+    int x = waypoint_radius_;
+    int y = 0;
+    int radius_error = 1 - x;
+
+    while (x >= y) {
+        SDL_RenderDrawLine(renderer_, x + x0, y + y0, -x + x0, y + y0);
+        SDL_RenderDrawLine(renderer_, y + x0, x + y0, -y + x0, x + y0);
+        SDL_RenderDrawLine(renderer_, -x + x0, -y + y0, x + x0, -y + y0);
+        SDL_RenderDrawLine(renderer_, -y + x0, -x + y0, y + x0, -x + y0);
+        y++;
+        if (radius_error < 0)
+            radius_error += 2 * y + 1;
+        else {
+            x--;
+            radius_error += 2 * (y - x + 1);
+        }
     }
 }
 

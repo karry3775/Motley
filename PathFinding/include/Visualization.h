@@ -58,10 +58,14 @@ class Visualizer {
     void renderCell(const Cell& cell, const SDL_Color& color);
     void renderBoundaries();
     void renderGridLines();
+    void renderWayPoints(const uint32_t& num_waypoints);
+    void renderWayPointPair(const Cell& c1, const Cell& c2);
+    void renderCircle(int x0, int y0);
 
     uint32_t width_;
     uint32_t height_;
     uint32_t cell_size_;
+    uint32_t waypoint_radius_;
 
     SDL_Window* window_;
     SDL_Renderer* renderer_;
@@ -71,7 +75,8 @@ class Visualizer {
     SDL_Color grid_line_color_;
     SDL_Color traversal_cell_color_;
     SDL_Color path_color_;
-    SDL_Color waypoint_color_;
+    SDL_Color waypoint_line_color_;
+    SDL_Color waypoint_circle_color_;
 
     Theme theme_;
     const char* title_;

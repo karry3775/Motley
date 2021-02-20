@@ -33,6 +33,8 @@ void Visualizer::show() {
 }
 
 void Visualizer::showGrid() {
+    // TODO: Add a check to see if the width_ and
+    // height_ have been set
     // TODO: Add check for checking if path was
     // calculated
     SDL_bool quit = SDL_FALSE;
@@ -51,50 +53,18 @@ void Visualizer::showGrid() {
             }
         }
         // Render background
-        SDL_SetRenderDrawColor(renderer_, background_color_.r,
-                               background_color_.g, background_color_.b,
-                               background_color_.a);
-        SDL_RenderClear(renderer_);
+        renderBackground();
 
-        // TODO: Add a check to see if the width_ and
-        // height_ have been set
+        // Render Path
+        renderPath(num_path_waypoints);
 
-        // Iterate through the path and fill up rectangles with
-        // path color
-        // TODO: Make it progressional
-        SDL_SetRenderDrawColor(renderer_, path_color_.r, path_color_.g,
-                               path_color_.b, path_color_.a);
-
-        for (int i = 0; i < num_path_waypoints; ++i) {
-            auto cell = *path_[i];
-
-            // Form the rectangle to be rendered
-            SDL_Rect rect;
-            rect.x = cell.getCol() * cell_size_;
-            rect.y = cell.getRow() * cell_size_;
-            rect.w = cell_size_;
-            rect.h = cell_size_;
-
-            // Fill the rectangle
-            SDL_RenderFillRect(renderer_, &rect);
-        }
-
+        // Update number of way points to be displayed
         num_path_waypoints = (num_path_waypoints < path_.size())
                                  ? num_path_waypoints + 1
                                  : num_path_waypoints;
 
-        SDL_SetRenderDrawColor(renderer_, grid_line_color_.r,
-                               grid_line_color_.g, grid_line_color_.b,
-                               grid_line_color_.a);
-
-        // Draw horizontal grid lines
-        for (int row = 0; row < width_; row += cell_size_) {
-            SDL_RenderDrawLine(renderer_, row, 0, row, height_ - 1);
-        }
-        // Draw vertical grid lines
-        for (int col = 0; col < height_; col += cell_size_) {
-            SDL_RenderDrawLine(renderer_, 0, col, width_ - 1, col);
-        }
+        // Render grid lines
+        renderGridLines();
 
         // Present the render
         SDL_RenderPresent(renderer_);
@@ -288,6 +258,20 @@ void Visualizer::renderBoundaries() {
     SDL_RenderDrawLine(renderer_, 0, 0, 0, height_ - 1);
     SDL_RenderDrawLine(renderer_, 0, height_ - 1, width_ - 1, height_ - 1);
     SDL_RenderDrawLine(renderer_, width_ - 1, height_ - 1, width_ - 1, 0);
+}
+
+void Visualizer::renderGridLines() {
+    SDL_SetRenderDrawColor(renderer_, grid_line_color_.r, grid_line_color_.g,
+                           grid_line_color_.b, grid_line_color_.a);
+
+    // Draw horizontal grid lines
+    for (int row = 0; row < width_; row += cell_size_) {
+        SDL_RenderDrawLine(renderer_, row, 0, row, height_ - 1);
+    }
+    // Draw vertical grid lines
+    for (int col = 0; col < height_; col += cell_size_) {
+        SDL_RenderDrawLine(renderer_, 0, col, width_ - 1, col);
+    }
 }
 
 }  // namespace pathfinding

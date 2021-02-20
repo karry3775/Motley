@@ -57,6 +57,7 @@ class Visualizer {
     void renderWalls();
     void renderCell(const Cell& cell, const SDL_Color& color);
     void renderBoundaries();
+    void renderGridLines();
 
     uint32_t width_;
     uint32_t height_;

@@ -61,19 +61,22 @@ void Visualizer::showGrid() {
         // Render Path
         renderPath(num_path_waypoints);
 
-        // Update number of way points to be displayed
-        num_path_waypoints = (num_path_waypoints < path_.size())
-                                 ? num_path_waypoints + 1
-                                 : num_path_waypoints;
-
         // Render grid lines
         renderGridLines();
+
+        // Render Waypoints
+        renderWayPoints(num_path_waypoints);
 
         // Present the render
         SDL_RenderPresent(renderer_);
 
         // Sleep
         usleep(m_sleep_duration_ms);
+
+        // Update number of way points to be displayed
+        num_path_waypoints = (num_path_waypoints < path_.size())
+                                 ? num_path_waypoints + 1
+                                 : num_path_waypoints;
     }
 
     // Destroy

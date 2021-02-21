@@ -81,10 +81,10 @@ void Maze::generateRDFS(Cell* current, std::set<Cell*>& visited) {
         // Check if the current random_idx is still visitable
         // since the children might have already visited it
         if (visited.find(neighbours[random_idx]) != visited.end()) {
-            // Remove this neighbour
-            neighbours.erase(neighbours.begin() + random_idx);
             // Add a wall
             addWall(current, neighbours[random_idx]);
+            // Remove this neighbour
+            neighbours.erase(neighbours.begin() + random_idx);
             continue;
         }
 

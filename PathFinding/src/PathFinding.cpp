@@ -36,7 +36,10 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
     env_ = new Maze(rows, cols, cell_size, maze_gen_method);
 
     // Find path using the suggested method above
-    findPath();
+    path_found_ = findPath();
+
+    // Assign a seed
+    srand(12345);
 }
 
 const Environment<Cell>* PathFinder::getEnvironment() const { return env_; }

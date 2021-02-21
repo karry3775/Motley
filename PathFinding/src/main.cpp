@@ -27,11 +27,14 @@ int main(int argc, char** argv) {
         PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE,
         /**num_obstacles**/ 300, rows, cols, cell_size, start, end);
 
+    PF::PathFinder* maze_path_finder = 
+    new PF::PathFinder(PF::EnvironmentType::MAZE, PF::PathFindingMethod::BFS, PF::MazeGenerationMethod::RANDOMIZED_DFS, rows, cols, cell_size, start, end);
+
     /** Visualize the environment **/
     // Create a visualizer object for the grid object
-    PF::Visualizer* visualizer(new PF::Visualizer(grid_path_finder));
+    PF::Visualizer* visualizer(new PF::Visualizer(maze_path_finder));
     // Set title
-    visualizer->setTitle("GRID");
+    visualizer->setTitle("MAZE");
     // Set theme
     visualizer->setTheme(PF::Theme::LIGHT);
     // Initiate the grid

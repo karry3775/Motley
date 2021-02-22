@@ -10,13 +10,13 @@ find_package(Ceres REQUIRED)
 file(
     GLOB SOURCES
         "src/main.cpp"
-        "src/example_1.cpp"
+        "src/hello_world.cpp"
 )
 
-add_executable(example_1 ${SOURCES})
-target_link_libraries(example_1 glog::glog Ceres::ceres)
+add_executable(hello_world ${SOURCES})
+target_link_libraries(hello_world glog::glog Ceres::ceres)
 target_include_directories(
-    example_1
+    hello_world
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include
 )

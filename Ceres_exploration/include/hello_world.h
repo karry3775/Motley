@@ -9,7 +9,7 @@
 // Comparing it to the problem formulation proposed
 // by ceres we will get f(x) = (10 - x)
 
-namespace example_one {
+namespace hello_world {
 
 // Functor for (10 - x)
 struct CostFunctor;
@@ -17,4 +17,4 @@ struct CostFunctor;
 // Function to formulate and solve the problem at hand
 void solve();
 
-}  // namespace example_one
+}  // namespace hello_world

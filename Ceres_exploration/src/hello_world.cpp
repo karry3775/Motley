@@ -1,6 +1,6 @@
-#include <example_1.h>
+#include <hello_world.h>
 
-namespace example_one {
+namespace hello_world {
 struct CostFunctor {
     template <typename T>
     bool operator()(const T* const x, T* residual) const {
@@ -34,4 +34,4 @@ void solve() {
     std::cout << "x : " << initial_x << " -> " << x << "\n";
 }
 
-}  // namespace example_one
+}  // namespace hello_world

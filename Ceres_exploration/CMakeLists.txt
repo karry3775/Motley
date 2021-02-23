@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(glog REQUIRED)
 find_package(Ceres REQUIRED)
 
+
+########### Hello world ##################################
 file(
     GLOB SOURCES_HELLO_WORLD
         "src/run_hello_world.cpp"
@@ -27,6 +29,8 @@ target_include_directories(
     ${PROJECT_SOURCE_DIR}/include
 )
 
+
+############ Powell function ##############################
 file(
     GLOB SOURCES_POWELL
         "src/run_powell.cpp"
@@ -50,6 +54,7 @@ target_include_directories(
     ${PROJECT_SOURCE_DIR}/include
 )
 
+############### Curve fitting ###############################
 file (
     GLOB SOURCES_CURVE_FITTING
         "src/run_curve_fitting.cpp"
@@ -64,3 +69,18 @@ target_include_directories(
     ${PROJECT_SOURCE_DIR}/include
 )
 
+
+############## Robust curve fitting ##########################
+file (
+    GLOB SOURCES_ROBUST_CURVE_FITTING
+        "src/run_robust_curve_fitting.cpp"
+        "src/robust_curve_fitting.cpp"
+)
+
+add_executable(robust_curve_fitting ${SOURCES_ROBUST_CURVE_FITTING}) 
+target_link_libraries(robust_curve_fitting glog::glog Ceres::ceres)
+target_include_directories(
+    robust_curve_fitting
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)

@@ -49,3 +49,18 @@ target_include_directories(
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include
 )
+
+file (
+    GLOB SOURCES_CURVE_FITTING
+        "src/run_curve_fitting.cpp"
+        "src/curve_fitting.cpp"        
+)
+
+add_executable(curve_fitting ${SOURCES_CURVE_FITTING})
+target_link_libraries(curve_fitting glog::glog Ceres::ceres)
+target_include_directories(
+    curve_fitting
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)
+

@@ -20,23 +20,23 @@ class Maze : public Environment<Cell> {
      * Getter for the number of rows in the maze
      * @return Number of rows
      */
-    const uint32_t getRows() const;
+    virtual const uint32_t getRows() const override;
 
     /**
      * Getter for number of columns in the maze
      * @return Number of columns
      */
-    const uint32_t getCols() const;
+    virtual const uint32_t getCols() const override;
 
     /** Getter for number of cell size for the maze
      * @return size of cell in pixels
      */
-    const uint32_t getCellSize() const;
+    virtual const uint32_t getCellSize() const override;
 
     /**
      * Getter for walls of the maze
      */
-    const std::vector<Wall*> getWalls() const;
+    virtual const std::vector<Wall*> getWalls() const override;
 
     /**
      * Gets the pointer to the cell in the maze based
@@ -44,7 +44,7 @@ class Maze : public Environment<Cell> {
      * @param Cell Cell describing the location to be accessed
      * @return Cell pointer for the maze
      */
-    Cell* at(const Cell&);
+    virtual Cell* at(const Cell&) override;
 
     /**
      * Gets the pointer to the cell in the maze based
@@ -53,7 +53,7 @@ class Maze : public Environment<Cell> {
      * @param col col for the cell
      * @return Cell pointer for the maze at given row and col
      */
-    Cell* at(const uint32_t& row, const uint32_t& col);
+    virtual Cell* at(const uint32_t& row, const uint32_t& col) override;
 
    private:
     /**

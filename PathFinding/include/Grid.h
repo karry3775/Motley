@@ -15,19 +15,20 @@ class Grid : public Environment<Cell> {
          const ObstacleGenerationMethod& obs_gen_method,
          const uint32_t& num_obstacles);
 
-    const uint32_t getRows() const;
-    const uint32_t getCols() const;
-    const uint32_t getCellSize() const;
+    virtual const uint32_t getRows() const override;
+    virtual const uint32_t getCols() const override;
+    virtual const uint32_t getCellSize() const override;
 
     // Getters for easy element access
-    Cell* at(const Cell&);
-    Cell* at(const uint32_t& row, const uint32_t& col);
+    virtual Cell* at(const Cell&) override;
+    virtual Cell* at(const uint32_t& row, const uint32_t& col) override;
 
     // public function to assign obstacles
-    void pushObstacles(const uint32_t& row, const uint32_t& col);
+    virtual void pushObstacles(const uint32_t& row,
+                               const uint32_t& col) override;
 
     // Getter for obstacles
-    std::vector<std::vector<int>> getObstacles() const;
+    virtual std::vector<std::vector<int>> getObstacles() const override;
 
    private:
     // TODO: Rename to something better (Make this as generate so that

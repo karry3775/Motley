@@ -13,6 +13,8 @@ class Environment {
 
     Environment(uint32_t size) : size_{size} {};
 
+    virtual ~Environment() {}
+
     // function to add edge to the Environment
     virtual void addEdge(T* v, T* w) {
         adj_[v].push_back(w);

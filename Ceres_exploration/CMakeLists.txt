@@ -84,3 +84,18 @@ target_include_directories(
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include
 )
+
+############# Bundle adjustment ###############################
+file (
+    GLOB SOURCES_BUNDLE_ADJUSTMENT
+        "src/run_bundle_adjustment.cpp"
+        "src/bundle_adjustment.cpp"
+)
+
+add_executable(bundle_adjustment ${SOURCES_BUNDLE_ADJUSTMENT})
+target_link_libraries(bundle_adjustment glog::glog Ceres::ceres) 
+target_include_directories(
+    bundle_adjustment
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)

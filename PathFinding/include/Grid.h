@@ -19,15 +19,35 @@ class Grid : public Environment<Cell> {
     virtual const uint32_t getCols() const override;
     virtual const uint32_t getCellSize() const override;
 
-    // Getters for easy element access
+    /**
+     * Gets the pointer to the cell in the grid based on
+     * information provided by the Cell object
+     * @param Cell Cell describing the location to be accessed
+     * @return Cell pointer for the grid
+     */
     virtual Cell* at(const Cell&) override;
+
+    /**
+     * Gets the pointer to the cell in the grid based on
+     * row and column information
+     * @param row row for the cell
+     * @param col col for the cell
+     * @return Cell pointer for the grid at given row and col
+     */
     virtual Cell* at(const uint32_t& row, const uint32_t& col) override;
 
-    // public function to assign obstacles
+    /**
+     * Helper function to populate obstacles in the environment
+     * @param row row for the obstacle
+     * @param col col for the obstacle
+     */
     virtual void pushObstacles(const uint32_t& row,
                                const uint32_t& col) override;
 
-    // Getter for obstacles
+    /**
+     * Getter for obstacles
+     * @return 2D matrix resprenting obstacle map
+     */
     virtual std::vector<std::vector<int>> getObstacles() const override;
 
    private:

@@ -99,3 +99,17 @@ target_include_directories(
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include
 )
+
+########### test file ###########################################
+file (
+    GLOB SOURCES_TEST
+        "src/test.cpp"
+)
+
+add_executable(test ${SOURCES_TEST})
+target_link_libraries(test glog::glog Ceres::ceres)
+target_include_directories (
+    test
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)

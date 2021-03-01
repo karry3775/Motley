@@ -4,10 +4,10 @@
 
 namespace bundle_adjustment {
 
-class BalProblemExtractor;
+class BalProblemReader;
 
 struct SnavelyReprojectionError;
 
-void solve();
+void solve(char** argv);
 
 }  // namespace bundle_adjustment

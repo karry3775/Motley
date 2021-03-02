@@ -27,7 +27,8 @@ inline double RandNormal() {
 
     w = sqrt((-2.0 * log(w)) / w);
 
-    return x1 * w;
+    double ret_val = std::isnan(x1 * w) ? 0.0 : x1 * w;
+    return ret_val;
 }
 
 void simulateRobot(std::vector<double>* odometry_values,

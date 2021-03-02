@@ -100,6 +100,21 @@ target_include_directories(
     ${PROJECT_SOURCE_DIR}/include
 )
 
+############### Robot pose MLE #################################
+file (
+    GLOB SOURCES_ROBOT_POSE_MLE
+        "src/run_robot_pose_mle.cpp"
+        "src/robot_pose_mle.cpp"
+)
+
+add_executable(robot_pose_mle ${SOURCES_ROBOT_POSE_MLE})
+target_link_libraries(robot_pose_mle glog::glog Ceres::ceres)
+target_include_directories(
+    robot_pose_mle
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)
+
 ########### test file ###########################################
 file (
     GLOB SOURCES_TEST

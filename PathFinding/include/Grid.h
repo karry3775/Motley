@@ -15,8 +15,22 @@ class Grid : public Environment<Cell> {
          const ObstacleGenerationMethod& obs_gen_method,
          const uint32_t& num_obstacles);
 
+    /**
+     * Getter for number of rows
+     * @return Number of rows in the grid
+     */
     virtual const uint32_t getRows() const override;
+
+    /**
+     *  Getter for number of cols
+     * @return Number of cols in the grid
+     */
     virtual const uint32_t getCols() const override;
+
+    /**
+     * Getter for cell size of the grid
+     * @return Size of cell in pixels
+     */
     virtual const uint32_t getCellSize() const override;
 
     /**

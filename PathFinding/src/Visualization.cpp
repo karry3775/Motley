@@ -37,6 +37,7 @@ void Visualizer::setTitle(const char* title) { title_ = title; }
 void Visualizer::setTheme(const Theme& theme) { theme_ = theme; }
 
 void Visualizer::show() {
+    usleep(10.0 * microseconds_in_seconds);
     switch (env_type_) {
         case EnvironmentType::GRID:
             showGrid();

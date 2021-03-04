@@ -7,8 +7,8 @@ This repository is made for the sole purpose of doing random assortment of proje
 ![maze](SDL_exploration/images/mazegen.gif)
 
 ## Path finding tool
-![grid_bfs](PathFinding/images/grid_bfs.gif)
-![maze_bfs](PathFinding/images/maze_2_bfs.gif)
+<img src="PathFinding/images/grid_bfs.gif" width=500/>
+<img src="PathFinding/images/maze_2_bfs.gif" width=500/>
 
 ### Sample usage
 ```cpp

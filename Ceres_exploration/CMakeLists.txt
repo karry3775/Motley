@@ -115,6 +115,21 @@ target_include_directories(
     ${PROJECT_SOURCE_DIR}/include
 )
 
+############### Circle fit ######################################
+file (
+    GLOB SOURCES_CIRCLE_FIT
+        "src/run_circle_fit.cpp"
+        "src/circle_fit.cpp"
+)
+
+add_executable(circle_fit ${SOURCES_CIRCLE_FIT})
+target_link_libraries(circle_fit glog::glog Ceres::ceres)
+target_include_directories(
+    circle_fit
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)
+
 ########### test file ###########################################
 file (
     GLOB SOURCES_TEST

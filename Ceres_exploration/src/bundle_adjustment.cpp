@@ -120,7 +120,7 @@ struct SnavelyReprojectionError {
         // comes from teh camera model that Noah Snavely's Bundler assumes,
         // whereby the camera coordinate system has a negative z axis
 
-        // This step has basically converted it homogenous coordinates
+        // This step has basically converted it to homogenous coordinates
         // without the focal length and radial distortion correction
         // This step is also called  (perspective division)
         T xp = -p[0] / p[2];

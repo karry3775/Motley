@@ -19,9 +19,6 @@ void generateData(std::vector<double>& x_data, std::vector<double>& y_data,
     CHECK_NE(theta_resolution, 0.0);
 
     // Simulate the data using the equation
-    // (x - cx)^2 + (y - cy)^2 = r^2
-    // while adding some noise
-    // or better yet
     // x = r * cos(theta) + cx;
     // y = t * sin(theta) + cy;
     // from theta ranging from 0 to pi

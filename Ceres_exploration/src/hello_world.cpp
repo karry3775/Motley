@@ -30,7 +30,7 @@ void solve() {
     ceres::Solver::Summary summary;
     ceres::Solve(options, &problem, &summary);
 
-    std::cout << summary.BriefReport() << "\n";
+    std::cout << summary.FullReport() << "\n";
     std::cout << "x : " << initial_x << " -> " << x << "\n";
 }
 

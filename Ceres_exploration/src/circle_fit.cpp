@@ -31,8 +31,8 @@ void generateData(std::vector<double>& x_data, std::vector<double>& y_data,
         double x_noise = noise_perc * ((((double)rand()) / RAND_MAX) * 2) - 1;
         double y_noise = noise_perc * ((((double)rand()) / RAND_MAX) * 2) - 1;
 
-        x_data.push_back(x);
-        y_data.push_back(y);
+        x_data.push_back(x + x_noise);
+        y_data.push_back(y + y_noise);
 
         theta += theta_resolution;
     }

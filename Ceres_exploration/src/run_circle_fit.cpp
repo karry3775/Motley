@@ -5,7 +5,7 @@ int main(int argc, char** argv) {
 
     // Generate points of a circle, to act as data
     std::vector<double> x_data{}, y_data{};
-    circle_fit::generateData(x_data, y_data, 3, 1, 1, 0.0, M_PI / 180);
+    circle_fit::generateData(x_data, y_data, 3, 1, 1, 0.5, M_PI / 180);
 
     // Print out the data
     std::cerr << "Data values are : \n";
@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
     }
     std::cerr << "=======================================\n";
 
-    double cx{0.0}, cy{0.0}, r{0.0};
+    double cx{0.0}, cy{0.0}, r{0.1};
     circle_fit::solve(x_data, y_data, cx, cy, r);
 
     return 0;

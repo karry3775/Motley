@@ -10,14 +10,14 @@ struct CircleFitCostFunction {
 
     // Residual
     template <typename T>
-    bool operator()(const T* const cx, const T* const cy, const T* const r,
+    bool operator()(const T* const cx, const T* const cy, const T* const m,
                     T* residual) const {
         // Equation of circle
         // (x - cx)^2 + (y - cy)^2 = r^2;
         // residual = r^2 - (x - cx)^2 - (y - cy)^2;
-        T r1 = r[0] * r[0];
+        T r = m[0] * m[0];
         residual[0] =
-            r1 * r1 - (x - cx[0]) * (x - cx[0]) - (y - cy[0]) * (y - cy[0]);
+            r * r - (x - cx[0]) * (x - cx[0]) - (y - cy[0]) * (y - cy[0]);
         return true;
     }
 

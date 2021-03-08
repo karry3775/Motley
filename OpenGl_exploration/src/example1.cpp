@@ -11,7 +11,7 @@ bool Example1::run() {
     glewExperimental = true;  // Needed for core profile
 
     if (!glfwInit()) {
-        LOG(FATAL) << "Failed to Initialize GLFW\n";
+        LOG(FATAL) << "Failed to Initialize GLFW";
         return false;
     }
 

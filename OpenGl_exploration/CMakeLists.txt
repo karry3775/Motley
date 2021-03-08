@@ -38,3 +38,14 @@ target_include_directories(
     ${GLUT_INCLUDE_DIRS}
 )
 
+############## colored cube ################################
+add_executable(colored_cube src/colored_cube.cpp src/shader.cpp)
+target_link_libraries(colored_cube glog::glog GLEW::GLEW glfw ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+target_include_directories(
+    colored_cube
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${OPENGL_INCLUDE_DIRS}
+    ${GLUT_INCLUDE_DIRS}
+)
+

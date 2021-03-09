@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
-    // Accept the fragment if it closer to the camer than the former one
+    // Accept the fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
 
     GLuint vertex_array_id;

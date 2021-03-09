@@ -49,3 +49,14 @@ target_include_directories(
     ${GLUT_INCLUDE_DIRS}
 )
 
+
+############# textured cube ###################################
+add_executable(textured_cube src/textured_cube.cpp src/shader.cpp src/texture.cpp)
+target_link_libraries(textured_cube glog::glog GLEW::GLEW glfw ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+target_include_directories(
+    textured_cube
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include 
+    ${OPENGL_INCLUDE_DIRS}
+    ${GLUT_INCLUDE_DIRS}
+)

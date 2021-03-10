@@ -95,6 +95,16 @@ GLuint getTexture() {
         "/home/kartik/Documents/Motley/OpenGl_exploration/src/uvtemplate.DDS");
 }
 
+GLuint getBuffer(const GLfloat* buffer_data) {
+    GLuint buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data,
+                 GL_STATIC_DRAW);
+
+    return buffer;
+}
+
 int main(int argc, char** argv) {
     // Initialize GLFW
     if (!glfwInit()) {
@@ -152,7 +162,7 @@ int main(int argc, char** argv) {
     GLuint texture = getTexture();
 
     // Get a handle for our  "myTextureSampler" uniform
-    GLuint textured_id = glGetUniformLocation(program_id, "myTextureSampler");
+    GLuint texture_id = glGetUniformLocation(program_id, "myTextureSampler");
 
     // Our vertices. Tree consecutive floats give a 3D vertex; Three consecutive
     // vertices give a triangle. A cube has 6 faces with 2 triangles each, so
@@ -190,6 +200,61 @@ int main(int argc, char** argv) {
         0.000103f, 1.0f - 0.336048f, 0.336024f, 1.0f - 0.671877f,
         0.335973f, 1.0f - 0.335903f, 0.667969f, 1.0f - 0.671889f,
         1.000004f, 1.0f - 0.671847f, 0.667979f, 1.0f - 0.335851f};
+
+    GLuint vertex_buffer = getBuffer(g_vertex_buffer_data);
+
+    GLuint uv_buffer = getBuffer(g_uv_buffer_data);
+
+    // Main loop
+    do {
+        // Clear the screen
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Use our shader
+        glUseProgram(program_id);
+
+        // Send our transformation to the currently bound shader,
+        // in the "MVP" uniform
+        glUniformMatrix4fv(matrix_id, 1, GL_FALSE, &MVP[0][0]);
+
+        // Bind our texture in Texure Unit 0
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        // Set our  "myTextureSampler" sampler to use the Texture Unit 0
+        glUniform1i(texture_id, 0);
+
+        // First attribute buffer : vertices
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+        // Second attribute buffer : UVs
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+        // Draw the triangle
+        glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+
+        // Swap buffers
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }  // Check if the ESC key was pressed or the window was closed
+    while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+           glfwWindowShouldClose(window) == 0);
+
+    // Cleanup VBO and shader
+    glDeleteBuffers(1, &vertex_buffer);
+    glDeleteBuffers(1, &uv_buffer);
+    glDeleteProgram(program_id);
+    glDeleteTextures(1, &texture);
+    glDeleteVertexArrays(1, &vertex_array_id);
+
+    // Close OpenGl window and terminate GLFW
+    glfwTerminate();
 
     return 0;
 }

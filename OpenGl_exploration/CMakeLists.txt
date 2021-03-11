@@ -60,3 +60,15 @@ target_include_directories(
     ${OPENGL_INCLUDE_DIRS}
     ${GLUT_INCLUDE_DIRS}
 )
+
+############# triangle 2 #######################################
+add_executable(triangle2 src/triangle2.cpp)
+target_link_libraries(triangle2 GLEW::GLEW glfw ${OPENGL_LIBRARIES}
+${GLUT_LIBRARY})
+target_include_directories(
+    triangle2
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${OPENGL_INCLUDE_DIRS}
+    ${GLUT_INCLUDE_DIRS}
+)

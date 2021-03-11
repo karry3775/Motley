@@ -59,52 +59,6 @@ void setDepthRelatedProps() {
     glDepthFunc(GL_LESS);
 }
 
-GLuint getVertexArrayID() {
-    GLuint vertex_array_id;
-    glGenVertexArrays(1, &vertex_array_id);
-    glBindVertexArray(vertex_array_id);
-
-    return vertex_array_id;
-}
-
-GLuint getProgramIDForTexture() {
-    GLuint program_id = loadShaders(
-        "/home/kartik/Documents/Motley/OpenGl_exploration/src/"
-        "TransformVertexShader.vertexshader",
-        "/home/kartik/Documents/Motley/OpenGl_exploration/src/"
-        "TextureFragmentShader.fragmentshader");
-    return program_id;
-}
-
-glm::mat4 getProjectionMatrix() {
-    return glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-}
-
-glm::mat4 getViewMatrix() {
-    return glm::lookAt(
-        glm::vec3(4, 3, 3),  // Camera is at (4, 3, 3) in world space
-        glm::vec3(0, 0, 0),  // and looks at origin
-        glm::vec3(0, 1, 0)   // Head is up
-    );
-}
-
-glm::mat4 getModelMatrix() { return glm::mat4(1.0f); }
-
-GLuint getTexture() {
-    return loadDDS(
-        "/home/kartik/Documents/Motley/OpenGl_exploration/src/uvtemplate.DDS");
-}
-
-GLuint getBuffer(const GLfloat* buffer_data) {
-    GLuint buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data,
-                 GL_STATIC_DRAW);
-
-    return buffer;
-}
-
 int main(int argc, char** argv) {
     // Initialize GLFW
     if (!glfwInit()) {
@@ -138,28 +92,40 @@ int main(int argc, char** argv) {
     setDepthRelatedProps();
 
     // Create a vertex array id
-    GLuint vertex_array_id = getVertexArrayID();
+    GLuint vertex_array_id;
+    glGenVertexArrays(1, &vertex_array_id);
+    glBindVertexArray(vertex_array_id);
 
     // Get program id
-    GLuint program_id = getProgramIDForTexture();
+    GLuint program_id = loadShaders(
+        "/home/kartik/Documents/Motley/OpenGl_exploration/src/"
+        "TransformVertexShader.vertexshader",
+        "/home/kartik/Documents/Motley/OpenGl_exploration/src/"
+        "TextureFragmentShader.fragmentshader");
 
     // Get a handle for out "MVP" uniform
     GLuint matrix_id = glGetUniformLocation(program_id, "MVP");
 
     // Get projection matrix
-    glm::mat4 projection_matrix = getProjectionMatrix();
+    glm::mat4 projection_matrix =
+        glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 
     // Get view matrix for the camera
-    glm::mat4 view_matrix = getViewMatrix();
+    glm::mat4 view_matrix = glm::lookAt(
+        glm::vec3(4, 3, 3),  // Camera is at (4, 3, 3) in world space
+        glm::vec3(0, 0, 0),  // and looks at origin
+        glm::vec3(0, 1, 0)   // Head is up
+    );
 
     // Get model matrix
-    glm::mat4 model_matrix = getModelMatrix();
+    glm::mat4 model_matrix = glm::mat4(1.0f);
 
     // Finally compile the model view projection matrix
     glm::mat4 MVP = projection_matrix * view_matrix * model_matrix;
 
     // Get texture
-    GLuint texture = getTexture();
+    GLuint texture = loadDDS(
+        "/home/kartik/Documents/Motley/OpenGl_exploration/src/uvtemplate.DDS");
 
     // Get a handle for our  "myTextureSampler" uniform
     GLuint texture_id = glGetUniformLocation(program_id, "myTextureSampler");
@@ -201,9 +167,17 @@ int main(int argc, char** argv) {
         0.335973f, 1.0f - 0.335903f, 0.667969f, 1.0f - 0.671889f,
         1.000004f, 1.0f - 0.671847f, 0.667979f, 1.0f - 0.335851f};
 
-    GLuint vertex_buffer = getBuffer(g_vertex_buffer_data);
+    GLuint vertexbuffer;
+    glGenBuffers(1, &vertexbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data),
+                 g_vertex_buffer_data, GL_STATIC_DRAW);
 
-    GLuint uv_buffer = getBuffer(g_uv_buffer_data);
+    GLuint uvbuffer;
+    glGenBuffers(1, &uvbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data,
+                 GL_STATIC_DRAW);
 
     // Main loop
     do {
@@ -225,12 +199,12 @@ int main(int argc, char** argv) {
 
         // First attribute buffer : vertices
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
         // Second attribute buffer : UVs
         glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
         // Draw the triangle
@@ -247,8 +221,8 @@ int main(int argc, char** argv) {
            glfwWindowShouldClose(window) == 0);
 
     // Cleanup VBO and shader
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteBuffers(1, &uv_buffer);
+    glDeleteBuffers(1, &vertexbuffer);
+    glDeleteBuffers(1, &uvbuffer);
     glDeleteProgram(program_id);
     glDeleteTextures(1, &texture);
     glDeleteVertexArrays(1, &vertex_array_id);

@@ -20,7 +20,7 @@ class Shader {
         std::ifstream vertex_shader_file;
         std::ifstream fragment_shader_file;
 
-        // esnures ifstream objects can throw exceptions
+        // ensures ifstream objects can throw exceptions
         vertex_shader_file.exceptions(std::ifstream::badbit);
         fragment_shader_file.exceptions(std::ifstream::badbit);
 

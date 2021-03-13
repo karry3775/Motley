@@ -13,6 +13,11 @@
 
 #include <shader2.h>
 
+const GLchar* vertex_shader_path =
+    "/home/kartik/Documents/Motley/OpenGl_exploration/src/core.vs";
+const GLchar* fragment_shader_path =
+    "/home/kartik/Documents/Motley/OpenGl_exploration/src/core.frag";
+
 // Window dimensions
 const GLint WIDTH = 800, HEIGHT = 600;
 
@@ -66,7 +71,7 @@ int main(int argc, char** argv) {
     // screen_height
     glViewport(0, 0, screen_width, screen_height);
 
-    Shader our_shader("core.vs", "core.frag");
+    Shader our_shader(vertex_shader_path, fragment_shader_path);
 
     // Step 13: Create the vertex data
     // clang-format off

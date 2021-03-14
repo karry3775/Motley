@@ -84,3 +84,20 @@ target_include_directories(
     ${OPENGL_INCLUDE_DIRS}
     ${GLUT_INCLUDE_DIRS}
 )
+
+############### triangle4 ######################################
+file(
+    GLOB SOURCES_TRIANGLE4
+        "${PROJECT_SOURCE_DIR}/../SOIL2/src/SOIL2/*.c"
+)
+add_executable(triangle4 src/triangle4.cpp ${SOURCES_TRIANGLE4})
+target_link_libraries(triangle4 GLEW::GLEW glfw ${OPENGL_LIBRARIES}
+${GLUT_LIBRARY})
+target_include_directories(
+    triangle4
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/../SOIL2/src/SOIL2
+    ${OPENGL_INCLUDE_DIRS}
+    ${GLUT_INCLUDE_DIRS}
+)

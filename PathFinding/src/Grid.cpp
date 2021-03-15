@@ -36,10 +36,10 @@ Grid::Grid(const uint32_t& rows, const uint32_t& cols,
     }
 
     // Create grid
-    create();
+    generate();
 }
 
-void Grid::create() {
+void Grid::generate() {
     // Resize the grid matrix
     matrix_.resize(rows_, std::vector<Cell*>(cols_));
     // Initialize the grid with Cells

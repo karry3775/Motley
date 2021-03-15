@@ -65,9 +65,7 @@ class Grid : public Environment<Cell> {
     virtual std::vector<std::vector<int>> getObstacles() const override;
 
    private:
-    // TODO: Rename to something better (Make this as generate so that
-    // it is consistent with the Maze)
-    void create();
+    void generate();
     void generateObstacles();
     uint32_t rows_;
     uint32_t cols_;

@@ -24,15 +24,8 @@ class Cell {
         return (this->row_ != c.row_ || this->col_ != c.col_);
     }
 
-    /**
-     * Getter for row for the cell
-     * @return row for the cell
-     */
     const int32_t getRow() const { return row_; }
 
-    /** Getter for columm for the cell
-     * @return column for the cell
-     */
     const int64_t getCol() const { return col_; }
 
    private:

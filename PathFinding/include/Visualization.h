@@ -17,7 +17,7 @@ class Visualizer {
 
     Visualizer(const PathFinder*);
 
-    ~Visualizer();
+    ~Visualizer() = default;
 
     /**
      * Function to set the window title

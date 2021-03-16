@@ -17,3 +17,5 @@
 #include <set>
 
 #include <glog/logging.h>
+
+#include <memory> // for unique_ptr

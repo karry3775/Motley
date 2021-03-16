@@ -21,14 +21,14 @@ int main(int argc, char** argv) {
     // Choose an ending point
     PF::Cell end(39, 39);
 
-    // Create a grid PathFinder Object
-    PF::PathFinder* grid_path_finder = new PF::PathFinder(
+    std::unique_ptr<PF::PathFinder> grid_path_finder(new PF::PathFinder(
         PF::EnvironmentType::GRID, PF::PathFindingMethod::BFS,
         PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE,
-        /**num_obstacles**/ 300, rows, cols, cell_size, start, end);
+        /**num obstacles**/ 300, rows, cols, cell_size, start, end));
 
     // Create a visualizer object for the grid object
-    PF::Visualizer* grid_visualizer(new PF::Visualizer(grid_path_finder));
+    std::unique_ptr<PF::Visualizer> grid_visualizer(
+        new PF::Visualizer(grid_path_finder.get()));
     // Set title
     grid_visualizer->setTitle("GRID");
     // Set theme
@@ -39,13 +39,14 @@ int main(int argc, char** argv) {
     grid_visualizer->show();
 
     // Create a maze PathFinder Object
-    PF::PathFinder* maze_path_finder = new PF::PathFinder(
+    std::unique_ptr<PF::PathFinder> maze_path_finder(new PF::PathFinder(
         PF::EnvironmentType::MAZE, PF::PathFindingMethod::BFS,
         PF::MazeGenerationMethod::RANDOMIZED_DFS, rows, cols, cell_size, start,
-        end);
+        end));
 
     // Create a visualizer object for the maze object
-    PF::Visualizer* maze_visualizer(new PF::Visualizer(maze_path_finder));
+    std::unique_ptr<PF::Visualizer> maze_visualizer(
+        new PF::Visualizer(maze_path_finder.get()));
     // Set title
     maze_visualizer->setTitle("MAZE");
     // Set theme

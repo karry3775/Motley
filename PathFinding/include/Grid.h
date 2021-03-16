@@ -15,53 +15,23 @@ class Grid : public Environment<Cell> {
          const ObstacleGenerationMethod& obs_gen_method,
          const uint32_t& num_obstacles);
 
-    /**
-     * Getter for number of rows
-     * @return Number of rows in the grid
-     */
     virtual const uint32_t getRows() const override;
 
-    /**
-     *  Getter for number of cols
-     * @return Number of cols in the grid
-     */
     virtual const uint32_t getCols() const override;
 
-    /**
-     * Getter for cell size of the grid
-     * @return Size of cell in pixels
-     */
     virtual const uint32_t getCellSize() const override;
 
-    /**
-     * Gets the pointer to the cell in the grid based on
-     * information provided by the Cell object
-     * @param Cell Cell describing the location to be accessed
-     * @return Cell pointer for the grid
-     */
     virtual Cell* at(const Cell&) override;
 
-    /**
-     * Gets the pointer to the cell in the grid based on
-     * row and column information
-     * @param row row for the cell
-     * @param col col for the cell
-     * @return Cell pointer for the grid at given row and col
-     */
     virtual Cell* at(const uint32_t& row, const uint32_t& col) override;
 
     /**
      * Helper function to populate obstacles in the environment
-     * @param row row for the obstacle
-     * @param col col for the obstacle
+     * at a given row and column
      */
     virtual void pushObstacles(const uint32_t& row,
                                const uint32_t& col) override;
 
-    /**
-     * Getter for obstacles
-     * @return 2D matrix resprenting obstacle map
-     */
     virtual std::vector<std::vector<int>> getObstacles() const override;
 
    private:

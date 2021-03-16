@@ -16,48 +16,22 @@ class Maze : public Environment<Cell> {
     Maze(const uint32_t& rows, const uint32_t& cols, const uint32_t& cell_size,
          const MazeGenerationMethod& generation_method);
 
-    /**
-     * Getter for the number of rows in the maze
-     * @return Number of rows
-     */
     virtual const uint32_t getRows() const override;
 
-    /**
-     * Getter for number of columns in the maze
-     * @return Number of columns
-     */
     virtual const uint32_t getCols() const override;
 
-    /** Getter for number of cell size for the maze
-     * @return size of cell in pixels
-     */
     virtual const uint32_t getCellSize() const override;
 
-    /**
-     * Getter for walls of the maze
-     */
     virtual const std::vector<Wall*> getWalls() const override;
 
-    /**
-     * Gets the pointer to the cell in the maze based
-     * on information provided by a cell
-     * @param Cell Cell describing the location to be accessed
-     * @return Cell pointer for the maze
-     */
     virtual Cell* at(const Cell&) override;
 
-    /**
-     * Gets the pointer to the cell in the maze based
-     * on row and column information
-     * @param row row for the cell
-     * @param col col for the cell
-     * @return Cell pointer for the maze at given row and col
-     */
     virtual Cell* at(const uint32_t& row, const uint32_t& col) override;
 
    private:
     /**
-     * Generate Maze based on method chosen by the user     *
+     * Generate Maze based on method specified by the
+     * user in the constructor
      */
     void generate();
 
@@ -86,8 +60,6 @@ class Maze : public Environment<Cell> {
 
     /**
      * Construct wall defined by two corners
-     * @param first first corner of the wall
-     * @param second second corner of the wall
      */
     void constructWall(const Corner& first, const Corner& second);
 

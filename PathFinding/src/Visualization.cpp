@@ -17,6 +17,10 @@ Visualizer::Visualizer(const PathFinder* path_finder) {
     waypoint_radius_ = FLAGS_waypoint_radius;
     path_exists_ = path_finder->doesPathExists();
 
+    CHECK_NE(width_, 0);
+    CHECK_NE(height_, 0);
+    CHECK_NE(cell_size_, 0);
+
     switch (env_type_) {
         case EnvironmentType::GRID:
             obstacles_ = path_finder->getObstacles();
@@ -51,8 +55,6 @@ void Visualizer::show() {
 }
 
 void Visualizer::showGrid() {
-    // TODO: Add a check to see if the width_ and
-    // height_ have been set
     // TODO: Add check for checking if path was
     // calculated
     SDL_bool quit = SDL_FALSE;

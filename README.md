@@ -25,20 +25,22 @@ int main(int argc, char** argv) {
 
     /********************* PATH FINDING IN GRID BASED ENVIRONMENT *******************/
     // Finding a path in grid environment
-    PF::PathFinder* grid_path_finder = new PF::PathFinder(
+    std::unique_ptr<PF::PathFinder> grid_path_finder(new PF::PathFinder(
         PF::EnvironmentType::GRID,  /** Specifying GRID type environment **/
         PF::PathFindingMethod::BFS, /** Method to be used for path finding **/
-        PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE, /** Method to be used for generation of random obstacles **/
-        300, /** Number of obstacles to be generated **/
-        rows, /** Number of rows **/
-        cols, /** Number of cols **/
+        PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE, /** Method to be used
+        for generation of random obstacles **/
+        300,       /** Number of obstacles to be generated **/
+        rows,      /** Number of rows **/
+        cols,      /** Number of cols **/
         cell_size, /** Size of the square cells in pixels **/
-        start, /** Starting cell for the path **/
-        end, /** Ending cell for the path **/
-    );
+        start,     /** Starting cell for the path **/
+        end,       /** Ending cell for the path **/
+        ));
 
     // Visualize the path in grid environment
-    PF::Visualizer* grid_visualizer(new PF::Visualizer(grid_path_finder));
+    std::unique_ptr<PF::Visualizer> grid_visualizer(
+    new PF::Visualizer(grid_path_finder.get()));
     // Set title
     grid_visualizer->setTitle("GRID");
     // Set theme
@@ -49,7 +51,7 @@ int main(int argc, char** argv) {
     grid_visualizer->show();
 
     /********************* PATH FINDING IN MAZE ENVIRONMENT *************************/
-    PF::PathFinder* maze_path_finder =  new PF::PathFinder(
+    std::unique_ptr<PF::PathFinder> maze_path_finder(new PF::PathFinder(
         PF::EnvironmentType::MAZE, /** Specify MAZE environment **/
         PF::PathFindingMethod::BFS, /** Method to be used for path finding **/
         PF::MazeGenerationMethod::RANDOMIZED_DFS, /** Method to be used for maze generation **/
@@ -58,11 +60,12 @@ int main(int argc, char** argv) {
         cell_size, /** Size of square cells in pixels **/
         start, /** Starting cell for the path **/
         end, /** Ending cell for the path **/
-    );
+    ));
 
     // Visualize the path in maze environment
     // Create a visualizer object for the maze object
-    PF::Visualizer* maze_visualizer(new PF::Visualizer(maze_path_finder));
+    std::unique_ptr<PF::Visualizer> maze_visualizer(
+    new PF::Visualizer(maze_path_finder));
     // Set title
     maze_visualizer->setTitle("MAZE");
     // Set theme

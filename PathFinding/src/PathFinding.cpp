@@ -81,42 +81,64 @@ bool PathFinder::findPath() {
     return false;
 }
 
-// pseudo code form  : https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+// pseudo code soruce [NOT USING THIS]  :
+// https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm [USING THIS]
+// https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/
 bool PathFinder::findPathDijkstra() {
-    // Step 1: Mark all node as unvisited
-    std::set<Cell*> unvisited{};
     DistanceMap<Cell*> dist;
     PredecessorMap<Cell*> pred;
     // Priority queue (Min heap fashion to aid in finding the vertex with
     // minimum cost)
-    std::priority_queue<Cell*, std::vector<Cell*>, std::greater<Cell*>> pq;
+    typedef std::pair<int, Cell*>
+        CostCellPair;  // TODO Later move to default types
+    std::priority_queue<CostCellPair, std::vector<CostCellPair>,
+                        std::greater<CostCellPair>>
+        pq;
 
     // Get the adj_ list
     const auto adj = env_->getAdjacencyList();
 
     for (auto itr = adj.begin(); itr != adj.end(); ++itr) {
-        unvisited.insert(itr->first);
         // Mark the dist to be infinite
         dist[itr->first] = INT_MAX;
         // Mark the predecessor to be self
         pred[itr->first] = itr->first;
-        // Insert it into the priority queue
-        pq.emplace(itr->first);
     }
 
-    // Step 2: Assign the start_node a distance value of 0
+    // Setup data for source/start point
     dist[env_->at(start_)] = 0;
+    pq.push(std::make_pair(0, env_->at(start_)));
 
-    while (!unvisited.empty()) {
+    bool path_found;
+    while (!pq.empty()) {
         // Step 1: Get the vertex with minimum distance value
-
+        auto current = pq.top().second;
         // Step 2: Erase that vertex from the unvisited set
+        pq.pop();
 
         // Step 3: For each neighbour that vertex check if a
         // shorted circuit could be formed
+        for (size_t i = 0; i < adj.at(current).size(); ++i) {
+            const auto neighbour = adj.at(current)[i];
+
+            if (dist[current] + 1 < dist[neighbour]) {
+                dist[neighbour] = dist[current] + 1;
+                pred[neighbour] = current;
+                pq.push(std::make_pair(dist[neighbour], neighbour));
+            }
+
+            // Check if end point is reached
+            if (neighbour == env_->at(end_)) {
+                path_found = true;
+                break;
+            }
+        }
     }
 
-    return true;
+    // Form the path using predecessor
+    getPathFromPredecessorMap(pred);
+
+    return path_found;
 }
 
 bool PathFinder::findPathAstar() {
@@ -189,19 +211,23 @@ bool PathFinder::findPathBfs() {
     }
 
     // Form the path using predecessor
+    getPathFromPredecessorMap(pred);
+
+    return path_found;
+}
+
+void PathFinder::getPathFromPredecessorMap(const PredecessorMap<Cell*>& pred) {
     auto current = env_->at(end_);
-    while (pred[current] != current) {
+    while (pred.at(current) != current) {
         path_.push_back(current);
-        current = pred[current];
+        current = pred.at(current);
     }
 
-    // Additionally push back the starting point
+    // Insert the start point
     path_.push_back(env_->at(start_));
 
     // Reverse the path
     std::reverse(path_.begin(), path_.end());
-
-    return path_found;
 }
 
 }  // namespace pathfinding

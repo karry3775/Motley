@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 
     // Create a maze PathFinder Object
     std::unique_ptr<PF::PathFinder> maze_path_finder(new PF::PathFinder(
-        PF::EnvironmentType::MAZE, PF::PathFindingMethod::BFS,
+        PF::EnvironmentType::MAZE, PF::PathFindingMethod::DIJKSTRA,
         PF::MazeGenerationMethod::RANDOMIZED_DFS, rows, cols, cell_size, start,
         end));
 

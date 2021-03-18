@@ -78,6 +78,8 @@ class PathFinder {
     bool findPathHierarchical();
     bool findPathBfs();
 
+    void getPathFromPredecessorMap(const PredecessorMap<Cell*>& pred);
+
     Environment<Cell>* env_;
     Cell start_;
     Cell end_;

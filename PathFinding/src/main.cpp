@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     PF::Cell end(39, 39);
 
     std::unique_ptr<PF::PathFinder> grid_path_finder(new PF::PathFinder(
-        PF::EnvironmentType::GRID, PF::PathFindingMethod::BFS,
+        PF::EnvironmentType::GRID, PF::PathFindingMethod::DIJKSTRA,
         PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE,
         /**num obstacles**/ 300, rows, cols, cell_size, start, end));
 

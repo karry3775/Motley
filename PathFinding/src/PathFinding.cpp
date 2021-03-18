@@ -1,5 +1,6 @@
 #include "PathFinding.h"
 #include "PathFindingUtils.h"
+#include <queue>
 
 namespace pathfinding {
 
@@ -80,9 +81,42 @@ bool PathFinder::findPath() {
     return false;
 }
 
+// pseudo code form  : https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
 bool PathFinder::findPathDijkstra() {
-    // TODO
-    return false;
+    // Step 1: Mark all node as unvisited
+    std::set<Cell*> unvisited{};
+    DistanceMap<Cell*> dist;
+    PredecessorMap<Cell*> pred;
+    // Priority queue (Min heap fashion to aid in finding the vertex with
+    // minimum cost)
+    std::priority_queue<Cell*, std::vector<Cell*>, std::greater<Cell*>> pq;
+
+    // Get the adj_ list
+    const auto adj = env_->getAdjacencyList();
+
+    for (auto itr = adj.begin(); itr != adj.end(); ++itr) {
+        unvisited.insert(itr->first);
+        // Mark the dist to be infinite
+        dist[itr->first] = INT_MAX;
+        // Mark the predecessor to be self
+        pred[itr->first] = itr->first;
+        // Insert it into the priority queue
+        pq.emplace(itr->first);
+    }
+
+    // Step 2: Assign the start_node a distance value of 0
+    dist[env_->at(start_)] = 0;
+
+    while (!unvisited.empty()) {
+        // Step 1: Get the vertex with minimum distance value
+
+        // Step 2: Erase that vertex from the unvisited set
+
+        // Step 3: For each neighbour that vertex check if a
+        // shorted circuit could be formed
+    }
+
+    return true;
 }
 
 bool PathFinder::findPathAstar() {

@@ -18,4 +18,8 @@
 
 #include <glog/logging.h>
 
-#include <memory> // for unique_ptr
+#include <memory>  // for unique_ptr
+
+#include <queue>
+
+#include <set>

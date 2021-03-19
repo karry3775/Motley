@@ -6,13 +6,13 @@ namespace pathfinding {
 PathFinder::PathFinder(const EnvironmentType& env_type,
                        const PathFindingMethod& pf_method,
                        const ObstacleGenerationMethod& obs_gen_method,
-                       const uint32_t& num_obstacles, const uint32_t& rows,
+                       const double& obstacle_perc, const uint32_t& rows,
                        const uint32_t& cols, const uint32_t& cell_size,
                        const Cell& start, const Cell& end)
     : start_{start}, end_{end}, pf_method_{pf_method}, env_type_{env_type} {
     CHECK(env_type_ == EnvironmentType::GRID) << "Expected a GRID type!";
 
-    env_ = new Grid(rows, cols, cell_size, obs_gen_method, num_obstacles);
+    env_ = new Grid(rows, cols, cell_size, obs_gen_method, obstacle_perc);
 
     // Assign obstacles
     obstacles_ = env_->getObstacles();

@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     std::unique_ptr<PF::PathFinder> grid_path_finder(new PF::PathFinder(
         PF::EnvironmentType::GRID, PF::PathFindingMethod::DIJKSTRA,
         PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE,
-        /**num obstacles**/ 10, rows, cols, cell_size, start, end));
+        /**obstacle percentage**/ 0.1, rows, cols, cell_size, start, end));
 
     // Create a visualizer object for the grid object
     std::unique_ptr<PF::Visualizer> grid_visualizer(

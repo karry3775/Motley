@@ -38,12 +38,16 @@ class PathFinder {
     /**
      * @param env_type        Specifiy GRID as the environment type
      *
-     * @param obs_gen_method  Available methods to generate obstacles [MANUAL,
-     * AUTOMATIC]
      *
      * @param pf_method       Method to be used for path finding
      *                        Available options are DIJKSTRA, ASTAR, SAMPLE,
      *                        HIERARCHICAL, BFS
+     *
+     * @param obs_gen_method  Available methods to generate obstacles [MANUAL,
+     *                        FISHER_YATES_SHUFFLE]
+     *
+     * @param obstacle_perc   Percentage of grid filled by obstacles
+     *
      *
      * @param rows            Number of rows in the grid world
      * @param cols            Number of cols in the grid world
@@ -55,7 +59,7 @@ class PathFinder {
     PathFinder(const EnvironmentType& env_type,
                const PathFindingMethod& pf_method,
                const ObstacleGenerationMethod& obs_gen_method,
-               const uint32_t& num_obstacles, const uint32_t& rows,
+               const double& obstacle_perc, const uint32_t& rows,
                const uint32_t& cols, const uint32_t& cell_size,
                const Cell& start, const Cell& end);
 

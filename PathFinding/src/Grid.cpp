@@ -9,16 +9,18 @@ Grid::Grid() {
 Grid::Grid(const uint32_t& rows, const uint32_t& cols,
            const uint32_t& cell_size,
            const ObstacleGenerationMethod& obs_gen_method,
-           const uint32_t& num_obstacles)
+           const double& obstacle_perc)
     : Environment(rows * cols),
       rows_{rows},
       cols_{cols},
       cell_size_{cell_size},
-      obs_gen_method_{obs_gen_method},
-      num_obstacles_{num_obstacles} {
+      obs_gen_method_{obs_gen_method} {
     // Check if num obstacles specified are valid
-    CHECK(num_obstacles_ < rows_ * cols_)
-        << " Number of obstacles exceeds grid size!";
+    CHECK(obstacle_perc <= 1.0)
+        << " Obstacle percentage cannot more than 100%!";
+
+    // Calculate the number of obstalces
+    num_obstacles_ = static_cast<uint32_t>((rows_ * cols_) * obstacle_perc);
 
     // Initialize obstacles matrix with zero
     obstacles_.resize(rows_,

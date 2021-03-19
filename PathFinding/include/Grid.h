@@ -13,7 +13,7 @@ class Grid : public Environment<Cell> {
     Grid();
     Grid(const uint32_t& rows, const uint32_t& cols, const uint32_t& cell_size,
          const ObstacleGenerationMethod& obs_gen_method,
-         const uint32_t& num_obstacles);
+         const double& obstacle_perc);
 
     virtual const uint32_t getRows() const override;
 

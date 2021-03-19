@@ -8,8 +8,13 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
                        const ObstacleGenerationMethod& obs_gen_method,
                        const double& obstacle_perc, const uint32_t& rows,
                        const uint32_t& cols, const uint32_t& cell_size,
-                       const Cell& start, const Cell& end)
-    : start_{start}, end_{end}, pf_method_{pf_method}, env_type_{env_type} {
+                       const Cell& start, const Cell& end,
+                       bool show_path_progression)
+    : start_{start},
+      end_{end},
+      pf_method_{pf_method},
+      env_type_{env_type},
+      show_path_progression_{show_path_progression} {
     CHECK(env_type_ == EnvironmentType::GRID) << "Expected a GRID type!";
 
     env_ = new Grid(rows, cols, cell_size, obs_gen_method, obstacle_perc);
@@ -22,6 +27,9 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
 
     // Assign a seed
     srand(12345);
+
+    // Create the visualizer object when everything is set
+    visualizer = std::make_unique<Visualizer>(this);
 }
 
 PathFinder::PathFinder(const EnvironmentType& env_type,
@@ -29,8 +37,12 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
                        const MazeGenerationMethod& maze_gen_method,
                        const uint32_t& rows, const uint32_t& cols,
                        const uint32_t& cell_size, const Cell& start,
-                       const Cell& end)
-    : start_{start}, end_{end}, pf_method_{pf_method}, env_type_{env_type} {
+                       const Cell& end, bool show_path_progression)
+    : start_{start},
+      end_{end},
+      pf_method_{pf_method},
+      env_type_{env_type},
+      show_path_progression_{show_path_progression} {
     CHECK(env_type_ == EnvironmentType::MAZE) << "Expected a MAZE type!";
 
     env_ = new Maze(rows, cols, cell_size, maze_gen_method);
@@ -40,6 +52,9 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
 
     // Assign a seed
     srand(12345);
+
+    // Create the visualizer object when everything is set
+    visualizer = std::make_unique<Visualizer>(this);
 }
 
 const Environment<Cell>* PathFinder::getEnvironment() const { return env_; }
@@ -55,6 +70,33 @@ const std::vector<std::vector<int>> PathFinder::getObstacles() const {
 }
 
 bool PathFinder::doesPathExists() const { return path_found_; }
+
+void PathFinder::showFinalPath() const {
+    // Set visualizer attributes based on evnironment type
+    const char* title;
+    Theme theme;
+    switch (env_type_) {
+        case EnvironmentType::GRID:
+            title = "GRID";
+            theme = Theme::LIGHT;
+            break;
+        case EnvironmentType::MAZE:
+            title = "MAZE";
+            theme = Theme::LIGHT;
+            break;
+        default:
+            LOG(FATAL) << "Unknown environment type!";
+    }
+
+    // Set title
+    visualizer->setTitle(title);
+    // Set theme
+    visualizer->setTheme(theme);
+    // Initiate the visualizer
+    visualizer->init();
+    // Show
+    visualizer->show();
+}
 
 bool PathFinder::findPath() {
     switch (pf_method_) {
@@ -180,6 +222,10 @@ bool PathFinder::findPathBfs() {
     cell_queue.push(env_->at(start_));
 
     bool path_found = false;
+
+    // Vector to keep track of all the explored neighbours
+    std::vector<Cell*> explored;
+
     // standard BFS algorithm
     while (!cell_queue.empty()) {
         Cell* current = cell_queue.front();
@@ -198,6 +244,9 @@ bool PathFinder::findPathBfs() {
                 // push it in the queue to be processed later
                 cell_queue.push(adj[current][i]);
 
+                // Add current to explored
+                explored.emplace_back(adj[current][i]);
+
                 // We can stop the BFS when we find the destination
                 if (adj[current][i] == env_->at(end_)) {
                     path_found = true;
@@ -209,6 +258,11 @@ bool PathFinder::findPathBfs() {
 
     // Form the path using predecessor
     getPathFromPredecessorMap(pred);
+
+    // Show path progression
+    if (show_path_progression_) {
+        // TODO
+    }
 
     return path_found;
 }

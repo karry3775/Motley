@@ -1,4 +1,3 @@
-#include "Visualization.h"
 #include "PathFinding.h"
 
 namespace PF = pathfinding;
@@ -24,37 +23,18 @@ int main(int argc, char** argv) {
     std::unique_ptr<PF::PathFinder> grid_path_finder(new PF::PathFinder(
         PF::EnvironmentType::GRID, PF::PathFindingMethod::DIJKSTRA,
         PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE,
-        /**obstacle percentage**/ 0.1, rows, cols, cell_size, start, end));
+        /**obstacle percentage**/ 0.1, rows, cols, cell_size, start, end,
+        false));
 
-    // Create a visualizer object for the grid object
-    std::unique_ptr<PF::Visualizer> grid_visualizer(
-        new PF::Visualizer(grid_path_finder.get()));
-    // Set title
-    grid_visualizer->setTitle("GRID");
-    // Set theme
-    grid_visualizer->setTheme(PF::Theme::LIGHT);
-    // Initiate the grid
-    grid_visualizer->init();
-    // Show
-    grid_visualizer->show();
+    grid_path_finder->showFinalPath();
 
     // Create a maze PathFinder Object
     std::unique_ptr<PF::PathFinder> maze_path_finder(new PF::PathFinder(
         PF::EnvironmentType::MAZE, PF::PathFindingMethod::DIJKSTRA,
         PF::MazeGenerationMethod::RANDOMIZED_DFS, rows, cols, cell_size, start,
-        end));
+        end, false));
 
-    // Create a visualizer object for the maze object
-    std::unique_ptr<PF::Visualizer> maze_visualizer(
-        new PF::Visualizer(maze_path_finder.get()));
-    // Set title
-    maze_visualizer->setTitle("MAZE");
-    // Set theme
-    maze_visualizer->setTheme(PF::Theme::LIGHT);
-    // Initiate the grid
-    maze_visualizer->init();
-    // Show
-    maze_visualizer->show();
+    maze_path_finder->showFinalPath();
 
     return 0;
 }

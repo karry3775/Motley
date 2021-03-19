@@ -2,12 +2,14 @@
 
 #include <SDL2/SDL.h>
 #include "Grid.h"
-#include "PathFinding.h"
+#include "EnvironmentGeneration.h"
 #include <unistd.h>  // TODO: Switch to boost for portability
 
 #define microseconds_in_seconds 1000000
 
 namespace pathfinding {
+
+class PathFinder;  // Forward declaration
 
 enum class Theme { DARK, LIGHT };
 
@@ -40,14 +42,29 @@ class Visualizer {
     void show();
 
     /**
+     * Show Path progression
+     */
+    void showPathProgression(const std::vector<Cell*>& current_points);
+
+    /**
      * Visualizer pathfinding for Grid environment
      */
     void showGrid();
 
     /**
+     * Progression visualizer for Grid environment
+     */
+    void showGridProgression(const std::vector<Cell*>& current_points);
+
+    /**
      * Visualize pathfinding for maze environment
      */
     void showMaze();
+
+    /**
+     * Progression visualizer for Maze environment
+     */
+    void showMazeProgression(const std::vector<Cell*>& current_points);
 
    private:
     void setLightTheme();

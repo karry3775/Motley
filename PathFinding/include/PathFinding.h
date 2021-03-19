@@ -2,11 +2,11 @@
 
 #include "Grid.h"
 #include "Maze.h"
+#include "Visualization.h"
 
 namespace pathfinding {
 
 enum class PathFindingMethod { DIJKSTRA, ASTAR, SAMPLE, HIERARCHICAL, BFS };
-enum class EnvironmentType { GRID, MAZE };
 
 // TODO: For future make this a template type so that it can support different
 // varieties of cell (e.g. Square, pentagonal, hexagonal etc.)
@@ -33,7 +33,8 @@ class PathFinder {
                const PathFindingMethod& pf_method,
                const MazeGenerationMethod& maze_gen_method,
                const uint32_t& rows, const uint32_t& cols,
-               const uint32_t& cell_size, const Cell& start, const Cell& end);
+               const uint32_t& cell_size, const Cell& start, const Cell& end,
+               bool show_path_progression = true);
 
     /**
      * @param env_type        Specifiy GRID as the environment type
@@ -61,7 +62,8 @@ class PathFinder {
                const ObstacleGenerationMethod& obs_gen_method,
                const double& obstacle_perc, const uint32_t& rows,
                const uint32_t& cols, const uint32_t& cell_size,
-               const Cell& start, const Cell& end);
+               const Cell& start, const Cell& end,
+               bool show_path_progression = true);
 
     // TODO : Check if this is best way to return
     const Environment<Cell>* getEnvironment() const;
@@ -73,6 +75,8 @@ class PathFinder {
     const std::vector<std::vector<int>> getObstacles() const;
 
     bool doesPathExists() const;
+
+    void showFinalPath() const;
 
    private:
     bool findPath();
@@ -93,6 +97,10 @@ class PathFinder {
     Path<Cell*> path_;
     std::vector<std::vector<int>> obstacles_;
     bool path_found_;
+    bool show_path_progression_;
+
+    // Visualizer object
+    std::unique_ptr<Visualizer> visualizer;
 };
 
 }  // namespace pathfinding

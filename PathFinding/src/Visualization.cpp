@@ -54,6 +54,19 @@ void Visualizer::show() {
     }
 }
 
+void Visualizer::showPathProgression(const std::vector<Cell*>& current_points) {
+    switch (env_type_) {
+        case EnvironmentType::GRID:
+            showGridProgression(current_points);
+            break;
+        case EnvironmentType::MAZE:
+            showMazeProgression(current_points);
+            break;
+        default:
+            LOG(FATAL) << "Unknonw environment type for path finding!";
+    }
+}
+
 void Visualizer::showGrid() {
     // TODO: Add check for checking if path was
     // calculated
@@ -105,6 +118,10 @@ void Visualizer::showGrid() {
     SDL_Quit();
 }
 
+void Visualizer::showGridProgression(const std::vector<Cell*>& current_points) {
+    // TODO
+}
+
 void Visualizer::showMaze() {
     // TODO: Check if width and height have been set
     SDL_bool quit = SDL_FALSE;
@@ -152,6 +169,10 @@ void Visualizer::showMaze() {
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);
     SDL_Quit();
+}
+
+void Visualizer::showMazeProgression(const std::vector<Cell*>& current_points) {
+    // TODO
 }
 
 bool Visualizer::init() {

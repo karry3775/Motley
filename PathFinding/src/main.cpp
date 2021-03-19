@@ -7,24 +7,24 @@ int main(int argc, char** argv) {
     // TODO: Make the function call more abstract for
     // the end user
     // Number of rows in the grid
-    uint32_t rows{40};
+    uint32_t rows{10};
 
     // Number of cols in the grid
-    uint32_t cols{40};
+    uint32_t cols{20};
 
     // Size of individual cell in pixels
-    uint32_t cell_size{20};
+    uint32_t cell_size{50};
 
     // Choose a starting point
-    PF::Cell start(15, 12);
+    PF::Cell start(3, 3);
 
     // Choose an ending point
-    PF::Cell end(39, 39);
+    PF::Cell end(9, 19);
 
     std::unique_ptr<PF::PathFinder> grid_path_finder(new PF::PathFinder(
         PF::EnvironmentType::GRID, PF::PathFindingMethod::DIJKSTRA,
         PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE,
-        /**num obstacles**/ 300, rows, cols, cell_size, start, end));
+        /**num obstacles**/ 10, rows, cols, cell_size, start, end));
 
     // Create a visualizer object for the grid object
     std::unique_ptr<PF::Visualizer> grid_visualizer(

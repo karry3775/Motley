@@ -1,6 +1,5 @@
 #include "PathFinding.h"
 #include "PathFindingUtils.h"
-#include <queue>
 
 namespace pathfinding {
 
@@ -87,13 +86,9 @@ bool PathFinder::findPath() {
 bool PathFinder::findPathDijkstra() {
     DistanceMap<Cell*> dist;
     PredecessorMap<Cell*> pred;
-    // Priority queue (Min heap fashion to aid in finding the vertex with
-    // minimum cost)
-    typedef std::pair<int, Cell*>
-        CostCellPair;  // TODO Later move to default types
-    std::priority_queue<CostCellPair, std::vector<CostCellPair>,
-                        std::greater<CostCellPair>>
-        pq;
+
+    // Min heap to extract vertex with min distance
+    MinHeap<int, Cell*> min_heap;
 
     // Get the adj_ list
     const auto adj = env_->getAdjacencyList();
@@ -107,14 +102,14 @@ bool PathFinder::findPathDijkstra() {
 
     // Setup data for source/start point
     dist[env_->at(start_)] = 0;
-    pq.push(std::make_pair(0, env_->at(start_)));
+    min_heap.push(std::make_pair(0, env_->at(start_)));
 
     bool path_found;
-    while (!pq.empty()) {
+    while (!min_heap.empty()) {
         // Step 1: Get the vertex with minimum distance value
-        auto current = pq.top().second;
+        auto current = min_heap.top().second;
         // Step 2: Erase that vertex from the unvisited set
-        pq.pop();
+        min_heap.pop();
 
         // Step 3: For each neighbour that vertex check if a
         // shorted circuit could be formed
@@ -122,9 +117,10 @@ bool PathFinder::findPathDijkstra() {
             const auto neighbour = adj.at(current)[i];
 
             if (dist[current] + 1 < dist[neighbour]) {
+                // TODO: Make the cost between neighbours to be a variable later
                 dist[neighbour] = dist[current] + 1;
                 pred[neighbour] = current;
-                pq.push(std::make_pair(dist[neighbour], neighbour));
+                min_heap.push(std::make_pair(dist[neighbour], neighbour));
             }
 
             // Check if end point is reached
@@ -195,6 +191,7 @@ bool PathFinder::findPathBfs() {
                 // mark it as visited
                 visited.insert(adj[current][i]);
                 // update the distance to be one more than current
+                // TODO: Make the cost between neighbours to be a variable later
                 dist[adj[current][i]] = 1 + dist[current];
                 // make current as the predecessor
                 pred[adj[current][i]] = current;

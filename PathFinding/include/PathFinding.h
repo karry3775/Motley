@@ -76,7 +76,7 @@ class PathFinder {
 
     bool doesPathExists() const;
 
-    void showFinalPath() const;
+    void showFinalPath();
 
    private:
     bool findPath();
@@ -87,6 +87,8 @@ class PathFinder {
     bool findPathBfs();
 
     void getPathFromPredecessorMap(const PredecessorMap<Cell*>& pred);
+
+    void setUpVisualizer();
 
     Environment<Cell>* env_;
     Cell start_;

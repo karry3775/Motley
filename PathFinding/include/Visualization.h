@@ -31,51 +31,55 @@ class Visualizer {
      */
     void setTheme(const Theme&);
 
+
+    /**
+     * Set path
+     */
+    void setPath(const Path<Cell*>& path); 
+
     /**
      * Initiate the visualizer
      */
     bool init();
 
     /**
+     * Set path
+     */
+    void setPath(const Path<Cell*>* path); 
+
+    /**
      *  Shows the visualization
      */
-    void show();
+    void showFinalPath();
 
     /**
      * Show Path progression
      */
-    void showPathProgression(const std::vector<Cell*>& current_points);
+    void showPathProgression(const Path<Cell*>& path);
+
+    // The functions below should become private later on
 
     /**
      * Visualizer pathfinding for Grid environment
      */
-    void showGrid();
-
-    /**
-     * Progression visualizer for Grid environment
-     */
-    void showGridProgression(const std::vector<Cell*>& current_points);
+    void showPathGrid(const Path<Cell*>& path, const bool is_progression);
 
     /**
      * Visualize pathfinding for maze environment
      */
-    void showMaze();
-
-    /**
-     * Progression visualizer for Maze environment
-     */
-    void showMazeProgression(const std::vector<Cell*>& current_points);
+    void showPathMaze(const Path<Cell*>& path, const bool is_progression);
 
    private:
     void setLightTheme();
     void setDarkTheme();
     void renderBackground();
-    void renderPath(const uint32_t& num_waypoints);
+    void renderPath(const Path<Cell*>& path, const uint32_t& num_waypoints,
+    const bool is_progression);
     void renderWalls();
     void renderCell(const Cell& cell, const SDL_Color& color);
     void renderBoundaries();
     void renderGridLines();
-    void renderWayPoints(const uint32_t& num_waypoints);
+    void renderWayPoints(const Path<Cell*>& path, const uint32_t& num_waypoints);
     void renderWayPointPair(const Cell& c1, const Cell& c2);
     void renderCircle(int x0, int y0);
 

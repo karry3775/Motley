@@ -22,14 +22,20 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
     // Assign obstacles
     obstacles_ = env_->getObstacles();
 
+    // Create the visualizer object when everything is set
+    visualizer = std::make_unique<Visualizer>(this);
+
+    // Set up visualizer
+    setUpVisualizer();
+
     // Find path using the suggested method above
     path_found_ = findPath();
 
+    // Set final path for visualizer
+    visualizer->setPath(path_);
+
     // Assign a seed
     srand(12345);
-
-    // Create the visualizer object when everything is set
-    visualizer = std::make_unique<Visualizer>(this);
 }
 
 PathFinder::PathFinder(const EnvironmentType& env_type,
@@ -47,14 +53,20 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
 
     env_ = new Maze(rows, cols, cell_size, maze_gen_method);
 
+    // Create the visualizer object when everything is set
+    visualizer = std::make_unique<Visualizer>(this);
+
+    // Set up visualizer
+    setUpVisualizer();
+
     // Find path using the suggested method above
     path_found_ = findPath();
 
+    // Set final path for visualizer
+    visualizer->setPath(path_);
+
     // Assign a seed
     srand(12345);
-
-    // Create the visualizer object when everything is set
-    visualizer = std::make_unique<Visualizer>(this);
 }
 
 const Environment<Cell>* PathFinder::getEnvironment() const { return env_; }
@@ -71,31 +83,9 @@ const std::vector<std::vector<int>> PathFinder::getObstacles() const {
 
 bool PathFinder::doesPathExists() const { return path_found_; }
 
-void PathFinder::showFinalPath() const {
-    // Set visualizer attributes based on evnironment type
-    const char* title;
-    Theme theme;
-    switch (env_type_) {
-        case EnvironmentType::GRID:
-            title = "GRID";
-            theme = Theme::LIGHT;
-            break;
-        case EnvironmentType::MAZE:
-            title = "MAZE";
-            theme = Theme::LIGHT;
-            break;
-        default:
-            LOG(FATAL) << "Unknown environment type!";
-    }
-
-    // Set title
-    visualizer->setTitle(title);
-    // Set theme
-    visualizer->setTheme(theme);
-    // Initiate the visualizer
-    visualizer->init();
-    // Show
-    visualizer->show();
+void PathFinder::showFinalPath() {
+    setUpVisualizer();
+    visualizer->showFinalPath();
 }
 
 bool PathFinder::findPath() {
@@ -147,11 +137,18 @@ bool PathFinder::findPathDijkstra() {
     min_heap.push(std::make_pair(0, env_->at(start_)));
 
     bool path_found;
+
+    // Path to keep track of all the explored neighbours
+    Path<Cell*> explored_path;
+
     while (!min_heap.empty()) {
         // Step 1: Get the vertex with minimum distance value
         auto current = min_heap.top().second;
         // Step 2: Erase that vertex from the unvisited set
         min_heap.pop();
+
+        // Add current to explored
+        explored_path.emplace_back(current);
 
         // Step 3: For each neighbour that vertex check if a
         // shorted circuit could be formed
@@ -175,6 +172,11 @@ bool PathFinder::findPathDijkstra() {
 
     // Form the path using predecessor
     getPathFromPredecessorMap(pred);
+
+    // Show path progression
+    if (show_path_progression_) {
+        visualizer->showPathProgression(explored_path);
+    }
 
     return path_found;
 }
@@ -223,13 +225,16 @@ bool PathFinder::findPathBfs() {
 
     bool path_found = false;
 
-    // Vector to keep track of all the explored neighbours
-    std::vector<Cell*> explored;
+    // Path keep track of all the explored neighbours
+    Path<Cell*> explored_path;
 
     // standard BFS algorithm
     while (!cell_queue.empty()) {
         Cell* current = cell_queue.front();
         cell_queue.pop();
+
+        // Add current to explored
+        explored_path.emplace_back(current);
 
         // visit its neighbours one by one
         for (int i = 0; i < adj[current].size(); ++i) {
@@ -243,9 +248,6 @@ bool PathFinder::findPathBfs() {
                 pred[adj[current][i]] = current;
                 // push it in the queue to be processed later
                 cell_queue.push(adj[current][i]);
-
-                // Add current to explored
-                explored.emplace_back(adj[current][i]);
 
                 // We can stop the BFS when we find the destination
                 if (adj[current][i] == env_->at(end_)) {
@@ -261,7 +263,7 @@ bool PathFinder::findPathBfs() {
 
     // Show path progression
     if (show_path_progression_) {
-        // TODO
+        visualizer->showPathProgression(explored_path);
     }
 
     return path_found;
@@ -279,6 +281,31 @@ void PathFinder::getPathFromPredecessorMap(const PredecessorMap<Cell*>& pred) {
 
     // Reverse the path
     std::reverse(path_.begin(), path_.end());
+}
+
+void PathFinder::setUpVisualizer() {
+    // Set visualizer attributes based on environment type
+    const char* title;
+    Theme theme;
+    switch (env_type_) {
+        case EnvironmentType::GRID:
+            title = "GRID";
+            theme = Theme::LIGHT;
+            break;
+        case EnvironmentType::MAZE:
+            title = "MAZE";
+            theme = Theme::LIGHT;
+            break;
+        default:
+            LOG(FATAL) << "Unknown environment type!";
+    }
+
+    // Set title
+    visualizer->setTitle(title);
+    // Set theme
+    visualizer->setTheme(theme);
+    // Initiate the visualizer
+    visualizer->init();
 }
 
 }  // namespace pathfinding

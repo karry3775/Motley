@@ -58,6 +58,9 @@ void Grid::generate() {
             // grid cell which are not obstacles and add the edges to the
             // environment
 
+            // Skip if current row, col is an obstacle
+            if (obstacles_[row][col] == 1) continue;
+
             // top neighbour
             if (row - 1 >= 0 && obstacles_[row - 1][col] != 1) {
                 addEdge(matrix_[row][col], matrix_[row - 1][col]);

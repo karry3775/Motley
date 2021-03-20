@@ -40,13 +40,15 @@ void Visualizer::setTitle(const char* title) { title_ = title; }
 
 void Visualizer::setTheme(const Theme& theme) { theme_ = theme; }
 
-void Visualizer::show() {
+void Visualizer::setPath(const Path<Cell*>& path) { path_ = path; }
+
+void Visualizer::showFinalPath() {
     switch (env_type_) {
         case EnvironmentType::GRID:
-            showGrid();
+            showPathGrid(path_, false);
             break;
         case EnvironmentType::MAZE:
-            showMaze();
+            showPathMaze(path_, false);
             break;
         default:
             LOG(FATAL) << "Unknown environment type for path finding!";
@@ -54,22 +56,21 @@ void Visualizer::show() {
     }
 }
 
-void Visualizer::showPathProgression(const std::vector<Cell*>& current_points) {
+void Visualizer::showPathProgression(const Path<Cell*>& path) {
     switch (env_type_) {
         case EnvironmentType::GRID:
-            showGridProgression(current_points);
+            showPathGrid(path, true);
             break;
         case EnvironmentType::MAZE:
-            showMazeProgression(current_points);
+            showPathMaze(path, true);
             break;
         default:
             LOG(FATAL) << "Unknonw environment type for path finding!";
     }
 }
 
-void Visualizer::showGrid() {
-    // TODO: Add check for checking if path was
-    // calculated
+void Visualizer::showPathGrid(const Path<Cell*>& path,
+                              const bool is_progression) {
     SDL_bool quit = SDL_FALSE;
 
     // A variable to keep track of
@@ -92,13 +93,15 @@ void Visualizer::showGrid() {
         renderObstacles();
 
         // Render Path
-        renderPath(num_path_waypoints);
+        renderPath(path, num_path_waypoints, is_progression);
 
         // Render grid lines
         renderGridLines();
 
-        // Render Waypoints
-        renderWayPoints(num_path_waypoints);
+        if (!is_progression) {
+            // Render Waypoints
+            renderWayPoints(path, num_path_waypoints);
+        }
 
         // Present the render
         SDL_RenderPresent(renderer_);
@@ -107,7 +110,7 @@ void Visualizer::showGrid() {
         usleep(m_sleep_duration_ms);
 
         // Update number of way points to be displayed
-        num_path_waypoints = (num_path_waypoints < path_.size())
+        num_path_waypoints = (num_path_waypoints < path.size())
                                  ? num_path_waypoints + 1
                                  : num_path_waypoints;
     }
@@ -118,11 +121,8 @@ void Visualizer::showGrid() {
     SDL_Quit();
 }
 
-void Visualizer::showGridProgression(const std::vector<Cell*>& current_points) {
-    // TODO
-}
-
-void Visualizer::showMaze() {
+void Visualizer::showPathMaze(const Path<Cell*>& path,
+                              const bool is_progression) {
     // TODO: Check if width and height have been set
     SDL_bool quit = SDL_FALSE;
 
@@ -143,7 +143,7 @@ void Visualizer::showMaze() {
         renderBackground();
 
         // Render path
-        renderPath(num_path_waypoints);
+        renderPath(path, num_path_waypoints, is_progression);
 
         // Render walls
         renderWalls();
@@ -151,8 +151,10 @@ void Visualizer::showMaze() {
         // render outer boundaries
         renderBoundaries();
 
-        // render waypoints
-        renderWayPoints(num_path_waypoints);
+        if (!is_progression) {
+            // render waypoints
+            renderWayPoints(path, num_path_waypoints);
+        }
 
         // Present the render
         SDL_RenderPresent(renderer_);
@@ -161,7 +163,7 @@ void Visualizer::showMaze() {
         usleep(m_sleep_duration_ms);
 
         // Update number of waypoints to be rendered
-        num_path_waypoints = (num_path_waypoints < path_.size())
+        num_path_waypoints = (num_path_waypoints < path.size())
                                  ? num_path_waypoints + 1
                                  : num_path_waypoints;
     }
@@ -169,10 +171,6 @@ void Visualizer::showMaze() {
     SDL_DestroyRenderer(renderer_);
     SDL_DestroyWindow(window_);
     SDL_Quit();
-}
-
-void Visualizer::showMazeProgression(const std::vector<Cell*>& current_points) {
-    // TODO
 }
 
 bool Visualizer::init() {
@@ -217,7 +215,7 @@ void Visualizer::setDarkTheme() {
     background_color_ = {65, 60, 48, 255};
     grid_line_color_ = {223, 222, 221, 255};
     path_color_ = {106, 90, 205, 255};
-    traversal_cell_color_ = {123, 163, 219, 255};
+    traversal_cell_color_ = {8, 180, 99, 255};
     waypoint_line_color_ = {137, 225, 117, 255};
     waypoint_circle_color_ = {177, 137, 51, 255};
     obstacles_color_ = {180, 180, 180, 255};
@@ -229,7 +227,7 @@ void Visualizer::setLightTheme() {
     background_color_ = {223, 222, 221, 255};
     grid_line_color_ = {65, 60, 48, 255};
     path_color_ = {106, 90, 205, 255};
-    traversal_cell_color_ = {123, 163, 219, 255};
+    traversal_cell_color_ = {8, 180, 99, 255};
     waypoint_line_color_ = {137, 225, 117, 255};
     waypoint_circle_color_ = {177, 137, 51, 255};
     obstacles_color_ = {60, 60, 60, 255};
@@ -241,26 +239,24 @@ void Visualizer::renderBackground() {
     SDL_RenderClear(renderer_);
 }
 
-void Visualizer::renderPath(const uint32_t& num_waypoints) {
-    // Iterate through the path and fill up the rectangles with path
-    // color
-    SDL_SetRenderDrawColor(renderer_, path_color_.r, path_color_.g,
-                           path_color_.b, path_color_.a);
-
+void Visualizer::renderPath(const Path<Cell*>& path,
+                            const uint32_t& num_waypoints,
+                            const bool is_progression) {
+    SDL_Color path_color =
+        (is_progression) ? traversal_cell_color_ : path_color_;
     // Add waypoints progressionally
     for (int i = 0; i < num_waypoints; ++i) {
-        auto cell = *path_[i];
+        auto cell = *path[i];
 
         // Form the rectangle to be rendered
-        renderCell(cell, path_color_);
+        renderCell(cell, path_color);
     }
-
     // Render start cell
-    auto start_cell = *path_[0];
+    auto start_cell = *path[0];
     renderCell(start_cell, start_color_);
 
     // Render end cell
-    auto end_cell = *path_[path_.size() - 1];
+    auto end_cell = *path[path.size() - 1];
     renderCell(end_cell, end_color_);
 }
 
@@ -329,11 +325,12 @@ void Visualizer::renderGridLines() {
     }
 }
 
-void Visualizer::renderWayPoints(const uint32_t& num_waypoints) {
+void Visualizer::renderWayPoints(const Path<Cell*>& path,
+                                 const uint32_t& num_waypoints) {
     // Add waypoints progressionally
     for (int i = 0; i < num_waypoints - 1; ++i) {
-        auto cell1 = *path_[i];
-        auto cell2 = *path_[i + 1];
+        auto cell1 = *path[i];
+        auto cell2 = *path[i + 1];
 
         // Render waypoint pair
         renderWayPointPair(cell1, cell2);

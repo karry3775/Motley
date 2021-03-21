@@ -18,62 +18,39 @@ This repository is made for the sole purpose of doing random assortment of proje
 namespace PF = pathfinding;
 
 int main(int argc, char** argv) {
-    // Define basic parameters defining the path finder
-    uint32_t rows{40}, cols{40}, cell_size{20};
-    PF::Cell start(15, 12), end(39, 39);
+    // TODO: Make the function call more abstract for
+    // the end user
+    // Number of rows in the grid
+    uint32_t rows{40};
 
+    // Number of cols in the grid
+    uint32_t cols{40};
 
-    /********************* PATH FINDING IN GRID BASED ENVIRONMENT *******************/
-    // Finding a path in grid environment
+    // Size of individual cell in pixels
+    uint32_t cell_size{20};
+
+    // Choose a starting point
+    PF::Cell start(3, 3);
+
+    // Choose an ending point
+    PF::Cell end(30, 19);
+
     std::unique_ptr<PF::PathFinder> grid_path_finder(new PF::PathFinder(
-        PF::EnvironmentType::GRID,  /** Specifying GRID type environment **/
-        PF::PathFindingMethod::BFS, /** Method to be used for path finding **/
-        PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE, /** Method to be used
-        for generation of random obstacles **/
-        300,       /** Number of obstacles to be generated **/
-        rows,      /** Number of rows **/
-        cols,      /** Number of cols **/
-        cell_size, /** Size of the square cells in pixels **/
-        start,     /** Starting cell for the path **/
-        end,       /** Ending cell for the path **/
-        ));
+        PF::EnvironmentType::GRID, PF::PathFindingMethod::BFS,
+        PF::ObstacleGenerationMethod::FISHER_YATES_SHUFFLE,
+        /**obstacle percentage**/ 0.1, rows, cols, cell_size, start, end,
+        true));
 
-    // Visualize the path in grid environment
-    std::unique_ptr<PF::Visualizer> grid_visualizer(
-    new PF::Visualizer(grid_path_finder.get()));
-    // Set title
-    grid_visualizer->setTitle("GRID");
-    // Set theme
-    grid_visualizer->setTheme(PF::Theme::LIGHT);
-    // Initia the grid
-    grid_visualizer->init();
-    // Show
-    grid_visualizer->show();
 
-    /********************* PATH FINDING IN MAZE ENVIRONMENT *************************/
+    grid_path_finder->showFinalPath();
+
+    // Create a maze PathFinder Object
     std::unique_ptr<PF::PathFinder> maze_path_finder(new PF::PathFinder(
-        PF::EnvironmentType::MAZE, /** Specify MAZE environment **/
-        PF::PathFindingMethod::BFS, /** Method to be used for path finding **/
-        PF::MazeGenerationMethod::RANDOMIZED_DFS, /** Method to be used for maze generation **/
-        rows, /** Number of rows **/
-        cols, /** Number of cols **/
-        cell_size, /** Size of square cells in pixels **/
-        start, /** Starting cell for the path **/
-        end, /** Ending cell for the path **/
-    ));
+        PF::EnvironmentType::MAZE, PF::PathFindingMethod::DIJKSTRA,
+        PF::MazeGenerationMethod::RANDOMIZED_DFS, rows, cols, cell_size, start,
+        end, true));
 
-    // Visualize the path in maze environment
-    // Create a visualizer object for the maze object
-    std::unique_ptr<PF::Visualizer> maze_visualizer(
-    new PF::Visualizer(maze_path_finder));
-    // Set title
-    maze_visualizer->setTitle("MAZE");
-    // Set theme
-    maze_visualizer->setTheme(PF::Theme::LIGHT);
-    // Initiate the grid
-    maze_visualizer->init();
-    // Show
-    maze_visualizer->show();
+    maze_path_finder->showFinalPath();
 
     return 0;
 }

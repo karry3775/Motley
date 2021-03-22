@@ -101,6 +101,7 @@ class PathFinder {
     EnvironmentType env_type_;
 
     Path<Cell*> path_;
+    Path<Cell*> explored_path_;
     std::vector<std::vector<int>> obstacles_;
     bool path_found_;
     bool show_path_progression_;

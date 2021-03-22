@@ -17,10 +17,16 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
       show_path_progression_{show_path_progression} {
     CHECK(env_type_ == EnvironmentType::GRID) << "Expected a GRID type!";
 
+    // Assign a seed
+    srand(12345);
+
     env_ = new Grid(rows, cols, cell_size, obs_gen_method, obstacle_perc);
 
     // Assign obstacles
     obstacles_ = env_->getObstacles();
+
+    // Find path using the suggested method above
+    path_found_ = findPath();
 
     // Create the visualizer object when everything is set
     visualizer = std::make_unique<Visualizer>(this);
@@ -28,14 +34,10 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
     // Set up visualizer
     setUpVisualizer();
 
-    // Find path using the suggested method above
-    path_found_ = findPath();
-
-    // Set final path for visualizer
-    visualizer->setPath(path_);
-
-    // Assign a seed
-    srand(12345);
+    // Show path progression
+    if (show_path_progression_) {
+        visualizer->showPathProgression(explored_path_);
+    }
 }
 
 PathFinder::PathFinder(const EnvironmentType& env_type,
@@ -51,7 +53,13 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
       show_path_progression_{show_path_progression} {
     CHECK(env_type_ == EnvironmentType::MAZE) << "Expected a MAZE type!";
 
+    // Assign a seed
+    srand(12345);
+
     env_ = new Maze(rows, cols, cell_size, maze_gen_method);
+
+    // Find path using the suggested method above
+    path_found_ = findPath();
 
     // Create the visualizer object when everything is set
     visualizer = std::make_unique<Visualizer>(this);
@@ -59,14 +67,10 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
     // Set up visualizer
     setUpVisualizer();
 
-    // Find path using the suggested method above
-    path_found_ = findPath();
-
-    // Set final path for visualizer
-    visualizer->setPath(path_);
-
-    // Assign a seed
-    srand(12345);
+    // Show path progression
+    if (show_path_progression_) {
+        visualizer->showPathProgression(explored_path_);
+    }
 }
 
 const Environment<Cell>* PathFinder::getEnvironment() const { return env_; }
@@ -88,7 +92,12 @@ const std::vector<std::vector<int>> PathFinder::getObstacles() const {
 bool PathFinder::doesPathExists() const { return path_found_; }
 
 void PathFinder::showFinalPath() {
-    setUpVisualizer();
+    if (show_path_progression_) {
+        // The first instance of visualizer object must have been
+        // deinitialized
+        // As such we need to explicitly initialize it here
+        setUpVisualizer();
+    }
     visualizer->showFinalPath();
 }
 
@@ -142,9 +151,6 @@ bool PathFinder::findPathDijkstra() {
 
     bool path_found;
 
-    // Path to keep track of all the explored neighbours
-    Path<Cell*> explored_path;
-
     while (!min_heap.empty()) {
         // Step 1: Get the vertex with minimum distance value
         auto current = min_heap.top().second;
@@ -152,7 +158,7 @@ bool PathFinder::findPathDijkstra() {
         min_heap.pop();
 
         // Add current to explored
-        explored_path.emplace_back(current);
+        explored_path_.emplace_back(current);
 
         // Step 3: For each neighbour that vertex check if a
         // shorted circuit could be formed
@@ -176,11 +182,6 @@ bool PathFinder::findPathDijkstra() {
 
     // Form the path using predecessor
     getPathFromPredecessorMap(pred);
-
-    // Show path progression
-    if (show_path_progression_) {
-        visualizer->showPathProgression(explored_path);
-    }
 
     return path_found;
 }
@@ -229,16 +230,13 @@ bool PathFinder::findPathBfs() {
 
     bool path_found = false;
 
-    // Path keep track of all the explored neighbours
-    Path<Cell*> explored_path;
-
     // standard BFS algorithm
     while (!cell_queue.empty()) {
         Cell* current = cell_queue.front();
         cell_queue.pop();
 
         // Add current to explored
-        explored_path.emplace_back(current);
+        explored_path_.emplace_back(current);
 
         // visit its neighbours one by one
         for (int i = 0; i < adj[current].size(); ++i) {
@@ -264,11 +262,6 @@ bool PathFinder::findPathBfs() {
 
     // Form the path using predecessor
     getPathFromPredecessorMap(pred);
-
-    // Show path progression
-    if (show_path_progression_) {
-        visualizer->showPathProgression(explored_path);
-    }
 
     return path_found;
 }

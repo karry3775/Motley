@@ -79,7 +79,15 @@ void Visualizer::showPathGrid(const Path<Cell*>& path,
     // A variable to keep track of
     // how many waypoints we are showing
     // This is to aid progression of path
-    int num_path_waypoints = 1;
+
+    // if we are showing the final path then we do not need any progression
+    // and thus number of path waypoints to be rendered can be
+    // just set to full path size.
+    int num_current_path_waypoints = (is_progression) ? 1 : path.size();
+
+    // Only used when is_progression is true
+    // If not a progression then num_current_path_waypoint suffices
+    int num_final_path_waypoints_when_progression = 1;
 
     while (!quit) {
         SDL_Event event;
@@ -96,14 +104,28 @@ void Visualizer::showPathGrid(const Path<Cell*>& path,
         renderObstacles();
 
         // Render Path
-        renderPath(path, num_path_waypoints, is_progression);
+        renderPath(path, num_current_path_waypoints, is_progression);
+
+        if (is_progression && num_current_path_waypoints == path.size()) {
+            // Also render the final path once the explored path is finished
+            renderPath(path_, num_final_path_waypoints_when_progression, false);
+            // Update num_final_path_waypoints
+            num_final_path_waypoints_when_progression =
+                (num_final_path_waypoints_when_progression < path_.size())
+                    ? num_final_path_waypoints_when_progression + 1
+                    : num_final_path_waypoints_when_progression;
+        }
 
         // Render grid lines
         renderGridLines();
 
         if (!is_progression) {
             // Render Waypoints
-            renderWayPoints(path, num_path_waypoints);
+            renderWayPoints(path, num_current_path_waypoints);
+        }
+
+        if (is_progression && num_current_path_waypoints == path.size()) {
+            renderWayPoints(path_, num_final_path_waypoints_when_progression);
         }
 
         // Present the render
@@ -113,9 +135,9 @@ void Visualizer::showPathGrid(const Path<Cell*>& path,
         usleep(m_sleep_duration_ms);
 
         // Update number of way points to be displayed
-        num_path_waypoints = (num_path_waypoints < path.size())
-                                 ? num_path_waypoints + 1
-                                 : num_path_waypoints;
+        num_current_path_waypoints = (num_current_path_waypoints < path.size())
+                                         ? num_current_path_waypoints + 1
+                                         : num_current_path_waypoints;
     }
 
     // Destroy
@@ -129,9 +151,14 @@ void Visualizer::showPathMaze(const Path<Cell*>& path,
     // TODO: Check if width and height have been set
     SDL_bool quit = SDL_FALSE;
 
-    // To track the number of current waypoints shown
-    // Helps in showing path progression
-    int num_path_waypoints = 1;
+    // if we are showing the final path then we do not need any progression
+    // and thus number of path waypoints to be rendered can be
+    // just set to full path size.
+    int num_current_path_waypoints = (is_progression) ? 1 : path.size();
+
+    // Only used when is_progression is true
+    // If not a progression then num_current_path_waypoint suffices
+    int num_final_path_waypoints_when_progression = 1;
 
     while (!quit) {
         SDL_Event event;
@@ -145,8 +172,18 @@ void Visualizer::showPathMaze(const Path<Cell*>& path,
         // Render background
         renderBackground();
 
-        // Render path
-        renderPath(path, num_path_waypoints, is_progression);
+        // Render Path
+        renderPath(path, num_current_path_waypoints, is_progression);
+
+        if (is_progression && num_current_path_waypoints == path.size()) {
+            // Also render the final path once the explored path is finished
+            renderPath(path_, num_final_path_waypoints_when_progression, false);
+            // Update num_final_path_waypoints
+            num_final_path_waypoints_when_progression =
+                (num_final_path_waypoints_when_progression < path_.size())
+                    ? num_final_path_waypoints_when_progression + 1
+                    : num_final_path_waypoints_when_progression;
+        }
 
         // Render walls
         renderWalls();
@@ -155,8 +192,12 @@ void Visualizer::showPathMaze(const Path<Cell*>& path,
         renderBoundaries();
 
         if (!is_progression) {
-            // render waypoints
-            renderWayPoints(path, num_path_waypoints);
+            // Render Waypoints
+            renderWayPoints(path, num_current_path_waypoints);
+        }
+
+        if (is_progression && num_current_path_waypoints == path.size()) {
+            renderWayPoints(path_, num_final_path_waypoints_when_progression);
         }
 
         // Present the render
@@ -165,10 +206,10 @@ void Visualizer::showPathMaze(const Path<Cell*>& path,
         // Sleep
         usleep(m_sleep_duration_ms);
 
-        // Update number of waypoints to be rendered
-        num_path_waypoints = (num_path_waypoints < path.size())
-                                 ? num_path_waypoints + 1
-                                 : num_path_waypoints;
+        // Update number of way points to be displayed
+        num_current_path_waypoints = (num_current_path_waypoints < path.size())
+                                         ? num_current_path_waypoints + 1
+                                         : num_current_path_waypoints;
     }
     // Destroy
     SDL_DestroyRenderer(renderer_);
@@ -245,6 +286,7 @@ void Visualizer::renderBackground() {
 void Visualizer::renderPath(const Path<Cell*>& path,
                             const uint32_t& num_waypoints,
                             const bool is_progression) {
+    CHECK_NE(path.size(), 0) << "renderPath: Received an empty path!";
     SDL_Color path_color =
         (is_progression) ? traversal_cell_color_ : path_color_;
     // Add waypoints progressionally

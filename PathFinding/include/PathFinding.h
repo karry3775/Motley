@@ -72,6 +72,10 @@ class PathFinder {
 
     const Path<Cell*> getPath() const;
 
+    const Cell getStartCell() const;
+
+    const Cell getEndCell() const;
+
     const std::vector<std::vector<int>> getObstacles() const;
 
     bool doesPathExists() const;

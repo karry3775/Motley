@@ -5,13 +5,16 @@ DEFINE_int32(waypoint_radius, 3, "radius for a waypoint renderer through SDL");
 
 namespace pathfinding {
 
-const uint32_t Visualizer::m_sleep_duration_ms = 0.01 * microseconds_in_seconds;
+const uint32_t Visualizer::m_sleep_duration_ms =
+    0.001 * microseconds_in_seconds;
 
 Visualizer::Visualizer(const PathFinder* path_finder) {
     cell_size_ = path_finder->getEnvironment()->getCellSize();
     width_ = cell_size_ * path_finder->getEnvironment()->getCols() + 1;
     height_ = cell_size_ * path_finder->getEnvironment()->getRows() + 1;
     path_ = path_finder->getPath();
+    start_ = path_finder->getStartCell();
+    end_ = path_finder->getEndCell();
     env_type_ = path_finder->getEnvironmentType();
     env_ = path_finder->getEnvironment();
     waypoint_radius_ = FLAGS_waypoint_radius;
@@ -215,7 +218,7 @@ void Visualizer::setDarkTheme() {
     background_color_ = {65, 60, 48, 255};
     grid_line_color_ = {223, 222, 221, 255};
     path_color_ = {106, 90, 205, 255};
-    traversal_cell_color_ = {8, 180, 99, 255};
+    traversal_cell_color_ = {255, 68, 217, 100};
     waypoint_line_color_ = {137, 225, 117, 255};
     waypoint_circle_color_ = {177, 137, 51, 255};
     obstacles_color_ = {180, 180, 180, 255};
@@ -227,7 +230,7 @@ void Visualizer::setLightTheme() {
     background_color_ = {223, 222, 221, 255};
     grid_line_color_ = {65, 60, 48, 255};
     path_color_ = {106, 90, 205, 255};
-    traversal_cell_color_ = {8, 180, 99, 255};
+    traversal_cell_color_ = {255, 68, 217, 100};
     waypoint_line_color_ = {137, 225, 117, 255};
     waypoint_circle_color_ = {177, 137, 51, 255};
     obstacles_color_ = {60, 60, 60, 255};
@@ -252,12 +255,10 @@ void Visualizer::renderPath(const Path<Cell*>& path,
         renderCell(cell, path_color);
     }
     // Render start cell
-    auto start_cell = *path[0];
-    renderCell(start_cell, start_color_);
+    renderCell(start_, start_color_);
 
     // Render end cell
-    auto end_cell = *path[path.size() - 1];
-    renderCell(end_cell, end_color_);
+    renderCell(end_, end_color_);
 }
 
 void Visualizer::renderWalls() {

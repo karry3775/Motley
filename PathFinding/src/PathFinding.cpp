@@ -77,6 +77,10 @@ const EnvironmentType& PathFinder::getEnvironmentType() const {
 
 const Path<Cell*> PathFinder::getPath() const { return path_; }
 
+const Cell PathFinder::getStartCell() const { return start_; }
+
+const Cell PathFinder::getEndCell() const { return end_; }
+
 const std::vector<std::vector<int>> PathFinder::getObstacles() const {
     return obstacles_;
 }

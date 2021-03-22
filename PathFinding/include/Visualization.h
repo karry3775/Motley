@@ -31,11 +31,10 @@ class Visualizer {
      */
     void setTheme(const Theme&);
 
-
     /**
      * Set path
      */
-    void setPath(const Path<Cell*>& path); 
+    void setPath(const Path<Cell*>& path);
 
     /**
      * Initiate the visualizer
@@ -45,7 +44,7 @@ class Visualizer {
     /**
      * Set path
      */
-    void setPath(const Path<Cell*>* path); 
+    void setPath(const Path<Cell*>* path);
 
     /**
      *  Shows the visualization
@@ -74,12 +73,13 @@ class Visualizer {
     void setDarkTheme();
     void renderBackground();
     void renderPath(const Path<Cell*>& path, const uint32_t& num_waypoints,
-    const bool is_progression);
+                    const bool is_progression);
     void renderWalls();
     void renderCell(const Cell& cell, const SDL_Color& color);
     void renderBoundaries();
     void renderGridLines();
-    void renderWayPoints(const Path<Cell*>& path, const uint32_t& num_waypoints);
+    void renderWayPoints(const Path<Cell*>& path,
+                         const uint32_t& num_waypoints);
     void renderWayPointPair(const Cell& c1, const Cell& c2);
     void renderCircle(int x0, int y0);
 
@@ -106,6 +106,10 @@ class Visualizer {
     const char* title_;
 
     Path<Cell*> path_;
+
+    Cell start_;
+
+    Cell end_;
 
     std::vector<std::vector<int>> obstacles_;
 

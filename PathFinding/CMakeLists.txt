@@ -26,3 +26,22 @@ target_include_directories(
     ${PROJECT_SOURCE_DIR}/include
 )
 
+
+############ Examples (TODO rename these to be specfic) #################
+file(
+    GLOB SOURCES_TEST
+        "examples/example1.cpp"
+        "src/Grid.cpp"
+        "src/PathFinding.cpp"
+        "src/Visualization.cpp"
+        "src/Maze.cpp"
+        "src/Wall.cpp"
+)
+
+add_executable(example1 ${SOURCES_TEST})
+target_link_libraries(example1 ${SDL2_LIBRARIES} glog::glog)
+target_include_directories(
+    example1
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+)

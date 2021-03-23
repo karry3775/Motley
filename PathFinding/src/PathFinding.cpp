@@ -25,6 +25,10 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
     // Assign obstacles
     obstacles_ = env_->getObstacles();
 
+    // Check if start and end points are blocked
+    LOG_IF(FATAL, isCellBlocked(start_)) << "Start cell is blocked!";
+    LOG_IF(FATAL, isCellBlocked(end_)) << "End cell is blocked!";
+
     // Find path using the suggested method above
     path_found_ = findPath();
 
@@ -303,6 +307,15 @@ void PathFinder::setUpVisualizer() {
     visualizer->setTheme(theme);
     // Initiate the visualizer
     visualizer->init();
+}
+
+bool PathFinder::isCellBlocked(const Cell& cell) const {
+    if (obstacles_.size() > cell.getRow() &&
+        obstacles_[0].size() > cell.getCol()) {
+        return obstacles_[cell.getRow()][cell.getCol()] == 1;
+    }
+
+    return false;
 }
 
 }  // namespace pathfinding

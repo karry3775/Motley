@@ -94,6 +94,8 @@ class PathFinder {
 
     void setUpVisualizer();
 
+    bool isCellBlocked(const Cell& cell) const;
+
     Environment<Cell>* env_;
     Cell start_;
     Cell end_;

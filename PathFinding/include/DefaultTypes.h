@@ -13,6 +13,9 @@ template <typename T>
 using Path = std::vector<T>;
 
 template <typename T>
+using SimplePath = std::vector<std::pair<T, T>>;
+
+template <typename T>
 using PredecessorMap = std::map<T, T>;
 
 template <typename T>

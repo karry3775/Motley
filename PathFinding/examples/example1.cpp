@@ -22,13 +22,27 @@ int main(int argc, char** argv) {
     // Show final path
     grid_path_finder->showFinalPath();
 
-    // Get the path out
-    auto path = grid_path_finder->getPath();
+    // Get the raw path having cell constructor
+    // this might prohibit portability, as people might have
+    // to manually convert it to vector paths
+    // Could be useful for developers who want to use the cell kind
+    // of structs
+    const auto path = grid_path_finder->getPath();
 
     // Print out the path
     std::cout << "Final Path\n";
     for (auto& waypoint : path) {
         std::cout << *waypoint << "\n";
+    }
+    std::cout << "\n";
+
+    // For decoupled developed, there is also an option to get a simple path out
+    const auto simple_path = grid_path_finder->getSimplePath();
+
+    // Print the simple path
+    std::cout << "Simple path\n";
+    for (auto& wp_pair : simple_path) {
+        std::cout << wp_pair.first << ", " << wp_pair.second << "\n";
     }
     std::cout << "\n";
 

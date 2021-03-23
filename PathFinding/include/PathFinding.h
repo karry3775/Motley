@@ -72,6 +72,8 @@ class PathFinder {
 
     const Path<Cell*> getPath() const;
 
+    const SimplePath<uint32_t> getSimplePath() const;
+
     const Cell getStartCell() const;
 
     const Cell getEndCell() const;

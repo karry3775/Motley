@@ -85,6 +85,19 @@ const EnvironmentType& PathFinder::getEnvironmentType() const {
 
 const Path<Cell*> PathFinder::getPath() const { return path_; }
 
+const SimplePath<uint32_t> PathFinder::getSimplePath() const {
+    SimplePath<uint32_t> simple_path;
+
+    if (path_.empty()) return simple_path;
+
+    for (auto& cell : path_) {
+        simple_path.emplace_back(
+            std::make_pair(cell->getRow(), cell->getCol()));
+    }
+
+    return simple_path;
+}
+
 const Cell PathFinder::getStartCell() const { return start_; }
 
 const Cell PathFinder::getEndCell() const { return end_; }

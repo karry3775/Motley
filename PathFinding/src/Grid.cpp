@@ -77,6 +77,27 @@ void Grid::generate() {
             if (col - 1 >= 0 && obstacles_[row][col - 1] != 1) {
                 addEdge(matrix_[row][col], matrix_[row][col - 1]);
             }
+
+            // top right neighbour
+            if (row - 1 >= 0 && col + 1 < cols_ &&
+                obstacles_[row - 1][col + 1] != 1) {
+                addEdge(matrix_[row][col], matrix_[row - 1][col + 1]);
+            }
+            // top left neighbour
+            if (row - 1 >= 0 && col - 1 >= 0 &&
+                obstacles_[row - 1][col - 1] != 1) {
+                addEdge(matrix_[row][col], matrix_[row - 1][col - 1]);
+            }
+            // bottom right neighbour
+            if (row + 1 < rows_ && col + 1 < cols_ &&
+                obstacles_[row + 1][col + 1] != 1) {
+                addEdge(matrix_[row][col], matrix_[row + 1][col + 1]);
+            }
+            // bottom left neighbour
+            if (row + 1 < rows_ && col - 1 >= 0 &&
+                obstacles_[row + 1][col - 1] != 1) {
+                addEdge(matrix_[row][col], matrix_[row + 1][col - 1]);
+            }
         }
     }
 }

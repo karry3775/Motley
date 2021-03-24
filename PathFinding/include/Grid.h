@@ -6,7 +6,7 @@
 
 namespace pathfinding {
 
-enum class ObstacleGenerationMethod { MANUAL, FISHER_YATES_SHUFFLE };
+enum class ObstacleGenerationMethod { NONE, FISHER_YATES_SHUFFLE };
 
 class Grid : public Environment<Cell> {
    public:
@@ -14,6 +14,9 @@ class Grid : public Environment<Cell> {
     Grid(const uint32_t& rows, const uint32_t& cols, const uint32_t& cell_size,
          const ObstacleGenerationMethod& obs_gen_method,
          const double& obstacle_perc);
+
+    Grid(const uint32_t& rows, const uint32_t& cols, const uint32_t& cell_size,
+         const std::vector<std::vector<int>>& obstacles);
 
     virtual const uint32_t getRows() const override;
 
@@ -33,6 +36,9 @@ class Grid : public Environment<Cell> {
                                const uint32_t& col) override;
 
     virtual std::vector<std::vector<int>> getObstacles() const override;
+
+    virtual void setObstacles(
+        const std::vector<std::vector<int>>& obstacles) override;
 
    private:
     void generate();

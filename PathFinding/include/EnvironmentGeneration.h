@@ -83,6 +83,9 @@ class Environment {
      */
     virtual void pushObstacles(const uint32_t& row, const uint32_t& col) {}
 
+    // TODO: Add docstring
+    virtual void setObstacles(const std::vector<std::vector<int>>& obstacles) {}
+
    private:
     AdjacencyList<T*> adj_;
     uint32_t size_;

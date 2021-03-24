@@ -23,3 +23,5 @@
 #include <queue>
 
 #include <set>
+
+#include <unistd.h>  // For access() when using file exists

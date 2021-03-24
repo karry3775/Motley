@@ -27,7 +27,7 @@ Grid::Grid(const uint32_t& rows, const uint32_t& cols,
                       std::vector<int>(cols_, 0));  // 0 means not occupied
 
     switch (obs_gen_method_) {
-        case ObstacleGenerationMethod::MANUAL:
+        case ObstacleGenerationMethod::NONE:
             break;
         case ObstacleGenerationMethod::FISHER_YATES_SHUFFLE:
             generateObstacles();
@@ -37,6 +37,19 @@ Grid::Grid(const uint32_t& rows, const uint32_t& cols,
             break;
     }
 
+    // Create grid
+    generate();
+}
+
+// TODO: Integrate it nicely into the main constructor with FISHER_YATES
+Grid::Grid(const uint32_t& rows, const uint32_t& cols,
+           const uint32_t& cell_size,
+           const std::vector<std::vector<int>>& obstacles)
+    : Environment(rows * cols),
+      rows_{rows},
+      cols_{cols},
+      cell_size_{cell_size},
+      obstacles_{obstacles} {
     // Create grid
     generate();
 }
@@ -123,6 +136,10 @@ void Grid::pushObstacles(const uint32_t& row, const uint32_t& col) {
 }
 
 std::vector<std::vector<int>> Grid::getObstacles() const { return obstacles_; }
+
+void Grid::setObstacles(const std::vector<std::vector<int>>& obstacles) {
+    obstacles_ = obstacles;
+}
 
 void Grid::generateObstacles() {
     CHECK(obs_gen_method_ == ObstacleGenerationMethod::FISHER_YATES_SHUFFLE)

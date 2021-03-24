@@ -1,5 +1,6 @@
 #include "PathFinding.h"
 #include "PathFindingUtils.h"
+#include <opencv2/opencv.hpp>
 
 namespace pathfinding {
 
@@ -61,6 +62,38 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
     srand(12345);
 
     env_ = new Maze(rows, cols, cell_size, maze_gen_method);
+
+    // Find path using the suggested method above
+    path_found_ = findPath();
+
+    // Create the visualizer object when everything is set
+    visualizer = std::make_unique<Visualizer>(this);
+
+    // Set up visualizer
+    setUpVisualizer();
+
+    // Show path progression
+    if (show_path_progression_) {
+        visualizer->showPathProgression(explored_path_);
+    }
+}
+
+PathFinder::PathFinder(const EnvironmentType& env_type,
+                       const PathFindingMethod& pf_method,
+                       const char* env_image_path, const uint32_t& cell_size,
+                       const Cell& start, const Cell& end,
+                       bool show_path_progression)
+    : start_{start},
+      end_{end},
+      pf_method_{pf_method},
+      env_type_{env_type},
+      show_path_progression_{show_path_progression} {
+    CHECK(env_type_ == EnvironmentType::GRID) << "Expected a GRID type!";
+    setGridFromImage(env_image_path, cell_size);
+
+    // Check if start and end points are blocked
+    LOG_IF(FATAL, isCellBlocked(start_)) << "Start cell is blocked!";
+    LOG_IF(FATAL, isCellBlocked(end_)) << "End cell is blocked!";
 
     // Find path using the suggested method above
     path_found_ = findPath();
@@ -329,6 +362,45 @@ bool PathFinder::isCellBlocked(const Cell& cell) const {
     }
 
     return false;
+}
+
+void PathFinder::setGridFromImage(const char* image_path,
+                                  const uint32_t& cell_size) {
+    // First check if the file path exists
+    CHECK_GE(access(image_path, R_OK), 0) << "Image path does not exists!";
+
+    // Open image as a matrix whose pixel values can be read
+    // Major GOTCHA! -- Not specifying the image type as CV_8UC1
+    // and later not properly accesing it
+    cv::Mat image = cv::imread(image_path, CV_8UC1);
+
+    const uint32_t rows = image.rows / cell_size;
+    const uint32_t cols = image.cols / cell_size;
+
+    // Resize obstacles
+    obstacles_.resize(rows, std::vector<int>(cols, 0));
+
+    std::vector<std::pair<int, int>> available_cells;
+    // Access the image with step size of cell size
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            if (image.at<uchar>(row * cell_size, col * cell_size) == 0) {
+                obstacles_[row][col] = 1;
+            } else {
+                available_cells.emplace_back(std::make_pair(row, col));
+            }
+        }
+    }
+
+    if (isCellBlocked(start_) || isCellBlocked(end_)) {
+        std::cerr << "You can choose from these available cells\n";
+        for (const auto& cell : available_cells) {
+            std::cerr << cell.first << ", " << cell.second << "\n";
+        }
+        std::cerr << "==============\n";
+    }
+
+    env_ = new Grid(rows, cols, cell_size, obstacles_);
 }
 
 }  // namespace pathfinding

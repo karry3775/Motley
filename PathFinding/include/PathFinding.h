@@ -26,7 +26,8 @@ class PathFinder {
      * @param cols            Number of cols in the grid world
      * @param start           Starting Cell for the path
      * @param end             Ending Cell for the path
-     *
+     * @param show_path_progression
+     *                        Flag to enable path progression viz
      *
      */
     PathFinder(const EnvironmentType& env_type,
@@ -54,7 +55,8 @@ class PathFinder {
      * @param cols            Number of cols in the grid world
      * @param start           Starting Cell for the path
      * @param end             Ending Cell for the path
-     *
+     * @param show_path_progression
+     *                        Flag to enable path progression viz
      *
      */
     PathFinder(const EnvironmentType& env_type,
@@ -63,6 +65,28 @@ class PathFinder {
                const double& obstacle_perc, const uint32_t& rows,
                const uint32_t& cols, const uint32_t& cell_size,
                const Cell& start, const Cell& end,
+               bool show_path_progression = true);
+
+    /**
+     * @param env_type        Specifiy GRID as the environment type
+     *
+     *
+     * @param pf_method       Method to be used for path finding
+     *                        Available options are DIJKSTRA, ASTAR, SAMPLE,
+     *                        HIERARCHICAL, BFS
+     *
+     * @param env_image_path  Image path for the environment
+     * @param cell_size       Size of the grid cell in pixels
+     * @param start           Starting Cell for the path
+     * @param end             Ending Cell for the path
+     * @param show_path_progression
+     *                        Flag to enable path progression viz
+     *
+     *
+     */
+    PathFinder(const EnvironmentType& env_type,
+               const PathFindingMethod& pf_method, const char* env_image_path,
+               const uint32_t& cell_size, const Cell& start, const Cell& end,
                bool show_path_progression = true);
 
     // TODO : Check if this is best way to return
@@ -97,6 +121,8 @@ class PathFinder {
     void setUpVisualizer();
 
     bool isCellBlocked(const Cell& cell) const;
+
+    void setGridFromImage(const char* image_path, const uint32_t& cell_size);
 
     Environment<Cell>* env_;
     Cell start_;

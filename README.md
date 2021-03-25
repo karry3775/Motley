@@ -17,9 +17,7 @@ This repository is made for the sole purpose of doing random assortment of proje
 
 namespace PF = pathfinding;
 
-int main(int argc, char** argv) {
-    // TODO: Make the function call more abstract for
-    // the end user
+int main(int argc, char** argv) {    
     // Number of rows in the grid
     uint32_t rows{40};
 

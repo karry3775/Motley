@@ -19,7 +19,7 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
     CHECK(env_type_ == EnvironmentType::GRID) << "Expected a GRID type!";
 
     // Assign a seed
-    srand(12345);
+    srand(time(NULL));
 
     env_ = new Grid(rows, cols, cell_size, obs_gen_method, obstacle_perc);
 
@@ -59,7 +59,7 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
     CHECK(env_type_ == EnvironmentType::MAZE) << "Expected a MAZE type!";
 
     // Assign a seed
-    srand(12345);
+    srand(time(NULL));
 
     env_ = new Maze(rows, cols, cell_size, maze_gen_method);
 
@@ -91,7 +91,7 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
     CHECK(env_type_ == EnvironmentType::GRID) << "Expected a GRID type!";
 
     // Assign a seed
-    srand(12345);
+    srand(time(NULL));
 
     setGridFromImage(env_image_path, cell_size);
 

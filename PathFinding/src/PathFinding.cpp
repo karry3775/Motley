@@ -89,6 +89,10 @@ PathFinder::PathFinder(const EnvironmentType& env_type,
       env_type_{env_type},
       show_path_progression_{show_path_progression} {
     CHECK(env_type_ == EnvironmentType::GRID) << "Expected a GRID type!";
+
+    // Assign a seed
+    srand(12345);
+
     setGridFromImage(env_image_path, cell_size);
 
     // Check if start and end points are blocked
@@ -393,11 +397,27 @@ void PathFinder::setGridFromImage(const char* image_path,
     }
 
     if (isCellBlocked(start_) || isCellBlocked(end_)) {
-        std::cerr << "You can choose from these available cells\n";
-        for (const auto& cell : available_cells) {
-            std::cerr << cell.first << ", " << cell.second << "\n";
-        }
-        std::cerr << "==============\n";
+        CHECK_GE(available_cells.size(), 2)
+            << "Found blocked cells! Not enough available cells to auto assign "
+               "them!";
+
+        std::cerr << "Found blocked cells (start or end), Choosing from "
+                     "available cells at random\n";
+
+        // Extract random index for the start point
+        int rand_index = rand() % available_cells.size();
+        // Set start_
+        start_ = Cell(available_cells[rand_index].first,
+                      available_cells[rand_index].second);
+
+        // Remove the start index
+        available_cells.erase(available_cells.begin() + rand_index);
+
+        // Extract random index for the end point
+        rand_index = rand() % available_cells.size();
+        // Set end
+        end_ = Cell(available_cells[rand_index].first,
+                    available_cells[rand_index].second);
     }
 
     env_ = new Grid(rows, cols, cell_size, obstacles_);

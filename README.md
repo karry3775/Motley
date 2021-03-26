@@ -10,6 +10,9 @@ This repository is made for the sole purpose of doing random assortment of proje
 <img src="PathFinding/images/grid_bfs.gif" width=500/>
 <img src="PathFinding/images/maze_2_bfs.gif" width=500/>
 
+## Domino Tromino Tiling
+<img src="Tiling/gifs/demo.gif" width=500/>
+
 ### Sample usage
 ```cpp
 #include "Visualization.h"

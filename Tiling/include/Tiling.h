@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 constexpr const uint32_t kMicrosecondsInASecond = 1000000;
-constexpr const uint32_t kSleepDurationMs = 0.11 * kMicrosecondsInASecond;
+constexpr const uint32_t kSleepDurationMs = 0.8 * kMicrosecondsInASecond;
 constexpr const char* kWindowTitle = "Domino Tromino Tiling";
 
 namespace tiling {

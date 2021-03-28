@@ -3,14 +3,20 @@
 namespace ant_colony {
 
 AntColonySim::AntColonySim(const uint32_t num_ants) {
+    // Initialize seed
+    srand(time(NULL));
+
     // Resize  the Ants vector
     ants_.resize(num_ants);
+
+    // Initialize nest
+    nest_ = Nest(Defaults::nest_pos, Defaults::nest_radius);
 
     // Initialize random positions for ants
     initAnts();
 
-    // Initialize nest
-    nest_ = Nest(Defaults::nest_pos, Defaults::nest_radius);
+    // Initialize forage
+    initForage();
 
     // Initialize SDL
     initSDL();
@@ -40,14 +46,17 @@ void AntColonySim::show() {
         // Set Pixel values for ants into the buffer
         updateAnts(interval);
 
+        // set Color for forage
+        setForageColor();
+
+        // set Nest color
+        setNestColor();
+
         // renderBuffer
         renderCurrentBuffer();
 
         // box blur
         boxBlur();
-
-        // Sleep
-        // usleep(Defaults::sleep_duration_ms);
     }
 
     // Destroy
@@ -57,8 +66,6 @@ void AntColonySim::show() {
 /*------------------ Initialization functions ---------------------*/
 
 void AntColonySim::initAnts() {
-    // Initialize seed
-    srand(time(NULL));
     for (auto& ant : ants_) {
         // Initialize each ant with random params
         // For now let us just assign random positions
@@ -115,6 +122,26 @@ bool AntColonySim::initSDL() {
     return true;
 }
 
+void AntColonySim::initForage() {
+    // Resize Forage
+    forage_.food.resize(Defaults::forage_size);
+    // Set radius
+    forage_.radius = Defaults::forage_radius;
+
+    // Set food in four quadrants
+    forage_.food[0].x = Defaults::window_width / 4;
+    forage_.food[0].y = Defaults::window_height / 4;
+
+    forage_.food[1].x = 3 * Defaults::window_width / 4;
+    forage_.food[1].y = Defaults::window_height / 4;
+
+    forage_.food[2].x = Defaults::window_width / 4;
+    forage_.food[2].y = 3 * Defaults::window_height / 4;
+
+    forage_.food[3].x = 3 * Defaults::window_width / 4;
+    forage_.food[3].y = 3 * Defaults::window_width / 4;
+}
+
 /*---------------------- Update functions ---------------------------*/
 void AntColonySim::updateAnts(const int interval) {
     for (auto& ant : ants_) {
@@ -123,9 +150,25 @@ void AntColonySim::updateAnts(const int interval) {
         double red_factor = sin(time_elapsed * 0.0001 + M_PI / 4);
         double blue_factor = sin(time_elapsed * 0.0003 + M_PI / 8);
         // Set pixel value for the current ant
-        Uint8 red = 10 + Uint8(abs(255 * red_factor));
-        Uint8 green = 10 + Uint8(abs(255 * green_factor));
-        Uint8 blue = 10 + Uint8(abs(255 * blue_factor));
+        // Use this for changing colors
+        // Uint8 red = 10 + Uint8(abs(255 * red_factor));
+        // Uint8 green = 10 + Uint8(abs(255 * green_factor));
+        // Uint8 blue = 10 + Uint8(abs(255 * blue_factor));
+
+        Uint8 red, green, blue;
+
+        if (ant->has_salvaged) {
+            red = Defaults::ant_returning_color.r;
+            green = Defaults::ant_returning_color.g;
+            blue = Defaults::ant_returning_color.b;
+        } else {
+            red = Defaults::ant_foraging_color.r;
+            green = Defaults::ant_foraging_color.g;
+            blue = Defaults::ant_foraging_color.b;
+        }
+        // Uint8 red = Defaults::ant_color.r;
+        // Uint8 green = Defaults::ant_color.g;
+        // Uint8 blue = Defaults::ant_color.b;
 
         // Update trail
         // Size limiting
@@ -141,6 +184,26 @@ void AntColonySim::updateAnts(const int interval) {
         ant->pos.x += std::cos(ant->direction) * ant->move_speed;
         ant->pos.y += std::sin(ant->direction) * ant->move_speed;
 
+        // If reached within a certain threshold of the food source
+        // return to home
+        if (hasSalvagedFood(ant->pos.x, ant->pos.y)) {
+            ant->has_salvaged = true;
+        }
+
+        // reached back at home set the has salvaged flag to false
+        if (reachedNest(ant->pos.x, ant->pos.y)) {
+            ant->has_salvaged = false;
+        }
+
+        if (ant->has_salvaged) {
+            // Return home
+            ant->direction =
+                std::atan2(nest_.pos.y - ant->pos.y, nest_.pos.x - ant->pos.x);
+            ant->direction +=
+                ((double)rand() / RAND_MAX) * 2 * Defaults::max_angle_window -
+                Defaults::max_angle_window;
+        }
+
         if (ant->pos.x < 0 || ant->pos.x > Defaults::window_width ||
             ant->pos.y < 0 || ant->pos.y > Defaults::window_height) {
             ant->direction += M_PI / 2;
@@ -150,6 +213,27 @@ void AntColonySim::updateAnts(const int interval) {
                 Defaults::max_angle_window;
         }
     }
+}
+
+bool AntColonySim::hasSalvagedFood(const double x, const double y) {
+    for (auto food_pos : forage_.food) {
+        if ((x - food_pos.x) * (x - food_pos.x) +
+                (y - food_pos.y) * (y - food_pos.y) <
+            forage_.radius * forage_.radius) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool AntColonySim::reachedNest(const double x, const double y) {
+    if ((x - Defaults::nest_pos.x) * (x - Defaults::nest_pos.x) +
+            (y - Defaults::nest_pos.y) * (y - Defaults::nest_pos.y) <
+        Defaults::food_salvation_thresh * Defaults::food_salvation_thresh) {
+        return true;
+    }
+    return false;
 }
 
 /*---------------------- Rendering functions ------------------------*/
@@ -165,9 +249,10 @@ void AntColonySim::renderNest() {
 
 void AntColonySim::renderAnts() {
     // Set render draw color
-    SDL_SetRenderDrawColor(renderer_, Defaults::ant_color.r,
-                           Defaults::ant_color.g, Defaults::ant_color.b,
-                           Defaults::ant_color.a);
+    SDL_SetRenderDrawColor(renderer_, Defaults::ant_foraging_color.r,
+                           Defaults::ant_foraging_color.g,
+                           Defaults::ant_foraging_color.b,
+                           Defaults::ant_foraging_color.a);
 
     for (const auto& ant : ants_) {
         Utils::renderFillCircle(renderer_, ant->pos.x, ant->pos.y, ant->radius);
@@ -198,6 +283,33 @@ void AntColonySim::setAntColor(const Position& pos, const double radius,
         for (int y = -radius; y < radius; ++y) {
             if (x * x + y * y <= radius * radius) {
                 setPixelValue(x + pos.x, y + pos.y, red, green, blue);
+            }
+        }
+    }
+}
+
+void AntColonySim::setForageColor() {
+    for (auto& food_pos : forage_.food) {
+        for (int x = -forage_.radius; x < forage_.radius; ++x) {
+            for (int y = -forage_.radius; y < forage_.radius; ++y) {
+                if (x * x + y * y <= forage_.radius * forage_.radius) {
+                    setPixelValue(x + food_pos.x, y + food_pos.y,
+                                  Defaults::forage_color.r,
+                                  Defaults::forage_color.g,
+                                  Defaults::forage_color.b);
+                }
+            }
+        }
+    }
+}
+
+void AntColonySim::setNestColor() {
+    for (int x = -nest_.radius; x < nest_.radius; ++x) {
+        for (int y = -nest_.radius; y < nest_.radius; ++y) {
+            if (x * x + y * y <= nest_.radius * nest_.radius) {
+                setPixelValue(x + nest_.pos.x, y + nest_.pos.y,
+                              Defaults::nest_color.r, Defaults::nest_color.g,
+                              Defaults::nest_color.b);
             }
         }
     }

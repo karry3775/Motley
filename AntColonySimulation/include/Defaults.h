@@ -14,8 +14,9 @@ struct Defaults {
     // SDL Color
     static const SDL_Color bg_color;
     static const SDL_Color nest_color;
-    static const SDL_Color ant_color;
-    static const SDL_Color food_color;
+    static const SDL_Color ant_foraging_color;
+    static const SDL_Color ant_returning_color;
+    static const SDL_Color forage_color;
 
     // SDL Window params
     static const uint32_t window_width;
@@ -26,11 +27,16 @@ struct Defaults {
     static const uint32_t sleep_duration_ms;
 
     // Nest Params
-    static const uint32_t nest_radius;
+    static const double nest_radius;
     static const Position nest_pos;
 
     // Randomization Parms
     static const double max_angle_window;
+
+    // Forage Params
+    static const uint32_t forage_size;
+    static const double forage_radius;
+    static const double food_salvation_thresh;
 };
 
 }  // namespace ant_colony

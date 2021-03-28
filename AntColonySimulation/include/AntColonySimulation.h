@@ -17,9 +17,14 @@ class AntColonySim {
     // Helper functions for initializing various components
     bool initSDL();
     void initAnts();
+    void initForage();
 
     // Helper functions for update operations
     void updateAnts(const int interval);
+
+    bool hasSalvagedFood(const double x, const double y);
+
+    bool reachedNest(const double x, const double y);
 
     // Helper functions for rendering
     void renderNest();
@@ -28,6 +33,8 @@ class AntColonySim {
     void setTrailColor(const Ant& ant, Uint8 red, Uint8 green, Uint8 blue);
     void setAntColor(const Position& pos, const double radius, Uint8 red,
                      Uint8 green, Uint8 blue);
+    void setForageColor();
+    void setNestColor();
 
     // Function to destroy
     void destroy();
@@ -40,6 +47,7 @@ class AntColonySim {
 
     Ants ants_;
     Nest nest_;
+    Forage forage_;
 
     // SDL Objects
     SDL_Window* window_;

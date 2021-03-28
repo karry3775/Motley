@@ -11,7 +11,6 @@
 constexpr const uint32_t kMicrosecondsInASecond = 1000000;
 
 namespace ant_colony {
-
 // TODO: Add any default typedefs based on
 // fundamental types here
 struct Position {
@@ -27,13 +26,19 @@ struct Position {
 
 struct Nest {
     Nest() {}
-    Nest(const Position& pos, const uint32_t radius) {
+    Nest(const Position& pos, const double radius) {
         this->pos = pos;
         this->radius = radius;
     }
 
     Position pos;
-    uint32_t radius;
+    double radius;
+};
+
+struct Forage {
+    Forage() {}
+    std::vector<Position> food;
+    double radius;
 };
 
 }  // namespace ant_colony

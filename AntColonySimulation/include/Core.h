@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <memory>
 #include <vector>
+#include <list>
 #include <time.h>
 #include <iostream>
 

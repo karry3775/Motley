@@ -62,11 +62,12 @@ void AntColonySim::initAnts() {
     for (auto& ant : ants_) {
         // Initialize each ant with random params
         // For now let us just assign random positions
-        double rand_x = rand() % (Defaults::window_width);
-        double rand_y = rand() % (Defaults::window_height);
-        double rand_dir = rand() % (int)M_PI;
+        double rand_x = Defaults::window_width / 2;
+        double rand_y = Defaults::window_height / 2;
+        double rand_dir = (((double)rand()) / RAND_MAX) * 2 * M_PI - M_PI;
 
         ant = new Ant(Position(rand_x, rand_y), rand_dir, 0, 0);
+        ant->trail.emplace_back(ant->pos);
     }
 }
 
@@ -117,24 +118,37 @@ bool AntColonySim::initSDL() {
 /*---------------------- Update functions ---------------------------*/
 void AntColonySim::updateAnts(const int interval) {
     for (auto& ant : ants_) {
+        int time_elapsed = SDL_GetTicks();
+        double green_factor = sin(time_elapsed * 0.0001);
+        double red_factor = sin(time_elapsed * 0.0001 + M_PI / 4);
+        double blue_factor = sin(time_elapsed * 0.0003 + M_PI / 8);
         // Set pixel value for the current ant
-        setPixelValue(ant->pos.x, ant->pos.y, Defaults::food_color.r,
-                      Defaults::food_color.g, Defaults::food_color.b);
+        Uint8 red = 10 + Uint8(abs(255 * red_factor));
+        Uint8 green = 10 + Uint8(abs(255 * green_factor));
+        Uint8 blue = 10 + Uint8(abs(255 * blue_factor));
+
+        // Update trail
+        // Size limiting
+        if (ant->trail.size() > ant->max_trail_size) {
+            ant->trail.pop_front();
+        }
+
+        ant->trail.emplace_back(ant->pos);
+
+        setTrailColor(*ant, red, green, blue);
 
         // Modify the position of the ant based on direction and move_speed
         ant->pos.x += std::cos(ant->direction) * ant->move_speed;
         ant->pos.y += std::sin(ant->direction) * ant->move_speed;
 
-        if (ant->pos.x < 0 || ant->pos.x > Defaults::window_width) {
-            ant->move_speed = -ant->move_speed;
+        if (ant->pos.x < 0 || ant->pos.x > Defaults::window_width ||
+            ant->pos.y < 0 || ant->pos.y > Defaults::window_height) {
+            ant->direction += M_PI / 2;
+        } else {
+            ant->direction +=
+                ((double)rand() / RAND_MAX) * 2 * Defaults::max_angle_window -
+                Defaults::max_angle_window;
         }
-        if (ant->pos.y < 0 || ant->pos.y > Defaults::window_height) {
-            ant->move_speed = -ant->move_speed;
-        }
-
-        ant->direction +=
-            ((double)rand() / RAND_MAX) * 2 * Defaults::max_angle_window -
-            Defaults::max_angle_window;
     }
 }
 
@@ -168,6 +182,27 @@ void AntColonySim::renderCurrentBuffer() {
     SDL_RenderPresent(renderer_);
 }
 
+void AntColonySim::setTrailColor(const Ant& ant, Uint8 red, Uint8 green,
+                                 Uint8 blue) {
+    for (auto trail_pos : ant.trail) {
+        setPixelValue(trail_pos.x, trail_pos.y, red, green, blue);
+        // Could be time consuming the option below -- will optimize and
+        // later render like so
+        // setAntColor(trail_pos, ant.radius, red, green, blue);
+    }
+}
+
+void AntColonySim::setAntColor(const Position& pos, const double radius,
+                               Uint8 red, Uint8 green, Uint8 blue) {
+    for (int x = -radius; x < radius; ++x) {
+        for (int y = -radius; y < radius; ++y) {
+            if (x * x + y * y <= radius * radius) {
+                setPixelValue(x + pos.x, y + pos.y, red, green, blue);
+            }
+        }
+    }
+}
+
 /*--------------------- Function to destroy -----------------------*/
 void AntColonySim::destroy() {
     // free the buffer
@@ -187,6 +222,9 @@ void AntColonySim::destroy() {
 /*--------------------- Function to set pixel value------------------*/
 void AntColonySim::setPixelValue(int posx, int posy, Uint8 red, Uint8 green,
                                  Uint8 blue) {
+    if (posx <= 0 || posx >= Defaults::window_width || posy <= 0 ||
+        posy >= Defaults::window_height)
+        return;
     Uint32 color = 0;
 
     color += red;

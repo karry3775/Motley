@@ -18,8 +18,8 @@ const SDL_Color Defaults::food_color = {179, 191, 255, 100};
 
 /*----------------------- SDL Window params -----------------------*/
 
-const uint32_t Defaults::window_width = 1000;   // px
-const uint32_t Defaults::window_height = 1000;  // px
+const uint32_t Defaults::window_width = 500;   // px
+const uint32_t Defaults::window_height = 500;  // px
 
 const char* Defaults::window_title = "Ant Colony Simulation";
 

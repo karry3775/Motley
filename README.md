@@ -56,3 +56,6 @@ int main(int argc, char** argv) {
 ## Domino Tromino Tiling
 <img src="Tiling/gifs/demo.gif" width=500/>
 
+## Ant Colony Simulation
+<img src="AntColonySimulation/gifs/demo_wip.gif" width=500/>
+

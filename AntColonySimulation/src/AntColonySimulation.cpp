@@ -46,6 +46,9 @@ void AntColonySim::show() {
         // Set Pixel values for ants into the buffer
         updateAnts(interval);
 
+        // Experimental: Update forage locations
+        updateForagePositions(interval);
+
         // set Color for forage
         setForageColor();
 
@@ -150,7 +153,7 @@ void AntColonySim::updateAnts(const int interval) {
         double red_factor = sin(time_elapsed * 0.0001 + M_PI / 4);
         double blue_factor = sin(time_elapsed * 0.0003 + M_PI / 8);
         // Set pixel value for the current ant
-        // Use this for changing colors
+        // NOTE: Use this for changing colors
         // Uint8 red = 10 + Uint8(abs(255 * red_factor));
         // Uint8 green = 10 + Uint8(abs(255 * green_factor));
         // Uint8 blue = 10 + Uint8(abs(255 * blue_factor));
@@ -204,6 +207,10 @@ void AntColonySim::updateAnts(const int interval) {
                 Defaults::max_angle_window;
         }
 
+        if (!ant->has_salvaged && updateDirectionIfNearFood(ant)) {
+            continue;
+        }
+
         if (ant->pos.x < 0 || ant->pos.x > Defaults::window_width ||
             ant->pos.y < 0 || ant->pos.y > Defaults::window_height) {
             ant->direction += M_PI / 2;
@@ -213,6 +220,38 @@ void AntColonySim::updateAnts(const int interval) {
                 Defaults::max_angle_window;
         }
     }
+}
+
+void AntColonySim::updateForagePositions(const int interval) {
+    for (auto& food_pos : forage_.food) {
+        // First get the angle from the nest
+        double angle_from_nest =
+            std::atan2(food_pos.y - nest_.pos.y, food_pos.x - nest_.pos.x);
+        double angle_tangent = angle_from_nest + M_PI / 2;
+
+        food_pos.x += std::cos(angle_tangent) * interval * 0.025;
+        food_pos.y += std::sin(angle_tangent) * interval * 0.025;
+    }
+}
+
+bool AntColonySim::updateDirectionIfNearFood(Ant* ant) {
+    // TODO: Make 10 a gflags or default
+    for (auto food_pos : forage_.food) {
+        if ((ant->pos.x - food_pos.x) * (ant->pos.x - food_pos.x) +
+                (ant->pos.y - food_pos.y) * (ant->pos.y - food_pos.y) <
+            (forage_.radius + 100) * (forage_.radius + 100)) {
+            // update direction
+            ant->direction =
+                std::atan2(food_pos.y - ant->pos.y, food_pos.x - ant->pos.x);
+            ant->direction +=
+                ((double)rand() / RAND_MAX) * 2 * Defaults::max_angle_window -
+                Defaults::max_angle_window;
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool AntColonySim::hasSalvagedFood(const double x, const double y) {

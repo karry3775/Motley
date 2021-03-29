@@ -35,7 +35,7 @@ const Position Defaults::nest_pos =
     Position(Defaults::window_width / 2, Defaults::window_height / 2);
 
 /*------------------------- Randomization Params ------------------*/
-const double Defaults::max_angle_window = (10 * M_PI / 180);
+const double Defaults::max_angle_window = (50 * M_PI / 180);
 
 /*-----------------------Forage size-------------------------------*/
 const uint32_t Defaults::forage_size = 4;

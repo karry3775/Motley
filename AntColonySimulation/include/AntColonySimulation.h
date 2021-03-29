@@ -22,6 +22,10 @@ class AntColonySim {
     // Helper functions for update operations
     void updateAnts(const int interval);
 
+    void updateForagePositions(const int interval);
+
+    bool updateDirectionIfNearFood(Ant* ant);
+
     bool hasSalvagedFood(const double x, const double y);
 
     bool reachedNest(const double x, const double y);

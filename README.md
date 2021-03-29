@@ -56,6 +56,11 @@ int main(int argc, char** argv) {
 ## Domino Tromino Tiling
 <img src="Tiling/gifs/demo.gif" width=500/>
 
-## Ant Colony Simulation
+## Ant Colony Simulations
+
+### Stationary Forage (No Collective intelligence)
 <img src="AntColonySimulation/gifs/demo_wip.gif" width=500/>
+
+### Moving Forage (No Collective intelligence)
+<img src="AntColonySimulation/gifs/demo_moving_foods.gif" width=500/>
 

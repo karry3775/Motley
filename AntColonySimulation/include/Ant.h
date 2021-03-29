@@ -5,7 +5,7 @@
 namespace ant_colony {
 struct Ant {
     Ant(const Position& pos, const double direction, const double sense_angle,
-        const double sense_direction, const double move_speed = 3,
+        const double sense_direction, const double move_speed = 1,
         const double radius = 5, const int max_trail_size = 500) {
         this->pos = pos;
         this->direction = direction;

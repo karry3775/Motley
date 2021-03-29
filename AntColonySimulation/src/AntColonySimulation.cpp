@@ -340,7 +340,7 @@ void AntColonySim::setPixelValue(int posx, int posy, Uint8 red, Uint8 green,
     Uint32 color = 0;
 
     color += red;
-    color << 8;
+    color <<= 8;
     color += green;
     color <<= 8;
     color += blue;

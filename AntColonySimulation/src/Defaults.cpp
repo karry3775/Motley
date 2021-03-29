@@ -13,10 +13,10 @@ const SDL_Color Defaults::bg_color = {22, 22, 22, 255};
 const SDL_Color Defaults::nest_color = {82, 184, 184, 255};
 // Hex #CFDADA
 const SDL_Color Defaults::ant_foraging_color = {207, 218, 218, 255};
-const SDL_Color Defaults::ant_returning_color = {0, 255, 20, 255};
+const SDL_Color Defaults::ant_returning_color = {255, 102, 204, 255};
 
 // Hex #B3BFFF
-const SDL_Color Defaults::forage_color{255, 0, 0};
+const SDL_Color Defaults::forage_color{0, 255, 0};
 
 /*----------------------- SDL Window params -----------------------*/
 

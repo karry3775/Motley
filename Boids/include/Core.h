@@ -3,3 +3,4 @@
 #include <SDL2/SDL.h>
 #include <glog/logging.h>
 #include <vector>
+#include <memory>

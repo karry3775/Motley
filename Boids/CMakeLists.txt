@@ -11,6 +11,7 @@ find_package(glog REQUIRED)
 file(
     GLOB SOURCES
         "src/Boids.cpp"
+        "src/Visualization.cpp"
 )
 
 add_executable(BoidsApp src/BoidsApp.cpp ${SOURCES})

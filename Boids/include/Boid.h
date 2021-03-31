@@ -12,7 +12,9 @@ struct Boid {
     double x;
     double y;
     double direction;
-    double sense_radius;
-}
+    double neighbourhood_radius;
+    double neighbourhood_angle;
+    double velocity;
+};
 
 }  // namespace boids

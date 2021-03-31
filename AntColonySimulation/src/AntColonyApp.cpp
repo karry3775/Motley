@@ -7,7 +7,7 @@ int main(int argc, char** argv) {
     google::ParseCommandLineFlags(&argc, &argv, true);
 
     // Step 1: Create an AntColonySim object
-    std::unique_ptr<AC::AntColonySim> ant_colony_sim(new AC::AntColonySim(5));
+    std::unique_ptr<AC::AntColonySim> ant_colony_sim(new AC::AntColonySim(50));
 
     // Step 2: Show the AntColonySim
     ant_colony_sim->show();

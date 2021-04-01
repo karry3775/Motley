@@ -5,16 +5,28 @@
 namespace boids {
 
 struct Boid {
-    Boid() {}
-    Boid(const double x, const double y, const double direction)
-        : x(x), y(y), direction(direction) {}
+    Boid() {
+        this->neighbourhood_radius = 45;
+        this->neighbourhood_angle = 2 * M_PI;
+        this->separation_radius = 5;
+    }
 
-    double x;
-    double y;
-    double direction;
+    // Helper function to get distance between other boids
+    double getDistance(const Boid& other) const {
+        return sqrt((this->pos.x - other.pos.x) * (this->pos.x - other.pos.x) +
+                    (this->pos.y - other.pos.y) * (this->pos.y - other.pos.y));
+    }
+
     double neighbourhood_radius;
     double neighbourhood_angle;
-    double velocity;
+    double separation_radius;
+
+    Vector pos;         // position
+    Vector a;           // acceleration
+    Vector vel;         // velocity
+    Vector cohesion;    // cohesion force vector
+    Vector alignment;   // alignment force vector
+    Vector separation;  // sepation force vector
 };
 
 }  // namespace boids

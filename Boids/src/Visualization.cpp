@@ -4,8 +4,8 @@ namespace boids {
 
 Viz::Viz() {
     boid_color = {102, 179, 255, 255};
-    width = 500;
-    height = 500;
+    width = 600;//450;
+    height = 600;//450;
     title = "Boids";
 
     // Initialize the viz

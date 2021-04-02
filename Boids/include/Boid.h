@@ -6,9 +6,9 @@ namespace boids {
 
 struct Boid {
     Boid() {
-        this->neighbourhood_radius = 45;
+        this->neighbourhood_radius = 30;
         this->neighbourhood_angle = 2 * M_PI;
-        this->separation_radius = 5;
+        this->separation_radius = 15;
     }
 
     // Helper function to get distance between other boids
@@ -22,7 +22,6 @@ struct Boid {
     double separation_radius;
 
     Vector pos;         // position
-    Vector a;           // acceleration
     Vector vel;         // velocity
     Vector cohesion;    // cohesion force vector
     Vector alignment;   // alignment force vector

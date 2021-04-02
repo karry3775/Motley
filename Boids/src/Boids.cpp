@@ -3,13 +3,18 @@
 
 namespace boids {
 
-const double Boids::coh_wt = 0;
-const double Boids::sep_wt = 1;
-const double Boids::ali_wt = 0;
+const double Boids::coh_wt = 0.1;
+const double Boids::sep_wt = 0.1;
+const double Boids::ali_wt = 0.1;
 
-const double Boids::max_vel = 0.1;
+const double Boids::max_vel = 1;
 
-constexpr double turnfactor = 1;
+constexpr double turnfactor = 1.0;
+constexpr double inv_sep_wt = 40.0;
+constexpr double inv_ali_wt = 60.0;
+constexpr double inv_coh_wt = 600.0;
+constexpr double boid_radius = 1.5;
+constexpr double padding = 5;
 
 Boids::Boids(int num_boids) {
     // Initialize a seed
@@ -68,15 +73,15 @@ void Boids::updateBoids(int interval) {
         double green_factor = sin(time_elapsed * 0.0001);
         double red_factor = sin(time_elapsed * 0.0001 + M_PI / 4);
         double blue_factor = sin(time_elapsed * 0.0003 + M_PI / 8);
-        Uint8 red = 10 + Uint8(abs(255 * red_factor));
-        Uint8 green = 10 + Uint8(abs(255 * green_factor));
-        Uint8 blue = 10 + Uint8(abs(255 * blue_factor));
+        Uint8 red = 5 + Uint8(abs(255 * red_factor));
+        Uint8 green = 5 + Uint8(abs(255 * green_factor));
+        Uint8 blue = 5 + Uint8(abs(255 * blue_factor));
 
         // viz_.setPixelColor(boid.x, boid.y, red, green, blue);
 
-        for (int x = -2; x < 2; ++x) {
-            for (int y = -2; y < 2; ++y) {
-                if (x * x + y * y <= 2 * 2) {
+        for (int x = -boid_radius; x < boid_radius; ++x) {
+            for (int y = -boid_radius; y < boid_radius; ++y) {
+                if (x * x + y * y <= boid_radius * boid_radius) {
                     viz_.setPixelColor(x + boid.pos.x, y + boid.pos.y, red,
                                        green, blue);
                 }
@@ -92,54 +97,35 @@ void Boids::updateBoids(int interval) {
 
         // Get separation vector
         auto separation = getSeparationVector(boid, neighbours);
-
-        std::cout << "separation: " << separation.x << ", " << separation.y
-                  << "\n";
-
         // Rule 2: Alignment --  Set the heading to be equal to average
         // heading of the neighbour hood
         auto alignment = getAlignmentVector(boid, neighbours);
-
-        std::cout << "separation: " << alignment.x << ", " << alignment.y
-                  << "\n";
 
         // Rule 3: Cohesion -- Steer to move towards average location of the
         // neighbour
         auto cohesion = getCohesionVector(boid, neighbours);
 
-        std::cout << "separation: " << cohesion.x << ", " << cohesion.y << "\n";
-
-        // Form a final acceleration
-        auto acceleration =
-            separation * sep_wt + cohesion * coh_wt + alignment * ali_wt;
-
-        auto random_v = Vector(getRandWithin(-6, 6), getRandWithin(-6, 6));
-
-        acceleration += random_v;
-
-        std::cout << "acceleration : " << acceleration.x << ", "
-                  << acceleration.y << "\n";
+        auto randV = Vector(getRandWithin(-0.2, 0.2), getRandWithin(-0.2, 0.2));
 
         // Update velocity
-        boid.vel += acceleration * interval;
+        boid.vel += separation + alignment + cohesion + randV;
 
         boid.vel.x = std::min(max_vel, boid.vel.x);
         boid.vel.y = std::min(max_vel, boid.vel.y);
 
         // Update position
-        boid.pos += boid.vel * interval;
+        boid.pos += boid.vel;
 
-        if(boid.pos.x < 0) {
-            boid.pos.x += turnfactor;
+        if (boid.pos.x < padding) {
+            boid.vel.x = 0.5;
+        } else if (boid.pos.x > viz_.width - padding) {
+            boid.vel.x = -0.5;
         }
-        if(boid.pos.x > viz_.width) {
-            boid.pos.x -= turnfactor;
-        }
-        if(boid.pos.y < 0) {
-            boid.pos.y += turnfactor;
-        }
-        if(boid.pos.y > viz_.height) {
-            boid.pos.y -= turnfactor;
+
+        if (boid.pos.y < padding) {
+            boid.vel.y = 0.5;
+        } else if (boid.pos.y > viz_.height - padding) {
+            boid.vel.y = -0.5;
         }
     }
 }
@@ -164,7 +150,8 @@ Vector Boids::getSeparationVector(const Boid& boid,
     }
 
     // normalize separation vector
-    sep.normalize();
+    sep.x /= inv_sep_wt;
+    sep.y /= inv_sep_wt;
 
     return sep;
 }
@@ -177,13 +164,15 @@ Vector Boids::getAlignmentVector(const Boid& boid,
     if (neighbours.empty()) return ali;
 
     for (const auto& ngh : neighbours) {
-        ali += ngh.pos;
+        ali += ngh.vel;
     }
 
     // Normalize
-    ali.normalize();
+    ali.x /= neighbours.size();
+    ali.y /= neighbours.size();
 
-    return ali;
+    return Vector((ali.x - boid.vel.x) / inv_ali_wt,
+                  (ali.y - boid.vel.y) / inv_ali_wt);
 }
 
 Vector Boids::getCohesionVector(const Boid& boid,
@@ -194,15 +183,15 @@ Vector Boids::getCohesionVector(const Boid& boid,
     if (neighbours.empty()) return coh;
 
     for (const auto& ngh : neighbours) {
-        Vector outwards =
-            Vector(ngh.pos.x - boid.pos.x, ngh.pos.y - boid.pos.y);
-        coh += outwards;
+        coh += ngh.pos;
     }
 
     // Normalize
-    coh.normalize();
+    coh.x /= neighbours.size();
+    coh.y /= neighbours.size();
 
-    return coh;
+    return Vector((coh.x - boid.pos.x) / inv_coh_wt,
+                  (coh.y - boid.pos.y) / inv_coh_wt);
 }
 std::vector<Boid> Boids::getNeighbours(const Boid& boid) {
     std::vector<Boid> neighbours;

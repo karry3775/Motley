@@ -64,3 +64,5 @@ int main(int argc, char** argv) {
 ### Moving Forage (No Collective intelligence)
 <img src="AntColonySimulation/gifs/demo_moving_foods.gif" width=500/>
 
+## Boids Simulation
+<img src="Boids/gifs/demo.gif" width=500/>

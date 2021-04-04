@@ -3,10 +3,6 @@
 
 namespace boids {
 
-const double Boids::coh_wt = 0.1;
-const double Boids::sep_wt = 0.1;
-const double Boids::ali_wt = 0.1;
-
 const double Boids::max_vel = 1;
 
 constexpr double turnfactor = 1.0;

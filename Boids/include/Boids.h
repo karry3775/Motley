@@ -33,11 +33,6 @@ class Boids {
     std::vector<Boid> boids_;
     Viz viz_;
 
-    // Some params for collective group behaviour
-    static const double coh_wt;
-    static const double sep_wt;
-    static const double ali_wt;
-
     // Max velocity
     static const double max_vel;
 };

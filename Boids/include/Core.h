@@ -17,7 +17,7 @@ struct Vector {
     void normalize() {
         double norm = sqrt(x * x + y * y);
 
-        if(norm == 0) return;
+        if (norm == 0) return;
 
         x = x / norm;
         y = y / norm;
@@ -44,15 +44,6 @@ inline double getRandWithin(double min_val, double max_val) {
         (double(rand()) / RAND_MAX) * (max_val - min_val) + min_val;
 
     return rand_number;
-}
-
-inline double clampValue(double candidate, double min, double max) {
-    if (candidate < min)
-        return min;
-    else if (candidate > max)
-        return max;
-
-    return candidate;
 }
 
 }  // namespace boids

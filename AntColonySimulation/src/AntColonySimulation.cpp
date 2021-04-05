@@ -161,13 +161,13 @@ void AntColonySim::updateAnts(const int interval) {
         Uint8 red, green, blue;
 
         if (ant->has_salvaged) {
-            red = Defaults::ant_returning_color.r;
-            green = Defaults::ant_returning_color.g;
-            blue = Defaults::ant_returning_color.b;
+            red = Defaults::trail_return_color.r;
+            green = Defaults::trail_return_color.g;
+            blue = Defaults::trail_return_color.b;
         } else {
-            red = Defaults::ant_foraging_color.r;
-            green = Defaults::ant_foraging_color.g;
-            blue = Defaults::ant_foraging_color.b;
+            red = Defaults::trail_seek_color.r;
+            green = Defaults::trail_seek_color.g;
+            blue = Defaults::trail_seek_color.b;
         }
         // Uint8 red = Defaults::ant_color.r;
         // Uint8 green = Defaults::ant_color.g;
@@ -286,18 +286,6 @@ void AntColonySim::renderNest() {
                             Defaults::nest_pos.y, Defaults::nest_radius);
 }
 
-void AntColonySim::renderAnts() {
-    // Set render draw color
-    SDL_SetRenderDrawColor(renderer_, Defaults::ant_foraging_color.r,
-                           Defaults::ant_foraging_color.g,
-                           Defaults::ant_foraging_color.b,
-                           Defaults::ant_foraging_color.a);
-
-    for (const auto& ant : ants_) {
-        Utils::renderFillCircle(renderer_, ant->pos.x, ant->pos.y, ant->radius);
-    }
-}
-
 void AntColonySim::renderCurrentBuffer() {
     SDL_UpdateTexture(texture_, NULL, buffer_,
                       Defaults::window_width * sizeof(Uint32));
@@ -314,6 +302,10 @@ void AntColonySim::setTrailColor(const Ant& ant, Uint8 red, Uint8 green,
         // later render like so
         // setAntColor(trail_pos, ant.radius, red, green, blue);
     }
+
+    // Set the last element in the trail as ant
+    setAntColor(*(ant.trail.rbegin()), ant.radius, Defaults::ant_color.r,
+                Defaults::ant_color.g, Defaults::ant_color.b);
 }
 
 void AntColonySim::setAntColor(const Position& pos, const double radius,

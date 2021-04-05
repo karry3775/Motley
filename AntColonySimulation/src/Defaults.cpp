@@ -12,8 +12,9 @@ const SDL_Color Defaults::bg_color = {22, 22, 22, 255};
 // Hex #52B8B8
 const SDL_Color Defaults::nest_color = {194, 163, 122, 255};
 // Hex #CFDADA
-const SDL_Color Defaults::ant_foraging_color = {102, 179, 255, 255};
-const SDL_Color Defaults::ant_returning_color = {255, 38, 51, 255};
+const SDL_Color Defaults::trail_seek_color = {102, 179, 255, 255};
+const SDL_Color Defaults::trail_return_color = {255, 38, 51, 255};
+const SDL_Color Defaults::ant_color = {255, 230, 179, 255};
 
 // Hex #B3BFFF
 const SDL_Color Defaults::forage_color{0, 255, 0, 255};

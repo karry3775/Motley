@@ -14,8 +14,9 @@ struct Defaults {
     // SDL Color
     static const SDL_Color bg_color;
     static const SDL_Color nest_color;
-    static const SDL_Color ant_foraging_color;
-    static const SDL_Color ant_returning_color;
+    static const SDL_Color trail_seek_color;
+    static const SDL_Color trail_return_color;
+    static const SDL_Color ant_color;
     static const SDL_Color forage_color;
 
     // SDL Window params

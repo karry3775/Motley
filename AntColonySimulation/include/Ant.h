@@ -24,6 +24,8 @@ struct Ant {
     double sense_direction;
     double radius;
     std::list<Position> trail;
+    std::list<Position> seek_trail;
+    std::list<Position> return_trail;
     int max_trail_size;
     bool has_salvaged;
 };

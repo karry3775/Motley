@@ -164,24 +164,20 @@ void AntColonySim::updateAnts(const int interval) {
             red = Defaults::trail_return_color.r;
             green = Defaults::trail_return_color.g;
             blue = Defaults::trail_return_color.b;
+
+            // the position from now on should go to the return trail
+            ant->return_trail.emplace_back(ant->pos);
+
         } else {
             red = Defaults::trail_seek_color.r;
             green = Defaults::trail_seek_color.g;
             blue = Defaults::trail_seek_color.b;
-        }
-        // Uint8 red = Defaults::ant_color.r;
-        // Uint8 green = Defaults::ant_color.g;
-        // Uint8 blue = Defaults::ant_color.b;
 
-        // Update trail
-        // Size limiting
-        if (ant->trail.size() > ant->max_trail_size) {
-            ant->trail.pop_front();
+            // the position from now on should go to the seek trail
+            ant->seek_trail.emplace_back(ant->pos);
         }
 
-        ant->trail.emplace_back(ant->pos);
-
-        setTrailColor(*ant, red, green, blue);
+        setTrailColor(*ant);
 
         // Modify the position of the ant based on direction and move_speed
         ant->pos.x += std::cos(ant->direction) * ant->move_speed;
@@ -196,6 +192,9 @@ void AntColonySim::updateAnts(const int interval) {
         // reached back at home set the has salvaged flag to false
         if (reachedNest(ant->pos.x, ant->pos.y)) {
             ant->has_salvaged = false;
+            // reset the trails
+            ant->return_trail.clear();
+            ant->seek_trail.clear();
         }
 
         if (ant->has_salvaged) {
@@ -207,6 +206,7 @@ void AntColonySim::updateAnts(const int interval) {
                 Defaults::max_angle_window;
         }
 
+        // Update direction if near food when it is seeking for food
         if (!ant->has_salvaged && updateDirectionIfNearFood(ant)) {
             continue;
         }
@@ -294,20 +294,22 @@ void AntColonySim::renderCurrentBuffer() {
     SDL_RenderPresent(renderer_);
 }
 
-void AntColonySim::setTrailColor(const Ant& ant, Uint8 red, Uint8 green,
-                                 Uint8 blue) {
-    for (auto trail_pos : ant.trail) {
-        setPixelValue(trail_pos.x, trail_pos.y, red, green, blue);
-        // Could be time consuming the option below -- will optimize and
-        // later render like so
-        // setAntColor(trail_pos, ant.radius, red, green, blue);
+void AntColonySim::setTrailColor(const Ant& ant) {
+    for (auto trail_pos : ant.seek_trail) {
+        setPixelValue(trail_pos.x, trail_pos.y, Defaults::trail_seek_color.r,
+                      Defaults::trail_seek_color.g,
+                      Defaults::trail_seek_color.b);
     }
 
-    // Set the last element in the trail as ant
-    setAntColor(*(ant.trail.rbegin()), ant.radius, Defaults::ant_color.r,
+    for (auto trail_pos : ant.return_trail) {
+        setPixelValue(trail_pos.x, trail_pos.y, Defaults::trail_return_color.r,
+                      Defaults::trail_return_color.g,
+                      Defaults::trail_return_color.b);
+    }
+
+    setAntColor(ant.pos, ant.radius, Defaults::ant_color.r,
                 Defaults::ant_color.g, Defaults::ant_color.b);
 }
-
 void AntColonySim::setAntColor(const Position& pos, const double radius,
                                Uint8 red, Uint8 green, Uint8 blue) {
     for (int x = -radius; x < radius; ++x) {

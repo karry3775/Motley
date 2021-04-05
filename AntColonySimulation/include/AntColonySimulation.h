@@ -33,7 +33,8 @@ class AntColonySim {
     // Helper functions for rendering
     void renderNest();
     void renderCurrentBuffer();
-    void setTrailColor(const Ant& ant, Uint8 red, Uint8 green, Uint8 blue);
+    void setTrailColor(const Ant& ant);
+
     void setAntColor(const Position& pos, const double radius, Uint8 red,
                      Uint8 green, Uint8 blue);
     void setForageColor();

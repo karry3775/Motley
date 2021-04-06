@@ -49,6 +49,9 @@ class AntColonySim {
     // Function to do box blur
     void boxBlur();
 
+    // Function to decayPheromones over time
+    void decayPheromones();
+
     Ants ants_;
     Nest nest_;
     Forage forage_;
@@ -60,6 +63,7 @@ class AntColonySim {
 
     Uint32* buffer_;
     Uint32* blur_buffer_;
+    Uint32* pheromone_buffer_;
 };
 
 }  // namespace ant_colony

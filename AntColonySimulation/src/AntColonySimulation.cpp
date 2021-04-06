@@ -43,11 +43,14 @@ void AntColonySim::show() {
             }
         }
 
+        // decay pheromones
+        decayPheromones();
+
         // Set Pixel values for ants into the buffer
         updateAnts(interval);
 
         // Experimental: Update forage locations
-        updateForagePositions(interval);
+        // updateForagePositions(interval);
 
         // set Color for forage
         setForageColor();
@@ -76,7 +79,7 @@ void AntColonySim::initAnts() {
         double rand_y = Defaults::window_height / 2;
         double rand_dir = (((double)rand()) / RAND_MAX) * 2 * M_PI - M_PI;
 
-        ant = new Ant(Position(rand_x, rand_y), rand_dir, 0, 0);
+        ant = new Ant(Position(rand_x, rand_y), rand_dir, 50);
         ant->trail.emplace_back(ant->pos);
     }
 }
@@ -114,9 +117,13 @@ bool AntColonySim::initSDL() {
     // Initialize our buffer
     buffer_ = new Uint32[Defaults::window_width * Defaults::window_height];
     blur_buffer_ = new Uint32[Defaults::window_width * Defaults::window_height];
+    pheromone_buffer_ =
+        new Uint32[Defaults::window_width * Defaults::window_height];
     memset(buffer_, 0,
            Defaults::window_width * Defaults::window_height * sizeof(Uint32));
     memset(blur_buffer_, 0,
+           Defaults::window_width * Defaults::window_height * sizeof(Uint32));
+    memset(pheromone_buffer_, 0,
            Defaults::window_width * Defaults::window_height * sizeof(Uint32));
 
     // Set Window Title
@@ -131,7 +138,7 @@ void AntColonySim::initForage() {
     // Set radius
     forage_.radius = Defaults::forage_radius;
 
-    // Set food in four quadrants
+    // Set food in locations
     forage_.food[0].x = Defaults::window_width / 4;
     forage_.food[0].y = Defaults::window_height / 4;
 
@@ -143,6 +150,18 @@ void AntColonySim::initForage() {
 
     forage_.food[3].x = 3 * Defaults::window_width / 4;
     forage_.food[3].y = 3 * Defaults::window_width / 4;
+
+    forage_.food[4].x = Defaults::window_width / 2;
+    forage_.food[4].y = Defaults::window_height / 8;
+
+    forage_.food[5].x = Defaults::window_width / 8;
+    forage_.food[5].y = Defaults::window_height / 2;
+
+    forage_.food[6].x = Defaults::window_width / 2;
+    forage_.food[6].y = 7 * Defaults::window_height / 8;
+
+    forage_.food[7].x = 7 * Defaults::window_width / 8;
+    forage_.food[7].y = Defaults::window_width / 2;
 }
 
 /*---------------------- Update functions ---------------------------*/
@@ -167,6 +186,16 @@ void AntColonySim::updateAnts(const int interval) {
 
             // the position from now on should go to the return trail
             ant->return_trail.emplace_back(ant->pos);
+
+            // Desposit the positions into the pheromone buffer
+            pheromone_buffer_[int(ant->pos.y) * Defaults::window_width +
+                              int(ant->pos.x)] += Defaults::pheromone_strength;
+
+            // Size limiting
+            // TODO: Make this param
+            if (ant->return_trail.size() > 10) {
+                ant->return_trail.pop_front();
+            }
 
         } else {
             red = Defaults::trail_seek_color.r;
@@ -295,11 +324,11 @@ void AntColonySim::renderCurrentBuffer() {
 }
 
 void AntColonySim::setTrailColor(const Ant& ant) {
-    for (auto trail_pos : ant.seek_trail) {
-        setPixelValue(trail_pos.x, trail_pos.y, Defaults::trail_seek_color.r,
-                      Defaults::trail_seek_color.g,
-                      Defaults::trail_seek_color.b);
-    }
+    // for (auto trail_pos : ant.seek_trail) {
+    //     setPixelValue(trail_pos.x, trail_pos.y, Defaults::trail_seek_color.r,
+    //                   Defaults::trail_seek_color.g,
+    //                   Defaults::trail_seek_color.b);
+    // }
 
     for (auto trail_pos : ant.return_trail) {
         setPixelValue(trail_pos.x, trail_pos.y, Defaults::trail_return_color.r,
@@ -354,6 +383,8 @@ void AntColonySim::destroy() {
     if (buffer_ != nullptr) delete[] buffer_;
     // free the blur buffer
     if (blur_buffer_ != nullptr) delete[] blur_buffer_;
+    // free the pheromone buffer
+    if (pheromone_buffer_ != nullptr) delete[] pheromone_buffer_;
     // destroy the texture if exists
     if (texture_ != nullptr) SDL_DestroyTexture(texture_);
     // destroy renderer if exists
@@ -427,6 +458,28 @@ void AntColonySim::boxBlur() {
 
             // set the pixel value
             setPixelValue(x, y, red, green, blue);
+        }
+    }
+}
+
+/*------------------ Function to decay Pheromones -----------------------*/
+void AntColonySim::decayPheromones() {
+    // temp: Could lead in seg fault if not handled carefully
+    for (int x = 0; x < Defaults::window_width; ++x) {
+        for (int y = 0; y < Defaults::window_height; ++y) {
+            if (pheromone_buffer_[y * Defaults::window_width + x] > 0) {
+                // temp: also as we are on to it, lets also render the things
+                Uint8 green = Uint8(
+                    (double(pheromone_buffer_[y * Defaults::window_width + x]) *
+                     255) /
+                    100);
+                Uint8 red = 0;
+                Uint8 blue = 100;
+
+                setPixelValue(x, y, red, green, blue);
+                pheromone_buffer_[y * Defaults::window_width + x] -=
+                    Defaults::decay_rate;
+            }
         }
     }
 }

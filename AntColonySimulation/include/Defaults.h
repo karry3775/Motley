@@ -38,6 +38,10 @@ struct Defaults {
     static const uint32_t forage_size;
     static const double forage_radius;
     static const double food_salvation_thresh;
+
+    // Pheromone Params
+    static const uint32_t pheromone_strength;
+    static const uint32_t decay_rate;
 };
 
 }  // namespace ant_colony

@@ -21,8 +21,8 @@ const SDL_Color Defaults::forage_color{0, 255, 0, 255};
 
 /*----------------------- SDL Window params -----------------------*/
 
-const uint32_t Defaults::window_width = 750;   // px
-const uint32_t Defaults::window_height = 750;  // px
+const uint32_t Defaults::window_width = 900;   // 750;   // px
+const uint32_t Defaults::window_height = 900;  // 750;  // px
 
 const char* Defaults::window_title = "Ant Colony Simulation";
 
@@ -39,8 +39,12 @@ const Position Defaults::nest_pos =
 const double Defaults::max_angle_window = (50 * M_PI / 180);
 
 /*-----------------------Forage size-------------------------------*/
-const uint32_t Defaults::forage_size = 4;
+const uint32_t Defaults::forage_size = 8;
 const double Defaults::forage_radius = 10;
 const double Defaults::food_salvation_thresh = 5;
+
+/*--------------------- Pheromone strength -----------------------*/
+const uint32_t Defaults::pheromone_strength = 100;
+const uint32_t Defaults::decay_rate = 2;
 
 }  // namespace ant_colony

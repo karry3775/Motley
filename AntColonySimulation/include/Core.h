@@ -7,6 +7,7 @@
 #include <list>
 #include <time.h>
 #include <iostream>
+#include <algorithm>
 
 constexpr const uint32_t kMicrosecondsInASecond = 1000000;
 

@@ -6,6 +6,11 @@ AntColonySim::AntColonySim(const uint32_t num_ants) {
     // Initialize seed
     srand(time(NULL));
 
+    randomization_prob_ = 0.5;  // 10 percent
+
+    // Initialize directions vector
+    initAvailableDirections();
+
     // Resize  the Ants vector
     ants_.resize(num_ants);
 
@@ -20,6 +25,19 @@ AntColonySim::AntColonySim(const uint32_t num_ants) {
 
     // Initialize SDL
     initSDL();
+}
+
+void AntColonySim::initAvailableDirections() {
+    double start = -M_PI;
+    const double end = M_PI;
+    const double step = M_PI / 8;
+
+    while (start <= end) {
+        directions_.emplace_back(start);
+        start += step;
+    }
+
+    rand_directions_ = {-step, step};
 }
 
 void AntColonySim::show() {
@@ -50,7 +68,7 @@ void AntColonySim::show() {
         updateAnts(interval);
 
         // Experimental: Update forage locations
-        // updateForagePositions(interval);
+        updateForagePositions(interval);
 
         // set Color for forage
         setForageColor();
@@ -77,7 +95,9 @@ void AntColonySim::initAnts() {
         // For now let us just assign random positions
         double rand_x = Defaults::window_width / 2;
         double rand_y = Defaults::window_height / 2;
-        double rand_dir = (((double)rand()) / RAND_MAX) * 2 * M_PI - M_PI;
+
+        int rand_dir_index = rand() % (directions_.size());
+        double rand_dir = directions_[rand_dir_index];
 
         ant = new Ant(Position(rand_x, rand_y), rand_dir, 50);
         ant->trail.emplace_back(ant->pos);
@@ -212,6 +232,10 @@ void AntColonySim::updateAnts(const int interval) {
         ant->pos.x += std::cos(ant->direction) * ant->move_speed;
         ant->pos.y += std::sin(ant->direction) * ant->move_speed;
 
+        // Instead of doing the above update to position, this should now be
+        // decided by the pheromones so based on the direction we need to decide
+        // which all cells to look at.
+
         // If reached within a certain threshold of the food source
         // return to home
         if (hasSalvagedFood(ant->pos.x, ant->pos.y)) {
@@ -228,11 +252,15 @@ void AntColonySim::updateAnts(const int interval) {
 
         if (ant->has_salvaged) {
             // Return home
-            ant->direction =
-                std::atan2(nest_.pos.y - ant->pos.y, nest_.pos.x - ant->pos.x);
-            ant->direction +=
-                ((double)rand() / RAND_MAX) * 2 * Defaults::max_angle_window -
-                Defaults::max_angle_window;
+            ant->direction = getQuantizedDirection(
+                std::atan2(nest_.pos.y - ant->pos.y, nest_.pos.x - ant->pos.x));
+
+            if (double(rand()) / RAND_MAX < randomization_prob_) {
+                const auto rand_dir_index = rand() % (rand_directions_.size());
+
+                ant->direction =
+                    wrapToPi(ant->direction + rand_directions_[rand_dir_index]);
+            }
         }
 
         // Update direction if near food when it is seeking for food
@@ -242,11 +270,15 @@ void AntColonySim::updateAnts(const int interval) {
 
         if (ant->pos.x < 0 || ant->pos.x > Defaults::window_width ||
             ant->pos.y < 0 || ant->pos.y > Defaults::window_height) {
-            ant->direction += M_PI / 2;
+            ant->direction =
+                getQuantizedDirection(wrapToPi(ant->direction + M_PI / 2));
         } else {
-            ant->direction +=
-                ((double)rand() / RAND_MAX) * 2 * Defaults::max_angle_window -
-                Defaults::max_angle_window;
+            if (double(rand()) / RAND_MAX < randomization_prob_) {
+                const auto rand_dir_index = rand() % (rand_directions_.size());
+
+                ant->direction =
+                    wrapToPi(ant->direction + rand_directions_[rand_dir_index]);
+            }
         }
     }
 }
@@ -270,12 +302,15 @@ bool AntColonySim::updateDirectionIfNearFood(Ant* ant) {
                 (ant->pos.y - food_pos.y) * (ant->pos.y - food_pos.y) <
             (forage_.radius + 100) * (forage_.radius + 100)) {
             // update direction
-            ant->direction =
-                std::atan2(food_pos.y - ant->pos.y, food_pos.x - ant->pos.x);
-            ant->direction +=
-                ((double)rand() / RAND_MAX) * 2 * Defaults::max_angle_window -
-                Defaults::max_angle_window;
+            ant->direction = getQuantizedDirection(
+                std::atan2(food_pos.y - ant->pos.y, food_pos.x - ant->pos.x));
 
+            if (double(rand()) / RAND_MAX < randomization_prob_) {
+                const auto rand_dir_index = rand() % (rand_directions_.size());
+
+                ant->direction =
+                    ant->direction + rand_directions_[rand_dir_index];
+            }
             return true;
         }
     }
@@ -482,6 +517,20 @@ void AntColonySim::decayPheromones() {
             }
         }
     }
+}
+/*--------------- Function to get Quantized direction ------------------*/
+
+double AntColonySim::getQuantizedDirection(const double theta) {
+    auto const it =
+        std::lower_bound(directions_.begin(), directions_.end(), theta);
+
+    CHECK(it != directions_.end())
+        << "Incoming theta value was: " << theta * 180 / M_PI << "\n";
+    return *it;
+}
+
+double AntColonySim::wrapToPi(const double theta) {
+    return std::atan2(sin(theta), cos(theta));
 }
 
 }  // namespace ant_colony

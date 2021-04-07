@@ -40,7 +40,7 @@ const double Defaults::max_angle_window = (50 * M_PI / 180);
 
 /*-----------------------Forage size-------------------------------*/
 const uint32_t Defaults::forage_size = 8;
-const double Defaults::forage_radius = 10;
+const double Defaults::forage_radius = 5 /*10*/;
 const double Defaults::food_salvation_thresh = 5;
 
 /*--------------------- Pheromone strength -----------------------*/

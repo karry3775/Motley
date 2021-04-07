@@ -15,6 +15,7 @@ class AntColonySim {
 
    private:
     // Helper functions for initializing various components
+    void initAvailableDirections();
     bool initSDL();
     void initAnts();
     void initForage();
@@ -52,9 +53,19 @@ class AntColonySim {
     // Function to decayPheromones over time
     void decayPheromones();
 
+    // Function to get Quantized direction
+    double getQuantizedDirection(const double theta);
+
+    double wrapToPi(const double theta);
+
     Ants ants_;
     Nest nest_;
     Forage forage_;
+
+    // Available directions
+    std::vector<double> directions_;
+    std::vector<double> rand_directions_;
+    double randomization_prob_;
 
     // SDL Objects
     SDL_Window* window_;

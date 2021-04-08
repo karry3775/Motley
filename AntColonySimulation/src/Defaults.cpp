@@ -17,7 +17,7 @@ const SDL_Color Defaults::trail_return_color = {255, 38, 51, 255};
 const SDL_Color Defaults::ant_color = {255, 230, 179, 255};
 
 // Hex #B3BFFF
-const SDL_Color Defaults::forage_color{0, 255, 0, 255};
+const SDL_Color Defaults::forage_color{173, 230, 230, 255};
 
 /*----------------------- SDL Window params -----------------------*/
 
@@ -44,7 +44,7 @@ const double Defaults::forage_radius = 5 /*10*/;
 const double Defaults::food_salvation_thresh = 5;
 
 /*--------------------- Pheromone strength -----------------------*/
-const uint32_t Defaults::pheromone_strength = 100;
+const uint32_t Defaults::pheromone_strength = 500;
 const uint32_t Defaults::decay_rate = 2;
 
 }  // namespace ant_colony

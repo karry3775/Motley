@@ -37,7 +37,7 @@ void AntColonySim::initAvailableDirections() {
         start += step;
     }
 
-    rand_directions_ = {-step, step};
+    rand_directions_ = {-step, 0, step};
 }
 
 void AntColonySim::show() {
@@ -68,7 +68,7 @@ void AntColonySim::show() {
         updateAnts(interval);
 
         // Experimental: Update forage locations
-        updateForagePositions(interval);
+        // updateForagePositions(interval);
 
         // set Color for forage
         setForageColor();
@@ -228,13 +228,14 @@ void AntColonySim::updateAnts(const int interval) {
 
         setTrailColor(*ant);
 
-        // Modify the position of the ant based on direction and move_speed
-        ant->pos.x += std::cos(ant->direction) * ant->move_speed;
-        ant->pos.y += std::sin(ant->direction) * ant->move_speed;
-
         // Instead of doing the above update to position, this should now be
         // decided by the pheromones so based on the direction we need to decide
         // which all cells to look at.
+        ant->direction = getAntDirection(*ant);
+
+        // Modify the position of the ant based on direction and move_speed
+        ant->pos.x += std::cos(ant->direction) * ant->move_speed;
+        ant->pos.y += std::sin(ant->direction) * ant->move_speed;
 
         // If reached within a certain threshold of the food source
         // return to home
@@ -264,9 +265,10 @@ void AntColonySim::updateAnts(const int interval) {
         }
 
         // Update direction if near food when it is seeking for food
-        if (!ant->has_salvaged && updateDirectionIfNearFood(ant)) {
-            continue;
-        }
+        // Disabling attractin to food
+        // if (!ant->has_salvaged && updateDirectionIfNearFood(ant)) {
+        //     continue;
+        // }
 
         if (ant->pos.x < 0 || ant->pos.x > Defaults::window_width ||
             ant->pos.y < 0 || ant->pos.y > Defaults::window_height) {
@@ -290,8 +292,8 @@ void AntColonySim::updateForagePositions(const int interval) {
             std::atan2(food_pos.y - nest_.pos.y, food_pos.x - nest_.pos.x);
         double angle_tangent = angle_from_nest + M_PI / 2;
 
-        food_pos.x += std::cos(angle_tangent) * interval * 0.025;
-        food_pos.y += std::sin(angle_tangent) * interval * 0.025;
+        food_pos.x += std::cos(angle_tangent) * interval * 0.085;
+        food_pos.y += std::sin(angle_tangent) * interval * 0.085;
     }
 }
 
@@ -322,7 +324,7 @@ bool AntColonySim::hasSalvagedFood(const double x, const double y) {
     for (auto food_pos : forage_.food) {
         if ((x - food_pos.x) * (x - food_pos.x) +
                 (y - food_pos.y) * (y - food_pos.y) <
-            forage_.radius * forage_.radius) {
+            forage_.radius * forage_.radius * 2) {
             return true;
         }
     }
@@ -531,6 +533,132 @@ double AntColonySim::getQuantizedDirection(const double theta) {
 
 double AntColonySim::wrapToPi(const double theta) {
     return std::atan2(sin(theta), cos(theta));
+}
+
+/*--------Function to get ant direction based on pheromones------------*/
+double AntColonySim::getAntDirection(const Ant& ant) {
+    Position strongest_pheromone_pos;
+    uint32_t strongest_pheromone_strength = 0;
+    // for now we will do it naively and later on implement a
+    // more fine logic
+    if (abs(ant.direction) < 1e-2 || abs(ant.direction - M_PI / 8) < 1e-1 ||
+        abs(ant.direction + M_PI / 8) < 1e-1) {
+        std::vector<std::pair<int, int>> neighbours{
+            std::make_pair(1, 0), std::make_pair(1, -1), std::make_pair(1, 1)};
+
+        for (auto ngh : neighbours) {
+            if (ant.pos.x + ngh.first < Defaults::window_width &&
+                ant.pos.x + ngh.first >= 0 &&
+                ant.pos.y + ngh.second < Defaults::window_height &&
+                ant.pos.y + ngh.second >= 0) {
+                if (pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                          Defaults::window_width +
+                                      int(ant.pos.y + ngh.second)] >
+                    strongest_pheromone_strength) {
+                    strongest_pheromone_pos.x = ant.pos.x + ngh.first;
+                    strongest_pheromone_pos.y = ant.pos.y + ngh.second;
+                    strongest_pheromone_strength =
+                        pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                              Defaults::window_width +
+                                          int(ant.pos.y + ngh.second)];
+                }
+            }
+        }
+    } else if (abs(ant.direction - M_PI / 2) < 1e-1 ||
+               abs(ant.direction - M_PI / 2 - M_PI / 8) < 1e-1 ||
+               abs(ant.direction - M_PI / 2 + M_PI / 8) < 1e-1) {
+        std::vector<std::pair<int, int>> neighbours{std::make_pair(-1, -1),
+                                                    std::make_pair(0, -1),
+                                                    std::make_pair(1, -1)};
+
+        for (auto ngh : neighbours) {
+            if (ant.pos.x + ngh.first < Defaults::window_width &&
+                ant.pos.x + ngh.first >= 0 &&
+                ant.pos.y + ngh.second < Defaults::window_height &&
+                ant.pos.y + ngh.second >= 0) {
+                if (pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                          Defaults::window_width +
+                                      int(ant.pos.y + ngh.second)] >
+                    strongest_pheromone_strength) {
+                    strongest_pheromone_pos.x = ant.pos.x + ngh.first;
+                    strongest_pheromone_pos.y = ant.pos.y + ngh.second;
+                    strongest_pheromone_strength =
+                        pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                              Defaults::window_width +
+                                          int(ant.pos.y + ngh.second)];
+                }
+            }
+        }
+
+    } else if (abs(ant.direction - M_PI) < 1e-1 ||
+               abs(ant.direction - M_PI + M_PI / 8) < 1e-1 ||
+               abs(ant.direction - M_PI - M_PI / 8) < 1e-1) {
+        std::vector<std::pair<int, int>> neighbours{std::make_pair(-1, -1),
+                                                    std::make_pair(-1, 0),
+                                                    std::make_pair(-1, 1)};
+
+        for (auto ngh : neighbours) {
+            if (ant.pos.x + ngh.first < Defaults::window_width &&
+                ant.pos.x + ngh.first >= 0 &&
+                ant.pos.y + ngh.second < Defaults::window_height &&
+                ant.pos.y + ngh.second >= 0) {
+                if (pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                          Defaults::window_width +
+                                      int(ant.pos.y + ngh.second)] >
+                    strongest_pheromone_strength) {
+                    strongest_pheromone_pos.x = ant.pos.x + ngh.first;
+                    strongest_pheromone_pos.y = ant.pos.y + ngh.second;
+                    strongest_pheromone_strength =
+                        pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                              Defaults::window_width +
+                                          int(ant.pos.y + ngh.second)];
+                }
+            }
+        }
+    } else if (abs(ant.direction + M_PI / 2) < 1e-1 ||
+               abs(ant.direction + M_PI / 2 + M_PI / 8) < 1e-1 ||
+               abs(ant.direction + M_PI / 2 - M_PI / 8) < 1e-1) {
+        std::vector<std::pair<int, int>> neighbours{
+            std::make_pair(-1, 1), std::make_pair(0, 1), std::make_pair(1, 1)};
+
+        for (auto ngh : neighbours) {
+            if (ant.pos.x + ngh.first < Defaults::window_width &&
+                ant.pos.x + ngh.first >= 0 &&
+                ant.pos.y + ngh.second < Defaults::window_height &&
+                ant.pos.y + ngh.second >= 0) {
+                if (pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                          Defaults::window_width +
+                                      int(ant.pos.y + ngh.second)] >
+                    strongest_pheromone_strength) {
+                    strongest_pheromone_pos.x = ant.pos.x + ngh.first;
+                    strongest_pheromone_pos.y = ant.pos.y + ngh.second;
+                    strongest_pheromone_strength =
+                        pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                              Defaults::window_width +
+                                          int(ant.pos.y + ngh.second)];
+                }
+            }
+        }
+    }
+
+    // if no good pheromone was found return the same direction
+    // State unchanged
+    if (strongest_pheromone_strength == 0) {
+        // std::cerr << "Unchanged!\n";
+        return ant.direction;
+    }
+
+    // Otherwise, we need to compute the direction to the strongest pheromone
+    // pos and then quantized
+    auto dir = getQuantizedDirection(
+        std::atan2((strongest_pheromone_pos.y - ant.pos.y),
+                   (strongest_pheromone_pos.x - ant.pos.x)));
+
+    std::cerr << "Pheromone strength --> " << strongest_pheromone_strength
+              << " "
+              << "Original: " << ant.direction * 180.0 / M_PI
+              << " Returned: " << dir * 180.0 / M_PI << "\n";
+    return dir;
 }
 
 }  // namespace ant_colony

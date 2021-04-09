@@ -61,6 +61,8 @@ class AntColonySim {
 
     double wrapToPi(const double theta);
 
+    bool inBounds(const Position& pos);
+
     Ants ants_;
     Nest nest_;
     Forage forage_;

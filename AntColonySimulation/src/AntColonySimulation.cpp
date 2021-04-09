@@ -6,7 +6,7 @@ AntColonySim::AntColonySim(const uint32_t num_ants) {
     // Initialize seed
     srand(time(NULL));
 
-    randomization_prob_ = 0.5;  // 10 percent
+    randomization_prob_ = 0.25;  // 25 percent
 
     // Initialize directions vector
     initAvailableDirections();
@@ -207,9 +207,17 @@ void AntColonySim::updateAnts(const int interval) {
             // the position from now on should go to the return trail
             ant->return_trail.emplace_back(ant->pos);
 
-            // Desposit the positions into the pheromone buffer
-            pheromone_buffer_[int(ant->pos.y) * Defaults::window_width +
-                              int(ant->pos.x)] += Defaults::pheromone_strength;
+            // Check if the pos is still inside before we increase or decrease
+            // the pheronomone buffer
+
+            if (inBounds(ant->pos) &&
+                pheromone_buffer_[int(ant->pos.y) * Defaults::window_width +
+                                  int(ant->pos.x)] < 10000) {
+                // Desposit the positions into the pheromone buffer
+                pheromone_buffer_[int(ant->pos.y) * Defaults::window_width +
+                                  int(ant->pos.x)] +=
+                    Defaults::pheromone_strength;
+            }
 
             // Size limiting
             // TODO: Make this param
@@ -227,12 +235,10 @@ void AntColonySim::updateAnts(const int interval) {
         }
 
         setTrailColor(*ant);
-
         // Instead of doing the above update to position, this should now be
         // decided by the pheromones so based on the direction we need to decide
         // which all cells to look at.
         ant->direction = getAntDirection(*ant);
-
         // Modify the position of the ant based on direction and move_speed
         ant->pos.x += std::cos(ant->direction) * ant->move_speed;
         ant->pos.y += std::sin(ant->direction) * ant->move_speed;
@@ -509,7 +515,7 @@ void AntColonySim::decayPheromones() {
                 Uint8 green = Uint8(
                     (double(pheromone_buffer_[y * Defaults::window_width + x]) *
                      255) /
-                    100);
+                    5000);
                 Uint8 red = 0;
                 Uint8 blue = 100;
 
@@ -659,6 +665,11 @@ double AntColonySim::getAntDirection(const Ant& ant) {
               << "Original: " << ant.direction * 180.0 / M_PI
               << " Returned: " << dir * 180.0 / M_PI << "\n";
     return dir;
+}
+
+bool AntColonySim::inBounds(const Position& pos) {
+    return (pos.x > 0 && pos.x < Defaults::window_width && pos.y > 0 &&
+            pos.y < Defaults::window_height);
 }
 
 }  // namespace ant_colony

@@ -6,7 +6,7 @@ namespace boids {
 
 struct Boid {
     Boid() {
-        this->neighbourhood_radius = 30;
+        this->neighbourhood_radius = 3;
         this->neighbourhood_angle = 2 * M_PI;
         this->separation_radius = 15;
     }

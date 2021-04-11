@@ -113,15 +113,15 @@ void Boids::updateBoids(int interval) {
         boid.pos += boid.vel;
 
         if (boid.pos.x < padding) {
-            boid.vel.x = 0.5;
+            boid.vel.x = 1;
         } else if (boid.pos.x > viz_.width - padding) {
-            boid.vel.x = -0.5;
+            boid.vel.x = -1;
         }
 
         if (boid.pos.y < padding) {
-            boid.vel.y = 0.5;
+            boid.vel.y = 1;
         } else if (boid.pos.y > viz_.height - padding) {
-            boid.vel.y = -0.5;
+            boid.vel.y = -1;
         }
     }
 }

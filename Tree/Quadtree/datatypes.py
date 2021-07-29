@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from matplotlib.patches import Rectangle
+
+
 class Point:
     def __init__(self, x=0, y=0):
         self.x = x
@@ -31,26 +34,26 @@ class Quad:
 
     def is_within_top_left(self, pos):
         return (
-            pos.x > top_left.x and pos.x < (top_left.x + bot_right.x) / 2.0 and
-            pos.y > top_left.y and pos.y < (top_left.y + bot_right.y) / 2.0
+            pos.x > self.top_left.x and pos.x < (self.top_left.x + self.bot_right.x) / 2.0 and
+            pos.y > self.top_left.y and pos.y < (self.top_left.y + self.bot_right.y) / 2.0
         )
 
     def is_within_top_right(self, pos):
         return (
-            pos.x > (top_left.x + bot_right.x) / 2.0 and pos.x < bot_right.x and
-            pos.y > top_left.y and pos.y < (top_left.y + bot_right.y) / 2.0
+            pos.x > (self.top_left.x + self.bot_right.x) / 2.0 and pos.x < self.bot_right.x and
+            pos.y > self.top_left.y and pos.y < (self.top_left.y + self.bot_right.y) / 2.0
         )
 
     def is_within_bot_left(self, pos):
         return (
-            pos.x > top_left.x and pos.x < (top_left.x + bot_right.x) / 2.0 and
-            pos.y > (top_left.y + bot_right.y) / 2.0 and pos.y < bot_right.y
+            pos.x > self.top_left.x and pos.x < (self.top_left.x + self.bot_right.x) / 2.0 and
+            pos.y > (self.top_left.y + self.bot_right.y) / 2.0 and pos.y < self.bot_right.y
         )
 
     def is_within_bot_right(self, pos):
         return (
-            pos.x > (top_left.x + bot_right.x) / 2.0 and pos.x < bot_right.x and
-            pos.y > (top_left.y + bot_right.y) / 2.0 and pos.y < bot_right.y
+            pos.x > (self.top_left.x + self.bot_right.x) / 2.0 and pos.x < self.bot_right.x and
+            pos.y > (self.top_left.y + self.bot_right.y) / 2.0 and pos.y < self.bot_right.y
         )
 
     def get_top_left(self):
@@ -94,3 +97,12 @@ class Quad:
             ),
             bot_right=self.bot_right
         )
+
+    def get_viz_rect(self):
+        return Rectangle((self.top_left.x, self.top_left.y),
+                         abs(self.top_left.x - self.bot_right.x),
+                         abs(self.top_left.y - self.bot_right.y),
+                         lw=2,
+                         edgecolor='red',
+                         facecolor='none'
+                         )

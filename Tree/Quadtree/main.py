@@ -7,6 +7,32 @@ import matplotlib.pyplot as plt
 import random
 
 from collections import deque
+import numpy as np
+
+
+def get_random_pts(num_pts):
+    pts = []
+    for i in range(num_pts):
+        xr = random.uniform(1, 9)
+        yr = random.uniform(1, 9)
+        pts.append((xr, yr))
+
+    return pts
+
+
+def get_circle_pts(step=np.pi / 10, rad=3):
+    center = (5, 5)
+
+    pts = []
+    angle = 0
+    while(angle < 2 * np.pi):
+        xr = rad * np.cos(angle) + center[0]
+        yr = rad * np.sin(angle) + center[1]
+        pts.append((xr, yr))
+
+        angle += step
+
+    return pts
 
 
 def main():
@@ -16,23 +42,21 @@ def main():
     fig, ax = plt.subplots()
 
     # Generate random points between 1-9
-    num_pts = 100
-    pts = []
-    for i in range(num_pts):
-        xr = random.uniform(1, 9)
-        yr = random.uniform(1, 9)
-        pts.append((xr, yr))
-        ax.plot(pts[-1][0], pts[-1][1], 'bo')
+    # num_pts = 10
+    # rand_pts = get_random_pts(num_pts)
+    circle_pts = get_circle_pts()
 
-        # Add points to to the quad tree
+    for (xr, yr) in circle_pts:
+        ax.plot(xr, yr, 'bo')
         qt.insert(
-            Node(Point(
-                xr, yr
-            ))
+            Node(
+                Point(xr, yr)
+            )
         )
 
     ax.set_xlim([-1, 11])
     ax.set_ylim([-1, 11])
+    ax.set_aspect('equal')
 
     # Need to do a DFS
     q = deque()

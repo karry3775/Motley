@@ -16,7 +16,7 @@ def main():
     fig, ax = plt.subplots()
 
     # Generate random points between 1-9
-    num_pts = 20
+    num_pts = 100
     pts = []
     for i in range(num_pts):
         xr = random.uniform(1, 9)

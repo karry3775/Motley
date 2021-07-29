@@ -30,35 +30,39 @@ class QuadTree:
 
             # Assign to one of its children
             if self.quad.is_within_top_left(node.pos):
-                top_left_quad = self.quad.get_top_left()
-                self.top_left_tree = QuadTree(
-                    top_left_quad.top_left,
-                    top_left_quad.bot_right
-                )
+                if not self.top_left_tree:
+                    top_left_quad = self.quad.get_top_left()
+                    self.top_left_tree = QuadTree(
+                        top_left_quad.top_left,
+                        top_left_quad.bot_right
+                    )
                 self.top_left_tree.insert(node)
 
             elif self.quad.is_within_top_right(node.pos):
-                top_right_quad = self.quad.get_top_right()
-                self.top_right_tree = QuadTree(
-                    top_right_quad.top_left,
-                    top_right_quad.bot_right
-                )
+                if not self.top_right_tree:
+                    top_right_quad = self.quad.get_top_right()
+                    self.top_right_tree = QuadTree(
+                        top_right_quad.top_left,
+                        top_right_quad.bot_right
+                    )
                 self.top_right_tree.insert(node)
 
             elif self.quad.is_within_bot_left(node.pos):
-                bot_left_quad = self.quad.get_bot_left()
-                self.bot_left_tree = QuadTree(
-                    bot_left_quad.top_left,
-                    bot_left_quad.bot_right
-                )
+                if not self.bot_left_tree:
+                    bot_left_quad = self.quad.get_bot_left()
+                    self.bot_left_tree = QuadTree(
+                        bot_left_quad.top_left,
+                        bot_left_quad.bot_right
+                    )
                 self.bot_left_tree.insert(node)
 
             elif self.quad.is_within_bot_right(node.pos):
-                bot_right_quad = self.quad.get_bot_right()
-                self.bot_right_tree = QuadTree(
-                    bot_right_quad.top_left,
-                    bot_right_quad.bot_right
-                )
+                if not self.bot_right_tree:
+                    bot_right_quad = self.quad.get_bot_right()
+                    self.bot_right_tree = QuadTree(
+                        bot_right_quad.top_left,
+                        bot_right_quad.bot_right
+                    )
                 self.bot_right_tree.insert(node)
 
         return

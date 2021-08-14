@@ -6,7 +6,7 @@ AntColonySim::AntColonySim(const uint32_t num_ants) {
     // Initialize seed
     srand(time(NULL));
 
-    randomization_prob_ = 0.25;  // 25 percent
+    randomization_prob_ = 0.1;  // 35 percent
 
     // Initialize directions vector
     initAvailableDirections();
@@ -30,7 +30,7 @@ AntColonySim::AntColonySim(const uint32_t num_ants) {
 void AntColonySim::initAvailableDirections() {
     double start = -M_PI;
     const double end = M_PI;
-    const double step = M_PI / 8;
+    const double step = M_PI / 4;
 
     while (start <= end) {
         directions_.emplace_back(start);
@@ -238,7 +238,9 @@ void AntColonySim::updateAnts(const int interval) {
         // Instead of doing the above update to position, this should now be
         // decided by the pheromones so based on the direction we need to decide
         // which all cells to look at.
-        ant->direction = getAntDirection(*ant);
+        if (!ant->has_salvaged) {
+            ant->direction = getAntDirection(*ant);
+        }
         // Modify the position of the ant based on direction and move_speed
         ant->pos.x += std::cos(ant->direction) * ant->move_speed;
         ant->pos.y += std::sin(ant->direction) * ant->move_speed;
@@ -262,7 +264,7 @@ void AntColonySim::updateAnts(const int interval) {
             ant->direction = getQuantizedDirection(
                 std::atan2(nest_.pos.y - ant->pos.y, nest_.pos.x - ant->pos.x));
 
-            if (double(rand()) / RAND_MAX < randomization_prob_) {
+            if ((rand()) / RAND_MAX < randomization_prob_) {
                 const auto rand_dir_index = rand() % (rand_directions_.size());
 
                 ant->direction =
@@ -281,7 +283,8 @@ void AntColonySim::updateAnts(const int interval) {
             ant->direction =
                 getQuantizedDirection(wrapToPi(ant->direction + M_PI / 2));
         } else {
-            if (double(rand()) / RAND_MAX < randomization_prob_) {
+            if (!ant->is_dir_updated &&
+                double(rand()) / RAND_MAX < randomization_prob_) {
                 const auto rand_dir_index = rand() % (rand_directions_.size());
 
                 ant->direction =
@@ -542,13 +545,14 @@ double AntColonySim::wrapToPi(const double theta) {
 }
 
 /*--------Function to get ant direction based on pheromones------------*/
-double AntColonySim::getAntDirection(const Ant& ant) {
+double AntColonySim::getAntDirection(Ant& ant) {
     Position strongest_pheromone_pos;
     uint32_t strongest_pheromone_strength = 0;
     // for now we will do it naively and later on implement a
     // more fine logic
-    if (abs(ant.direction) < 1e-2 || abs(ant.direction - M_PI / 8) < 1e-1 ||
-        abs(ant.direction + M_PI / 8) < 1e-1) {
+
+    // 0 degrees direction (1, 0), (1, -1), (1, 1)
+    if (abs(ant.direction) < 1e-2) {
         std::vector<std::pair<int, int>> neighbours{
             std::make_pair(1, 0), std::make_pair(1, -1), std::make_pair(1, 1)};
 
@@ -570,9 +574,33 @@ double AntColonySim::getAntDirection(const Ant& ant) {
                 }
             }
         }
-    } else if (abs(ant.direction - M_PI / 2) < 1e-1 ||
-               abs(ant.direction - M_PI / 2 - M_PI / 8) < 1e-1 ||
-               abs(ant.direction - M_PI / 2 + M_PI / 8) < 1e-1) {
+    }
+    // 45 degrees (0, -1), (1, -1), (1, 0)
+    else if (abs(ant.direction - M_PI / 2) < 1e-2) {
+        std::vector<std::pair<int, int>> neighbours{
+            std::make_pair(0, -1), std::make_pair(1, -1), std::make_pair(1, 0)};
+
+        for (auto ngh : neighbours) {
+            if (ant.pos.x + ngh.first < Defaults::window_width &&
+                ant.pos.x + ngh.first >= 0 &&
+                ant.pos.y + ngh.second < Defaults::window_height &&
+                ant.pos.y + ngh.second >= 0) {
+                if (pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                          Defaults::window_width +
+                                      int(ant.pos.y + ngh.second)] >
+                    strongest_pheromone_strength) {
+                    strongest_pheromone_pos.x = ant.pos.x + ngh.first;
+                    strongest_pheromone_pos.y = ant.pos.y + ngh.second;
+                    strongest_pheromone_strength =
+                        pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                              Defaults::window_width +
+                                          int(ant.pos.y + ngh.second)];
+                }
+            }
+        }
+    }
+    // 90 degrees (-1, -1), (0, -1), (1, -1)
+    else if (abs(ant.direction - M_PI / 2) < 1e-1) {
         std::vector<std::pair<int, int>> neighbours{std::make_pair(-1, -1),
                                                     std::make_pair(0, -1),
                                                     std::make_pair(1, -1)};
@@ -596,9 +624,34 @@ double AntColonySim::getAntDirection(const Ant& ant) {
             }
         }
 
-    } else if (abs(ant.direction - M_PI) < 1e-1 ||
-               abs(ant.direction - M_PI + M_PI / 8) < 1e-1 ||
-               abs(ant.direction - M_PI - M_PI / 8) < 1e-1) {
+    }
+    // 135 degrees (-1, 0), (-1, -1), (0, -1)
+    else if (abs(ant.direction - 3 * M_PI / 4) < 1e-2) {
+        std::vector<std::pair<int, int>> neighbours{std::make_pair(-1, 0),
+                                                    std::make_pair(-1, -1),
+                                                    std::make_pair(0, -1)};
+
+        for (auto ngh : neighbours) {
+            if (ant.pos.x + ngh.first < Defaults::window_width &&
+                ant.pos.x + ngh.first >= 0 &&
+                ant.pos.y + ngh.second < Defaults::window_height &&
+                ant.pos.y + ngh.second >= 0) {
+                if (pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                          Defaults::window_width +
+                                      int(ant.pos.y + ngh.second)] >
+                    strongest_pheromone_strength) {
+                    strongest_pheromone_pos.x = ant.pos.x + ngh.first;
+                    strongest_pheromone_pos.y = ant.pos.y + ngh.second;
+                    strongest_pheromone_strength =
+                        pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                              Defaults::window_width +
+                                          int(ant.pos.y + ngh.second)];
+                }
+            }
+        }
+    }
+    // 180 degrees (-1, -1), (-1, 0), (-1, 1)
+    else if (abs(ant.direction - M_PI) < 1e-2) {
         std::vector<std::pair<int, int>> neighbours{std::make_pair(-1, -1),
                                                     std::make_pair(-1, 0),
                                                     std::make_pair(-1, 1)};
@@ -621,11 +674,60 @@ double AntColonySim::getAntDirection(const Ant& ant) {
                 }
             }
         }
-    } else if (abs(ant.direction + M_PI / 2) < 1e-1 ||
-               abs(ant.direction + M_PI / 2 + M_PI / 8) < 1e-1 ||
-               abs(ant.direction + M_PI / 2 - M_PI / 8) < 1e-1) {
+    }
+    // -135 degrees (-1, 0), (-1, 1), (0, 1)
+    else if (abs(ant.direction + 3 * M_PI / 4) < 1e-2) {
+        std::vector<std::pair<int, int>> neighbours{std::make_pair(-1, 0),
+                                                    std::make_pair(-1, -1),
+                                                    std::make_pair(0, 1)};
+
+        for (auto ngh : neighbours) {
+            if (ant.pos.x + ngh.first < Defaults::window_width &&
+                ant.pos.x + ngh.first >= 0 &&
+                ant.pos.y + ngh.second < Defaults::window_height &&
+                ant.pos.y + ngh.second >= 0) {
+                if (pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                          Defaults::window_width +
+                                      int(ant.pos.y + ngh.second)] >
+                    strongest_pheromone_strength) {
+                    strongest_pheromone_pos.x = ant.pos.x + ngh.first;
+                    strongest_pheromone_pos.y = ant.pos.y + ngh.second;
+                    strongest_pheromone_strength =
+                        pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                              Defaults::window_width +
+                                          int(ant.pos.y + ngh.second)];
+                }
+            }
+        }
+    }
+    // -90 degrees (-1, 1), (0, 1), (1, 1)
+    else if (abs(ant.direction + M_PI / 2) < 1e-2) {
         std::vector<std::pair<int, int>> neighbours{
             std::make_pair(-1, 1), std::make_pair(0, 1), std::make_pair(1, 1)};
+
+        for (auto ngh : neighbours) {
+            if (ant.pos.x + ngh.first < Defaults::window_width &&
+                ant.pos.x + ngh.first >= 0 &&
+                ant.pos.y + ngh.second < Defaults::window_height &&
+                ant.pos.y + ngh.second >= 0) {
+                if (pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                          Defaults::window_width +
+                                      int(ant.pos.y + ngh.second)] >
+                    strongest_pheromone_strength) {
+                    strongest_pheromone_pos.x = ant.pos.x + ngh.first;
+                    strongest_pheromone_pos.y = ant.pos.y + ngh.second;
+                    strongest_pheromone_strength =
+                        pheromone_buffer_[int(ant.pos.x + ngh.first) *
+                                              Defaults::window_width +
+                                          int(ant.pos.y + ngh.second)];
+                }
+            }
+        }
+    }
+    // - 45 degrees (0, 1), (1, 1), (1, 0)
+    else if (abs(ant.direction + M_PI / 4) < 1e-2) {
+        std::vector<std::pair<int, int>> neighbours{
+            std::make_pair(0, 1), std::make_pair(1, 1), std::make_pair(1, 0)};
 
         for (auto ngh : neighbours) {
             if (ant.pos.x + ngh.first < Defaults::window_width &&
@@ -651,6 +753,7 @@ double AntColonySim::getAntDirection(const Ant& ant) {
     // State unchanged
     if (strongest_pheromone_strength == 0) {
         // std::cerr << "Unchanged!\n";
+        ant.is_dir_updated = false;
         return ant.direction;
     }
 
@@ -660,10 +763,7 @@ double AntColonySim::getAntDirection(const Ant& ant) {
         std::atan2((strongest_pheromone_pos.y - ant.pos.y),
                    (strongest_pheromone_pos.x - ant.pos.x)));
 
-    std::cerr << "Pheromone strength --> " << strongest_pheromone_strength
-              << " "
-              << "Original: " << ant.direction * 180.0 / M_PI
-              << " Returned: " << dir * 180.0 / M_PI << "\n";
+    ant.is_dir_updated = true;
     return dir;
 }
 

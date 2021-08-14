@@ -5,7 +5,7 @@
 namespace ant_colony {
 struct Ant {
     Ant(const Position& pos, const double direction, const double sense_radius,
-        const double move_speed = 5, const double radius = 1.25,
+        const double move_speed = 0.5, const double radius = 1.25,
         const int max_trail_size = 500) {
         this->pos = pos;
         this->direction = direction;
@@ -14,6 +14,7 @@ struct Ant {
         this->radius = radius;
         this->max_trail_size = max_trail_size;
         this->has_salvaged = false;
+        this->is_dir_updated = false;
     }
 
     Position pos;
@@ -26,6 +27,7 @@ struct Ant {
     std::list<Position> return_trail;
     int max_trail_size;
     bool has_salvaged;
+    bool is_dir_updated;
 };
 
 }  // namespace ant_colony

@@ -44,7 +44,7 @@ void solve() {
     // Declare the problem
     ceres::Problem problem;
 
-    // Add residual tersm to the problem using the autodiff
+    // Add residual terms to the problem using the autodiff
     // wrapper to get the derivates automatically
     problem.AddResidualBlock(
         new ceres::AutoDiffCostFunction<F1, 1, 1, 1>(new F1), nullptr, &x1,

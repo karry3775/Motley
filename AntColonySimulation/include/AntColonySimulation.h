@@ -57,7 +57,7 @@ class AntColonySim {
     double getQuantizedDirection(const double theta);
 
     // Function to get ant direction based on pheromones
-    double getAntDirection(const Ant& ant);
+    double getAntDirection(Ant& ant);
 
     double wrapToPi(const double theta);
 
